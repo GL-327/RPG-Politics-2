@@ -277,6 +277,43 @@ public final class PowerManager {
                 particleCone(level, p, ParticleTypes.SWEEP_ATTACK);
                 level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.4f, 0.6f);
             }
+            case SHOCKWAVE -> {
+                for (LivingEntity e : around(p, 8)) {
+                    if (e == p) continue;
+                    launchEntity(e, p, -2.4, 0.6);
+                    e.hurtServer(level, level.damageSources().playerAttack(p), 5.0f);
+                }
+                level.sendParticles(ParticleTypes.EXPLOSION, p.getX(), p.getY(), p.getZ(), 8, 2, 0.2, 2, 0.0);
+            }
+            case IRON_SKIN -> {
+                p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 240, 2, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 240, 2, false, true));
+            }
+            case SOUL_DRAIN -> {
+                float drained = 0f;
+                for (LivingEntity e : cone(p, 10, 0.45)) {
+                    e.hurtServer(level, level.damageSources().magic(), 6.0f);
+                    drained += 2f;
+                }
+                p.heal(Math.min(12f, drained));
+                if (drained > 0) StatManager.addCursedEnergy(p, Math.min(15, drained));
+                level.sendParticles(ParticleTypes.SCULK_SOUL, p.getX(), p.getEyeY(), p.getZ(), 30, 1.5, 0.6, 1.5, 0.02);
+            }
+            case SHADOW_STEP -> {
+                p.addEffect(new MobEffectInstance(MobEffects.SPEED, 120, 3, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60, 0, false, false));
+                p.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, 120, 2, false, true));
+                level.sendParticles(ParticleTypes.SQUID_INK, p.getX(), p.getY() + 1, p.getZ(), 40, 0.4, 0.8, 0.4, 0.02);
+            }
+            case CURSED_RESTRAINT -> {
+                for (LivingEntity e : around(p, 8)) {
+                    if (e == p) continue;
+                    e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 160, 5));
+                    e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 160, 3));
+                    e.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 160, 3));
+                }
+                level.sendParticles(ParticleTypes.WITCH, p.getX(), p.getY() + 1, p.getZ(), 40, 3, 1, 3, 0.0);
+            }
             case ADAPTIVE_BIOLOGY -> {
                 p.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 2400, 1, false, true));
                 StatManager.addCursedEnergy(p, 20);

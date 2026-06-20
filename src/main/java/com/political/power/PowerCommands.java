@@ -36,6 +36,9 @@ public final class PowerCommands {
         TECHNIQUE_GRADE.put(Power.TEN_SHADOWS, 3);
         TECHNIQUE_GRADE.put(Power.SIMPLE_DOMAIN, 2);
         TECHNIQUE_GRADE.put(Power.WORLD_CUTTING_SLASH, 3);
+        TECHNIQUE_GRADE.put(Power.SOUL_DRAIN, 2);
+        TECHNIQUE_GRADE.put(Power.SHADOW_STEP, 1);
+        TECHNIQUE_GRADE.put(Power.CURSED_RESTRAINT, 2);
         TECHNIQUE_GRADE.put(Power.HOLLOW_PURPLE, 4);
         TECHNIQUE_GRADE.put(Power.INFINITY, 4);
         TECHNIQUE_GRADE.put(Power.DOMAIN_EXPANSION, 5);

@@ -158,5 +158,14 @@ public final class CurseManager {
         killer.sendSystemMessage(Component.literal("Exorcised a " + gradeLabel(grade)
                 + "! +" + gained + " Cursed Energy, +" + coins + " coins. (" + total + " exorcised)")
                 .withStyle(ChatFormatting.DARK_PURPLE));
+
+        // Higher-grade curses sometimes leave a cursed remnant behind.
+        if (dead.level() instanceof ServerLevel level && RNG.nextFloat() < 0.10f + grade * 0.06f) {
+            net.minecraft.world.item.ItemStack remnant =
+                    new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.BONE);
+            CursedObjects.makeCursed(remnant, 15 + grade * 10);
+            level.addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(
+                    level, dead.getX(), dead.getY() + 0.5, dead.getZ(), remnant));
+        }
     }
 }

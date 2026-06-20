@@ -45,6 +45,8 @@ public final class CursedGear {
         BASE.put("cursed_blade", 7f);
         BASE.put("soul_cleaver", 9f);
         BASE.put("cursed_polearm", 11f); // the tool-specialist's reach weapon
+        BASE.put("cursed_greatsword", 12f);
+        BASE.put("cursed_whip", 5f);
     }
 
     private static final Map<String, Item> ITEMS = new LinkedHashMap<>();

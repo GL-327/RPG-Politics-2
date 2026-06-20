@@ -54,8 +54,12 @@ public enum Power {
             "Your rewritten body resonates with latent cursed energy, deepening your reserves.", 80),
     REGENERATIVE_CODE("Regenerative Code", Origin.COMPOUND_V, 40, 220,
             "Cellular overdrive heals you and awakens dormant cursed energy.", 40),
+    SHOCKWAVE("Shockwave", Origin.COMPOUND_V, 25, 120,
+            "Slam the ground, hurling everything around you away."),
+    IRON_SKIN("Iron Skin", Origin.COMPOUND_V, 20, 200,
+            "Harden your body against incoming harm."),
 
-    // ---------------- Jujutsu Kaisen cursed techniques ----------------
+    // ---------------- Cursed techniques ----------------
     LIMITLESS_BLUE("Cursed Technique: Blue", Origin.CURSED_TECHNIQUE, 30, 80,
             "Limitless \u2014 Blue. Drag nearby entities violently toward you."),
     LIMITLESS_RED("Cursed Technique: Red", Origin.CURSED_TECHNIQUE, 45, 140,
@@ -85,7 +89,13 @@ public enum Power {
     SIMPLE_DOMAIN("Simple Domain", Origin.CURSED_TECHNIQUE, 40, 160,
             "A defensive circle that wards and repels all who draw near."),
     WORLD_CUTTING_SLASH("World-Cutting Slash", Origin.CURSED_TECHNIQUE, 60, 200,
-            "A single slash that severs everything in a wide arc before you.");
+            "A single slash that severs everything in a wide arc before you."),
+    SOUL_DRAIN("Soul Drain", Origin.CURSED_TECHNIQUE, 35, 120,
+            "Tear cursed energy from those before you to mend yourself."),
+    SHADOW_STEP("Shadow Step", Origin.CURSED_TECHNIQUE, 25, 100,
+            "Blur through space in a burst of speed and misdirection."),
+    CURSED_RESTRAINT("Cursed Restraint", Origin.CURSED_TECHNIQUE, 30, 140,
+            "Bind nearby foes in heavy cursed energy.");
 
     /** Where a power comes from, which controls how it is acquired and displayed. */
     public enum Origin {
