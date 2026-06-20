@@ -24,6 +24,7 @@ public final class RpgItems {
 
         CompoundTag tag = new CompoundTag();
         tag.putString(ITEM_ID_KEY, def.id());
+        tag.putString(ItemStats.RARITY, def.rarity.name());
         if (def.health != 0) tag.putInt("rpg_health", def.health);
         if (def.defense != 0) tag.putInt("rpg_defense", def.defense);
         if (def.strength != 0) tag.putInt("rpg_strength", def.strength);

@@ -93,6 +93,7 @@ public final class PowerCommands {
                 .then(Commands.literal("awaken").executes(PowerCommands::awaken))
                 .then(Commands.literal("learn").then(Commands.argument("id", StringArgumentType.word())
                         .executes(PowerCommands::learn)))
+                .then(Commands.literal("forge").executes(PowerCommands::forge))
                 .then(Commands.literal("grade").requires(OP)
                         .then(Commands.argument("player", EntityArgument.player())
                                 .then(Commands.argument("grade", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 5))
@@ -222,6 +223,24 @@ public final class PowerCommands {
                 + ". Exorcise more curses to grow stronger.");
         if (!DataManager.grantPower(uuid, power.id())) return fail(c, "You already know that technique.");
         return ok(c, "You master " + power.displayName + "!");
+    }
+
+    /** Pour your cursed energy into the held weapon, cursing it to your current grade. */
+    private static int forge(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
+        ServerPlayer p = self(c);
+        String uuid = p.getStringUUID();
+        int grade = DataManager.sorcererGrade(uuid);
+        var trait = DataManager.cursedTrait(uuid);
+        if (!trait.canUseTechniques() || grade < 1)
+            return fail(c, "You must awaken your cursed energy before you can curse a tool.");
+        net.minecraft.world.item.ItemStack held = p.getMainHandItem();
+        if (held.isEmpty()) return fail(c, "Hold the weapon or tool you wish to curse.");
+        int targetGrade = Math.min(4, grade);
+        if (!com.political.combat.StatManager.spendCursedEnergy(p, 20 + targetGrade * 10))
+            return fail(c, "Not enough cursed energy to seal the curse (" + (20 + targetGrade * 10) + " needed).");
+        com.political.items.ItemStats.setCursedGrade(held, targetGrade);
+        com.political.items.ItemStats.decorate(held);
+        return ok(c, "Cursed energy floods the tool \u2014 it is now Cursed (Grade " + targetGrade + ").");
     }
 
     private static int giveSerum(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {

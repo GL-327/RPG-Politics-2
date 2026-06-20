@@ -13,4 +13,16 @@ public class RpgStats {
     /** Physical bonuses (Heavenly Restriction / sliver users), applied as attributes. */
     public double bonusSpeedPct = 0.0;
     public double bonusAttackSpeedPct = 0.0;
+
+    // ---- Skyblock-style combat stats (summed from gear) ----
+    /** Chance (percent) for a hit to critically strike. */
+    public double critChance = 0.0;
+    /** Extra damage (percent) dealt on a critical strike. Base 50%. */
+    public double critDamage = 50.0;
+    /** Chance (percent) for bonus strikes; 100 = one guaranteed extra hit. */
+    public double ferocity = 0.0;
+    /** Speed stat points (each adds a small movement-speed bonus). */
+    public double speed = 0.0;
+    /** Attack-speed stat points. */
+    public double attackSpeed = 0.0;
 }

@@ -138,14 +138,17 @@ public final class StatManager {
 
     private static void addItemStats(RpgStats s, ItemStack stack) {
         if (stack == null || stack.isEmpty()) return;
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        if (data == null) return;
-        var tag = data.copyTag();
-        s.maxHealth += tag.getIntOr("rpg_health", 0);
-        s.defense += tag.getIntOr("rpg_defense", 0);
-        s.strength += tag.getIntOr("rpg_strength", 0);
-        s.maxMana += tag.getIntOr("rpg_intelligence", 0);
-        s.maxCursedEnergy += tag.getIntOr("rpg_cursed", 0);
+        com.political.items.ItemStats.Sheet sheet = com.political.items.ItemStats.compute(stack);
+        s.maxHealth += sheet.health;
+        s.defense += sheet.defense;
+        s.strength += sheet.strength;
+        s.maxMana += sheet.intelligence;
+        s.maxCursedEnergy += sheet.cursed;
+        s.critChance += sheet.critChance;
+        s.critDamage += sheet.critDamage;
+        s.ferocity += sheet.ferocity;
+        s.speed += sheet.speed;
+        s.attackSpeed += sheet.attackSpeed;
     }
 
     public static void apply(ServerPlayer player) {
@@ -155,8 +158,8 @@ public final class StatManager {
         applyModifier(player.getAttribute(Attributes.MAX_HEALTH), RPG_HEALTH_ID, s.maxHealth - VANILLA_BASE_HEALTH, AttributeModifier.Operation.ADD_VALUE);
         applyModifier(player.getAttribute(Attributes.ARMOR), RPG_DEFENSE_ID, s.defense * 0.15, AttributeModifier.Operation.ADD_VALUE);
         applyModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), RPG_STRENGTH_ID, s.strength * 0.1, AttributeModifier.Operation.ADD_VALUE);
-        applyModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), RPG_SPEED_ID, s.bonusSpeedPct, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
-        applyModifier(player.getAttribute(Attributes.ATTACK_SPEED), RPG_ATTACK_SPEED_ID, s.bonusAttackSpeedPct, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        applyModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), RPG_SPEED_ID, s.bonusSpeedPct + s.speed * 0.005, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        applyModifier(player.getAttribute(Attributes.ATTACK_SPEED), RPG_ATTACK_SPEED_ID, s.bonusAttackSpeedPct + s.attackSpeed * 0.01, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
 
         MANA.put(player.getUUID(), Math.min(MANA.getOrDefault(player.getUUID(), s.maxMana), s.maxMana));
         CURSED.put(player.getUUID(), Math.min(CURSED.getOrDefault(player.getUUID(), 0.0), s.maxCursedEnergy));
@@ -219,6 +222,14 @@ public final class StatManager {
             int ce = (int) Math.floor(getCursedEnergy(player));
             bar = bar.copy().append(Component.literal("   \u2620 " + ce + "/" + (int) s.maxCursedEnergy + " CE")
                     .withStyle(ChatFormatting.DARK_PURPLE));
+        }
+        if (s.critChance > 0) {
+            bar = bar.copy().append(Component.literal("   \u2741 " + (int) s.critChance + "% Crit")
+                    .withStyle(ChatFormatting.BLUE));
+        }
+        if (s.ferocity > 0) {
+            bar = bar.copy().append(Component.literal("   \u2694 " + (int) s.ferocity + " Fer")
+                    .withStyle(ChatFormatting.RED));
         }
         player.sendSystemMessage(bar, true);
     }

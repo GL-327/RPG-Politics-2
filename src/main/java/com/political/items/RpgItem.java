@@ -131,19 +131,4 @@ public enum RpgItem {
             return null;
         }
     }
-
-    /** Item rarity controls display colour and is shown in lore. */
-    public enum Rarity {
-        COMMON(ChatFormatting.WHITE),
-        RARE(ChatFormatting.BLUE),
-        EPIC(ChatFormatting.LIGHT_PURPLE),
-        LEGENDARY(ChatFormatting.GOLD),
-        MYTHIC(ChatFormatting.RED);
-
-        public final ChatFormatting color;
-
-        Rarity(ChatFormatting color) {
-            this.color = color;
-        }
-    }
 }

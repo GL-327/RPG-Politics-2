@@ -215,9 +215,10 @@ public final class VillagerManager {
         say(p, name, "Go forth with strength and a guarded heart. (-" + cost + " coins)", Role.GUARD.color);
     }
 
-    private static int priceOf(RpgItem.Rarity rarity) {
+    private static int priceOf(com.political.items.Rarity rarity) {
         return switch (rarity) {
             case COMMON -> 80;
+            case UNCOMMON -> 160;
             case RARE -> 320;
             case EPIC -> 700;
             case LEGENDARY -> 1500;

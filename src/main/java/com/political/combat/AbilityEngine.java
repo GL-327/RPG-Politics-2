@@ -5,7 +5,9 @@ import com.political.items.RpgItems;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -73,9 +75,11 @@ public final class AbilityEngine {
     // ---------------- On attack ----------------
 
     private static void onAttack(ServerPlayer attacker, LivingEntity target) {
+        ServerLevel level = (ServerLevel) target.level();
+        applyCritAndFerocity(attacker, target, level);
+
         List<Ability> abilities = RpgItems.abilitiesOf(attacker.getMainHandItem());
         if (abilities.isEmpty()) return;
-        ServerLevel level = (ServerLevel) target.level();
 
         for (Ability a : abilities) {
             switch (a) {
@@ -108,6 +112,25 @@ public final class AbilityEngine {
                 }
                 default -> { }
             }
+        }
+    }
+
+    /** Skyblock-style crit + ferocity, computed from the attacker's summed gear stats. */
+    private static void applyCritAndFerocity(ServerPlayer attacker, LivingEntity target, ServerLevel level) {
+        RpgStats s = StatManager.get(attacker);
+        double atk = Math.max(1.0, attacker.getAttributeValue(Attributes.ATTACK_DAMAGE));
+
+        if (s.critChance > 0 && RNG.nextDouble() * 100.0 < s.critChance) {
+            float bonus = (float) (atk * s.critDamage / 100.0);
+            target.hurtServer(level, level.damageSources().playerAttack(attacker), bonus);
+            level.sendParticles(ParticleTypes.CRIT, target.getX(),
+                    target.getY() + target.getBbHeight() * 0.6, target.getZ(), 12, 0.3, 0.3, 0.3, 0.1);
+        }
+
+        int extra = (int) (s.ferocity / 100.0);
+        if (RNG.nextDouble() * 100.0 < s.ferocity % 100.0) extra++;
+        for (int i = 0; i < extra; i++) {
+            target.hurtServer(level, level.damageSources().playerAttack(attacker), (float) atk);
         }
     }
 
