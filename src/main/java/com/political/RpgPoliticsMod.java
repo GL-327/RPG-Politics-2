@@ -5,6 +5,8 @@ import com.political.bounty.BountyManager;
 import com.political.combat.AbilityEngine;
 import com.political.combat.HealthScalingManager;
 import com.political.combat.StatManager;
+import com.political.curse.CurseCommands;
+import com.political.curse.CurseManager;
 import com.political.court.CourtCommands;
 import com.political.court.CourtDomainManager;
 import com.political.economy.BankManager;
@@ -16,6 +18,10 @@ import com.political.player.PlayerCommands;
 import com.political.politics.GovExtrasCommands;
 import com.political.items.RpgItemCommands;
 import com.political.net.ModNetworking;
+import com.political.npc.VillagerManager;
+import com.political.power.ModItems;
+import com.political.power.PowerCommands;
+import com.political.power.PowerManager;
 import com.political.politics.DataManager;
 import com.political.politics.ElectionManager;
 import com.political.politics.PerkManager;
@@ -44,10 +50,15 @@ public class RpgPoliticsMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ModItems.register();
         ModNetworking.registerS2CTypes();
+        ModNetworking.registerC2STypes();
         CourtDomainManager.registerEvents();
         AbilityEngine.register();
         HealthScalingManager.register();
+        PowerManager.register();
+        CurseManager.register();
+        VillagerManager.register();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             CourtCommands.register(dispatcher);
@@ -59,11 +70,14 @@ public class RpgPoliticsMod implements ModInitializer {
             PlayerCommands.register(dispatcher);
             MarketCommands.register(dispatcher);
             GovExtrasCommands.register(dispatcher);
+            PowerCommands.register(dispatcher);
+            CurseCommands.register(dispatcher);
         });
 
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
             if (source.getEntity() instanceof ServerPlayer killer) {
                 BountyManager.onEntityDeath(entity, killer);
+                CurseManager.onEntityDeath(entity, killer);
             }
         });
 
@@ -84,6 +98,7 @@ public class RpgPoliticsMod implements ModInitializer {
             BankManager.tickInterest(server);
             MarketManager.tick(server);
             BountyManager.tick(server);
+            PowerManager.tick(server);
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
@@ -98,6 +113,7 @@ public class RpgPoliticsMod implements ModInitializer {
             ServerPlayer player = handler.player;
             StatManager.remove(player.getUUID());
             AbilityEngine.onPlayerRemoved(player.getUUID());
+            PowerManager.onPlayerRemoved(player.getUUID());
             CourtDomainManager.onPlayerRemoved(player.getUUID());
         });
 

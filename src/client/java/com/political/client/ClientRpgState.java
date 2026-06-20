@@ -4,8 +4,8 @@ package com.political.client;
 public final class ClientRpgState {
     public static volatile float defense;
     public static volatile float strength;
-    public static volatile float maxMana = 100f;
-    public static volatile float mana = 100f;
+    public static volatile float maxEnergy = 100f;
+    public static volatile float energy = 100f;
 
     private ClientRpgState() {}
 }

@@ -156,4 +156,68 @@ public final class DataManager {
     public static String titleOf(String uuid) {
         return data.titles.get(uuid);
     }
+
+    // --- Powers ---
+
+    public static java.util.List<String> knownPowers(String uuid) {
+        return data.knownPowers.computeIfAbsent(uuid, k -> new java.util.ArrayList<>());
+    }
+
+    public static boolean hasPower(String uuid, String powerId) {
+        return knownPowers(uuid).contains(powerId);
+    }
+
+    public static boolean grantPower(String uuid, String powerId) {
+        java.util.List<String> list = knownPowers(uuid);
+        if (list.contains(powerId)) return false;
+        list.add(powerId);
+        if (data.selectedPower.get(uuid) == null) data.selectedPower.put(uuid, powerId);
+        return true;
+    }
+
+    public static void revokeAllPowers(String uuid) {
+        knownPowers(uuid).clear();
+        data.selectedPower.remove(uuid);
+        data.tempPowerExpiry.remove(uuid);
+    }
+
+    public static String selectedPower(String uuid) {
+        return data.selectedPower.get(uuid);
+    }
+
+    public static void setSelectedPower(String uuid, String powerId) {
+        data.selectedPower.put(uuid, powerId);
+    }
+
+    // --- Sorcerer grade ---
+
+    public static int sorcererGrade(String uuid) {
+        return data.sorcererGrade.getOrDefault(uuid, 0);
+    }
+
+    public static void setSorcererGrade(String uuid, int grade) {
+        data.sorcererGrade.put(uuid, Math.max(0, Math.min(5, grade)));
+    }
+
+    /** Grade label: 0 none, 1 Grade 4 ... 5 Special Grade (JJK-style, inverted scale). */
+    public static String gradeLabel(int grade) {
+        return switch (grade) {
+            case 1 -> "Grade 4 Sorcerer";
+            case 2 -> "Grade 3 Sorcerer";
+            case 3 -> "Grade 2 Sorcerer";
+            case 4 -> "Grade 1 Sorcerer";
+            case 5 -> "Special Grade Sorcerer";
+            default -> "Non-sorcerer";
+        };
+    }
+
+    public static int addExorcism(String uuid) {
+        int v = data.cursesExorcised.merge(uuid, 1, Integer::sum);
+        // Auto-promote grade as curses are exorcised.
+        int[] thresholds = {3, 10, 25, 60, 120};
+        int grade = 0;
+        for (int t : thresholds) if (v >= t) grade++;
+        if (grade > sorcererGrade(uuid)) setSorcererGrade(uuid, grade);
+        return v;
+    }
 }

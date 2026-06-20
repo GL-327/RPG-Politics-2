@@ -98,4 +98,17 @@ public class PoliticsData {
     // --- World / misc tuning ---
     public double mobHealthScalingMultiplier = 1.0;
     public boolean healthScalingEnabled = true;
+
+    // --- Powers (Compound V + JJK cursed techniques) ---
+    // Known power ids per player.
+    public Map<String, List<String>> knownPowers = new HashMap<>();
+    // Currently selected power id per player.
+    public Map<String, String> selectedPower = new HashMap<>();
+    // Temp V powers expire: key = uuid -> epoch millis when temp powers are stripped (0 = none).
+    public Map<String, Long> tempPowerExpiry = new HashMap<>();
+    // Sorcerer grade per player (0 = not a sorcerer; 1..5 where 5 = Special Grade).
+    public Map<String, Integer> sorcererGrade = new HashMap<>();
+    // Lifetime curses exorcised (drives grade progression and bragging rights).
+    public Map<String, Integer> cursesExorcised = new HashMap<>();
+    public boolean curseSpawningEnabled = true;
 }

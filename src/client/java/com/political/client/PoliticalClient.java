@@ -1,45 +1,67 @@
 package com.political.client;
 
+import com.political.net.ActivatePowerC2S;
 import com.political.net.StatSyncS2C;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Client entrypoint for 26.2. Receives synced RPG stats, hides the vanilla hearts
- * (health is shown Skyblock-style in the action bar) and draws a mana bar.
+ * (health is shown Skyblock-style in the action bar) and draws an Energy bar.
  */
 public class PoliticalClient implements ClientModInitializer {
 
     private static final int BAR_WIDTH = 182;
     private static final int BAR_HEIGHT = 5;
 
+    private static KeyMapping activatePowerKey;
+
     @Override
     public void onInitializeClient() {
         ClientPlayNetworking.registerGlobalReceiver(StatSyncS2C.TYPE, (payload, context) -> {
             ClientRpgState.defense = payload.defense();
             ClientRpgState.strength = payload.strength();
-            ClientRpgState.maxMana = payload.maxMana();
-            ClientRpgState.mana = payload.mana();
+            ClientRpgState.maxEnergy = payload.maxEnergy();
+            ClientRpgState.energy = payload.energy();
         });
 
         HudElementRegistry.removeElement(VanillaHudElements.HEALTH_BAR);
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT,
-                Identifier.fromNamespaceAndPath("politicalserver", "mana_bar"),
-                PoliticalClient::renderManaBar);
+                Identifier.fromNamespaceAndPath("politicalserver", "energy_bar"),
+                PoliticalClient::renderEnergyBar);
+
+        activatePowerKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+                "key.politicalserver.activate_power",
+                InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_R,
+                KeyMapping.Category.MISC));
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            while (activatePowerKey.consumeClick()) {
+                if (client.player != null) {
+                    ClientPlayNetworking.send(new ActivatePowerC2S());
+                }
+            }
+        });
     }
 
-    private static void renderManaBar(GuiGraphicsExtractor graphics, DeltaTracker delta) {
+    private static void renderEnergyBar(GuiGraphicsExtractor graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 
-        float max = Math.max(1f, ClientRpgState.maxMana);
-        float frac = Math.max(0f, Math.min(1f, ClientRpgState.mana / max));
+        float max = Math.max(1f, ClientRpgState.maxEnergy);
+        float frac = Math.max(0f, Math.min(1f, ClientRpgState.energy / max));
 
         int screenW = mc.getWindow().getGuiScaledWidth();
         int screenH = mc.getWindow().getGuiScaledHeight();

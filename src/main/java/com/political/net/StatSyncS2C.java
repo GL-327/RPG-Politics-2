@@ -10,7 +10,7 @@ import net.minecraft.resources.Identifier;
  * Server -> client sync of the RPG stats the client cannot derive on its own.
  * Health/max-health are read from the local player; only the RPG layers travel here.
  */
-public record StatSyncS2C(float defense, float strength, float maxMana, float mana)
+public record StatSyncS2C(float defense, float strength, float maxEnergy, float energy)
         implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<StatSyncS2C> TYPE =
@@ -19,8 +19,8 @@ public record StatSyncS2C(float defense, float strength, float maxMana, float ma
     public static final StreamCodec<RegistryFriendlyByteBuf, StatSyncS2C> CODEC = StreamCodec.composite(
             ByteBufCodecs.FLOAT, StatSyncS2C::defense,
             ByteBufCodecs.FLOAT, StatSyncS2C::strength,
-            ByteBufCodecs.FLOAT, StatSyncS2C::maxMana,
-            ByteBufCodecs.FLOAT, StatSyncS2C::mana,
+            ByteBufCodecs.FLOAT, StatSyncS2C::maxEnergy,
+            ByteBufCodecs.FLOAT, StatSyncS2C::energy,
             StatSyncS2C::new);
 
     @Override
