@@ -116,6 +116,7 @@ public final class SettlementCommands {
                 + (s.governedBy.isEmpty() ? "Sovereign" : "Under " + nameOrId(s.governedBy))).withStyle(ChatFormatting.GRAY), false);
         src.sendSuccess(() -> Component.literal("  Leader: " + (s.leader.isEmpty() ? "vacant" : DataManager.nameOf(s.leader))
                 + (s.electionActive ? "  (election in progress)" : "")).withStyle(ChatFormatting.GRAY), false);
+        src.sendSuccess(() -> Component.literal("  Treasury: " + s.treasury + " coins").withStyle(ChatFormatting.GRAY), false);
     }
 
     private static int rank(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {

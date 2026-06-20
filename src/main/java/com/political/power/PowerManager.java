@@ -61,7 +61,26 @@ public final class PowerManager {
             }
             return InteractionResult.PASS;
         });
+
+        // Infinity (passive): knowing the technique lets cursed energy auto-negate incoming hits.
+        net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> {
+            if (!(entity instanceof ServerPlayer sp)) return true;
+            String uuid = sp.getStringUUID();
+            if (!DataManager.hasPower(uuid, Power.INFINITY.id())) return true;
+            if (StatManager.getCursedEnergy(sp) < 6) return true;
+            int grade = DataManager.sorcererGrade(uuid);
+            if (RNG.nextFloat() < 0.20f + 0.05f * grade) {
+                StatManager.spendCursedEnergy(sp, 6);
+                if (sp.level() instanceof ServerLevel sl) {
+                    sl.sendParticles(ParticleTypes.END_ROD, sp.getX(), sp.getY() + 1, sp.getZ(), 14, 0.4, 0.6, 0.4, 0.02);
+                }
+                return false; // hit folded into "infinity" — negated
+            }
+            return true;
+        });
     }
+
+    private static final java.util.Random RNG = new java.util.Random();
 
     // ---------------- Cooldowns ----------------
 

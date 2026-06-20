@@ -151,6 +151,7 @@ public final class SettlementManager {
 
         // Local elections every server tick (cheap; guarded inside).
         tickElections(server, d, now);
+        payStipends(server, d, now);
 
         // Don't queue a new settlement while one is still building.
         if (!d.settlementGenEnabled || !PENDING.isEmpty()) return;
@@ -259,6 +260,41 @@ public final class SettlementManager {
     // ------------------------------------------------------------------
     // Local (per-settlement) elections — rank-gated candidacy
     // ------------------------------------------------------------------
+
+    private static final long STIPEND_INTERVAL = 6L * 60 * 60 * 1000; // every 6 real hours
+
+    private static int stipendFor(SettlementType type) {
+        return switch (type) {
+            case CAPITAL -> 250;
+            case CITY -> 140;
+            case TOWN -> 70;
+            case VILLAGE -> 25;
+        };
+    }
+
+    /** Settlements accrue a local treasury and pay their Leader a periodic stipend. */
+    private static void payStipends(MinecraftServer server, PoliticsData d, long now) {
+        for (Settlement s : d.settlements.values()) {
+            if (s.nextStipend == 0L) { s.nextStipend = now + STIPEND_INTERVAL; continue; }
+            if (now < s.nextStipend) continue;
+            s.nextStipend = now + STIPEND_INTERVAL;
+
+            int income = stipendFor(s.type);
+            s.treasury += income;
+            if (!s.leader.isEmpty()) {
+                int pay = income / 2;
+                if (s.treasury >= pay) {
+                    s.treasury -= pay;
+                    DataManager.addCoins(s.leader, pay);
+                    ServerPlayer leader = server.getPlayerList().getPlayer(java.util.UUID.fromString(s.leader));
+                    if (leader != null) {
+                        leader.sendSystemMessage(Component.literal("As Leader of " + s.name
+                                + ", you collect a stipend of " + pay + " coins.").withStyle(ChatFormatting.GOLD));
+                    }
+                }
+            }
+        }
+    }
 
     private static void tickElections(MinecraftServer server, PoliticsData d, long now) {
         for (Settlement s : d.settlements.values()) {

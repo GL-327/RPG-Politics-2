@@ -21,6 +21,10 @@ public class Settlement {
     public String governedBy = "";   // settlement id, "" if sovereign
     public String leader = "";       // player uuid, "" if vacant
 
+    // Local economy.
+    public int treasury = 0;
+    public long nextStipend = 0L;    // when the Leader is next paid
+
     // Local election state (rank-gated candidacy -> vote).
     public boolean electionActive = false;
     public long electionEnd = 0L;
