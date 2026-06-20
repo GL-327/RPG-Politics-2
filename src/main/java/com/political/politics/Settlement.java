@@ -24,6 +24,7 @@ public class Settlement {
     // Local election state (rank-gated candidacy -> vote).
     public boolean electionActive = false;
     public long electionEnd = 0L;
+    public long nextElection = 0L; // when the next term election may auto-start
     public List<String> candidates = new ArrayList<>();
     public Map<String, Integer> votes = new HashMap<>();
     public List<String> voted = new ArrayList<>();

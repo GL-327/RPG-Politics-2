@@ -77,24 +77,29 @@ public final class SettlementManager {
         PoliticsData d = DataManager.data();
         if (!d.capitalId.isEmpty() && DataManager.settlement(d.capitalId) != null) return;
 
-        ServerLevel level = server.overworld();
-        BlockPos spawn = level.getRespawnData().pos();
-        int cx = spawn.getX();
-        int cz = spawn.getZ();
+        try {
+            ServerLevel level = server.overworld();
+            BlockPos spawn = level.getRespawnData().pos();
+            int cx = spawn.getX();
+            int cz = spawn.getZ();
 
-        Random rng = new Random(((long) cx << 32) ^ cz);
-        Settlement capital = SettlementGenerator.generateCapital(level, cx, cz, SettlementGenerator.pickName(rng));
-        d.capitalId = capital.id;
-        markCell(d, level, cx, cz);
+            // Make sure the spawn chunk is generated so heightmaps are valid.
+            level.getChunk(cx >> 4, cz >> 4);
 
-        // Relocate world spawn just inside the gate of the capital, facing the keep.
-        BlockPos newSpawn = new BlockPos(cx, capital.y + 1, cz + 18);
-        level.setRespawnData(net.minecraft.world.level.storage.LevelData.RespawnData.of(
-                level.dimension(), newSpawn, 180.0f, 0.0f));
+            Random rng = new Random(((long) cx << 32) ^ cz);
+            Settlement capital = SettlementGenerator.generateCapital(level, cx, cz, SettlementGenerator.pickName(rng));
+            d.capitalId = capital.id;
+            markCell(d, level, cx, cz);
 
-        server.getPlayerList().broadcastSystemMessage(
-                Component.literal("The capital of " + capital.name + " has been founded at world spawn.")
-                        .withStyle(ChatFormatting.GOLD), false);
+            // Relocate world spawn just inside the gate of the capital, facing the keep.
+            BlockPos newSpawn = new BlockPos(cx, capital.y + 1, cz + 18);
+            level.setRespawnData(net.minecraft.world.level.storage.LevelData.RespawnData.of(
+                    level.dimension(), newSpawn, 180.0f, 0.0f));
+
+            com.political.RpgPoliticsMod.LOGGER.info("Founded capital '{}' at {},{}", capital.name, cx, cz);
+        } catch (RuntimeException e) {
+            com.political.RpgPoliticsMod.LOGGER.error("Failed to found the capital at world spawn", e);
+        }
     }
 
     // ------------------------------------------------------------------
@@ -147,21 +152,31 @@ public final class SettlementManager {
 
         int gx = Math.floorDiv(px, cell);
         int gz = Math.floorDiv(pz, cell);
-        // Deterministic centre, jittered within the cell.
         Random rng = new Random((((long) gx * 73428767L) ^ ((long) gz * 912931L)) ^ 0x5DEECE66DL);
         if (rng.nextDouble() > d.settlementSpawnChance) return false;
 
-        int jitter = cell / 4;
-        int cx = gx * cell + cell / 2 + rng.nextInt(jitter * 2 + 1) - jitter;
-        int cz = gz * cell + cell / 2 + rng.nextInt(jitter * 2 + 1) - jitter;
+        // Place the settlement a short, deterministic distance from the player so it always
+        // lands in already-loaded chunks (correct heightmap, no floating/buried builds).
+        double angle = rng.nextDouble() * Math.PI * 2;
+        int dist = 64 + rng.nextInt(48);
+        int cx = px + (int) Math.round(Math.cos(angle) * dist);
+        int cz = pz + (int) Math.round(Math.sin(angle) * dist);
+
+        if (!level.isLoaded(new BlockPos(cx, level.getSeaLevel(), cz))) return false;
 
         // Don't crowd existing settlements.
         Settlement near = DataManager.nearestSettlement(level.dimension().identifier().toString(), cx, cz);
-        if (near != null && near.distSq(cx, cz) < (double) cell * cell * 0.36) return false;
+        if (near != null && near.distSq(cx, cz) < 90.0 * 90.0) return false;
 
         SettlementType type = rollType(rng);
         String name = SettlementGenerator.pickName(rng);
-        Settlement s = SettlementGenerator.generate(level, cx, cz, type, name);
+        Settlement s;
+        try {
+            s = SettlementGenerator.generate(level, cx, cz, type, name);
+        } catch (RuntimeException e) {
+            com.political.RpgPoliticsMod.LOGGER.error("Settlement generation failed at {},{}", cx, cz, e);
+            return false;
+        }
 
         level.getServer().getPlayerList().broadcastSystemMessage(
                 Component.literal("A new " + type.display.toLowerCase() + ", " + name
@@ -208,6 +223,13 @@ public final class SettlementManager {
         for (Settlement s : d.settlements.values()) {
             if (s.electionActive) {
                 if (now >= s.electionEnd) endElection(server, s);
+                continue;
+            }
+            // Auto-start a local election when the seat is vacant or the term has expired,
+            // provided at least one citizen has climbed to Councilor (the candidacy gate).
+            boolean termOver = s.leader.isEmpty() || (s.nextElection != 0L && now >= s.nextElection);
+            if (termOver && !eligibleCandidates(s).isEmpty()) {
+                startElection(server, s);
             }
         }
     }
@@ -224,12 +246,24 @@ public final class SettlementManager {
     public static boolean startElection(MinecraftServer server, Settlement s) {
         List<String> pool = eligibleCandidates(s);
         if (pool.isEmpty()) return false;
+
+        // Uncontested: the sole eligible Councilor takes office immediately.
+        if (pool.size() == 1) {
+            s.electionActive = false;
+            s.leader = pool.get(0);
+            s.nextElection = System.currentTimeMillis() + DataManager.data().settlementTermMillis;
+            server.getPlayerList().broadcastSystemMessage(Component.literal(
+                    DataManager.nameOf(s.leader) + " has become Leader of " + s.name + " unopposed.")
+                    .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
+            return true;
+        }
+
         s.candidates = new ArrayList<>(pool);
         s.votes.clear();
         s.voted.clear();
         for (String c : s.candidates) s.votes.put(c, 0);
         s.electionActive = true;
-        s.electionEnd = System.currentTimeMillis() + Math.min(DataManager.data().settlementTermMillis, 24L * 60 * 60 * 1000);
+        s.electionEnd = System.currentTimeMillis() + 10L * 60 * 1000; // 10-minute voting window
         StringBuilder sb = new StringBuilder();
         for (String c : s.candidates) {
             if (sb.length() > 0) sb.append(", ");
@@ -258,6 +292,7 @@ public final class SettlementManager {
                 .max(Comparator.comparingInt(Map.Entry::getValue))
                 .map(Map.Entry::getKey).orElse("");
         s.leader = winner;
+        s.nextElection = System.currentTimeMillis() + DataManager.data().settlementTermMillis;
         server.getPlayerList().broadcastSystemMessage(Component.literal(
                 "New Leader of " + s.name + ": " + (winner.isEmpty() ? "vacant" : DataManager.nameOf(winner)))
                 .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);

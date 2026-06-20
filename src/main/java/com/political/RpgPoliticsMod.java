@@ -111,6 +111,9 @@ public class RpgPoliticsMod implements ModInitializer {
             PowerManager.tick(server);
             CurseManager.tick(server);
             com.political.world.SettlementManager.tick(server);
+
+            // Periodic autosave (every 5 minutes) so progression survives crashes.
+            if (server.getTickCount() % 6000 == 0) DataManager.save(server);
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
