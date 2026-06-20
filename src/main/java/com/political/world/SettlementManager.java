@@ -11,6 +11,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.npc.villager.Villager;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,10 +37,12 @@ public final class SettlementManager {
     private static final class Pending {
         final ServerLevel level;
         final BuildBuffer buffer;
+        final Settlement settlement;
         int cursor = 0;
-        Pending(ServerLevel level, BuildBuffer buffer) {
+        Pending(ServerLevel level, BuildBuffer buffer, Settlement settlement) {
             this.level = level;
             this.buffer = buffer;
+            this.settlement = settlement;
         }
     }
 
@@ -47,7 +52,7 @@ public final class SettlementManager {
     public static Settlement queueBuild(ServerLevel level, int cx, int cz, SettlementType type, String name) {
         BuildBuffer buffer = new BuildBuffer();
         Settlement s = SettlementGenerator.planInto(buffer, level, cx, cz, type, name);
-        PENDING.addLast(new Pending(level, buffer));
+        PENDING.addLast(new Pending(level, buffer, s));
         return s;
     }
 
@@ -61,7 +66,41 @@ public final class SettlementManager {
                 p.level.setBlock(new BlockPos(op.x, op.y, op.z), op.state, 2);
                 budget--;
             }
-            if (p.cursor >= ops.size()) PENDING.removeFirst();
+            if (p.cursor >= ops.size()) {
+                PENDING.removeFirst();
+                // Structure finished streaming in: bring it to life with citizens.
+                if (p.settlement != null) populate(p.level, p.settlement);
+            }
+        }
+    }
+
+    private static int populationFor(SettlementType type) {
+        return switch (type) {
+            case CAPITAL -> 16;
+            case CITY -> 12;
+            case TOWN -> 7;
+            case VILLAGE -> 4;
+        };
+    }
+
+    /** Spawns villager-citizens around a finished settlement; they auto-enrol into its politics. */
+    public static void populate(ServerLevel level, Settlement s) {
+        int count = populationFor(s.type);
+        int radius = switch (s.type) {
+            case CAPITAL -> 22;
+            case CITY -> 28;
+            case TOWN -> 16;
+            case VILLAGE -> 8;
+        };
+        Random rng = new Random(s.id.hashCode());
+        for (int i = 0; i < count; i++) {
+            int x = s.x + rng.nextInt(radius * 2 + 1) - radius;
+            int z = s.z + rng.nextInt(radius * 2 + 1) - radius;
+            Villager v = EntityTypes.VILLAGER.create(level, EntitySpawnReason.MOB_SUMMONED);
+            if (v == null) continue;
+            v.setPos(x + 0.5, s.y + 1.5, z + 0.5);
+            v.setPersistenceRequired();
+            level.addFreshEntity(v);
         }
     }
 
@@ -96,8 +135,19 @@ public final class SettlementManager {
         p.sendSystemMessage(Component.literal("You: " + (citizen ? "citizen, " : "visitor, ") + "rank " + r.display
                 + (DataManager.canStandForElection(p.getStringUUID()) ? " (eligible for Leader)" : ""))
                 .withStyle(r.color));
+        p.sendSystemMessage(Component.literal("Population: " + populationOf(s.id) + " registered citizens.")
+                .withStyle(ChatFormatting.DARK_GRAY));
         p.sendSystemMessage(Component.literal("Use /settlement advance to climb the ranks, /settlement here for details.")
                 .withStyle(ChatFormatting.DARK_GRAY));
+    }
+
+    /** Counts everyone (players + villagers) registered as citizens of a settlement. */
+    public static int populationOf(String settlementId) {
+        int n = 0;
+        for (String sid : DataManager.data().citizenship.values()) {
+            if (settlementId.equals(sid)) n++;
+        }
+        return n;
     }
 
     private static String nameOf(String id) {
@@ -126,6 +176,7 @@ public final class SettlementManager {
             Settlement capital = SettlementGenerator.generateCapital(level, cx, cz, SettlementGenerator.pickName(rng));
             d.capitalId = capital.id;
             markCell(d, level, cx, cz);
+            populate(level, capital);
 
             // Relocate world spawn just inside the gate of the capital, facing the keep.
             BlockPos newSpawn = new BlockPos(cx, capital.y + 1, cz + 18);
@@ -133,6 +184,10 @@ public final class SettlementManager {
                     level.dimension(), newSpawn, 180.0f, 0.0f));
 
             com.political.RpgPoliticsMod.LOGGER.info("Founded capital '{}' at {},{}", capital.name, cx, cz);
+
+            if (System.getenv("SETTLEMENT_PREVIEW") != null) {
+                SettlementPreview.renderAll(level);
+            }
         } catch (RuntimeException e) {
             com.political.RpgPoliticsMod.LOGGER.error("Failed to found the capital at world spawn", e);
         }
@@ -218,7 +273,7 @@ public final class SettlementManager {
             com.political.RpgPoliticsMod.LOGGER.error("Settlement generation failed at {},{}", cx, cz, e);
             return false;
         }
-        PENDING.addLast(new Pending(level, buffer));
+        PENDING.addLast(new Pending(level, buffer, s));
 
         level.getServer().getPlayerList().broadcastSystemMessage(
                 Component.literal("A new " + type.display.toLowerCase() + ", " + name

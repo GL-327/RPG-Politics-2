@@ -81,6 +81,18 @@ public final class Build {
         }
     }
 
+    /** Fills a {@code thickness}-wide border ring of a rectangle at a single y (e.g. a rampart walkway). */
+    public static void borderRing(ServerLevel level, int x0, int z0, int x1, int z1, int y, int thickness, Block block) {
+        int minX = Math.min(x0, x1), maxX = Math.max(x0, x1);
+        int minZ = Math.min(z0, z1), maxZ = Math.max(z0, z1);
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                int edge = Math.min(Math.min(x - minX, maxX - x), Math.min(z - minZ, maxZ - z));
+                if (edge < thickness) set(level, x, y, z, block);
+            }
+        }
+    }
+
     /** A crenellated parapet (alternating merlons) along the top edge of a rectangle. */
     public static void crenellate(ServerLevel level, int x0, int z0, int x1, int z1, int y, Block block) {
         int minX = Math.min(x0, x1), maxX = Math.max(x0, x1);

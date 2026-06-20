@@ -5,6 +5,7 @@ import com.political.politics.DataManager;
 import com.political.politics.Settlement;
 import com.political.politics.SettlementType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -83,88 +84,139 @@ public final class SettlementGenerator {
     }
 
     // ------------------------------------------------------------------
-    // Capital castle
+    // Capital castle — a HUGE fortified town inside curtain walls
     // ------------------------------------------------------------------
 
     private static void buildCastle(ServerLevel level, int cx, int cz, int baseY, Random rng) {
-        int half = 24;
+        int half = 46; // ~92x92 walled bailey
         int x0 = cx - half, z0 = cz - half, x1 = cx + half, z1 = cz + half;
 
-        // Clear the build volume and lay a courtyard platform.
-        Build.clear(level, x0 - 1, baseY, z0 - 1, x1 + 1, baseY + 28, z1 + 1);
-        Build.foundation(level, x0, z0, x1, z1, baseY, ModBlocks.CASTLE_BRICKS);
+        // Clear the build volume and lay the bailey ground + foundation.
+        Build.clear(level, x0 - 2, baseY, z0 - 2, x1 + 2, baseY + 34, z1 + 2);
+        Build.foundation(level, x0 - 1, z0 - 1, x1 + 1, z1 + 1, baseY, ModBlocks.CASTLE_BRICKS);
         Build.floor(level, x0, z0, x1, z1, baseY - 1, ModBlocks.COBBLE_STREET);
 
-        // Outer curtain wall with crenellations.
-        int wallH = 7;
+        // Double-thick curtain wall with a walkable rampart + crenellations.
+        int wallH = 11;
         Build.walls(level, x0, z0, x1, z1, baseY, wallH, ModBlocks.CASTLE_BRICKS);
+        Build.walls(level, x0 + 1, z0 + 1, x1 - 1, z1 - 1, baseY, wallH, ModBlocks.CASTLE_BRICKS);
+        Build.borderRing(level, x0, z0, x1, z1, baseY + wallH - 1, 2, ModBlocks.CASTLE_BRICKS);
         Build.crenellate(level, x0, z0, x1, z1, baseY + wallH, ModBlocks.CASTLE_BRICKS);
-
-        // Corner towers.
-        cornerTower(level, x0, z0, baseY, ModBlocks.CASTLE_PILLAR);
-        cornerTower(level, x1 - 4, z0, baseY, ModBlocks.CASTLE_PILLAR);
-        cornerTower(level, x0, z1 - 4, baseY, ModBlocks.CASTLE_PILLAR);
-        cornerTower(level, x1 - 4, z1 - 4, baseY, ModBlocks.CASTLE_PILLAR);
-
-        // Gatehouse: carve a 3-wide opening in the south wall.
-        Build.clear(level, cx - 1, baseY, z1, cx + 1, baseY + 3, z1);
-        Build.set(level, cx - 2, baseY + wallH + 1, z1, ModBlocks.ROYAL_BANNER_BLOCK);
-        Build.set(level, cx + 2, baseY + wallH + 1, z1, ModBlocks.ROYAL_BANNER_BLOCK);
-        // Road from the gate to the keep.
-        Build.floor(level, cx - 1, cz, cx + 1, z1, baseY - 1, ModBlocks.PAVED_ROAD);
-
-        // Central keep.
-        int kh = 7; // keep half-width (14x14)
-        int keepH = 18;
-        int kx0 = cx - kh, kz0 = cz - kh, kx1 = cx + kh, kz1 = cz + kh;
-        Build.walls(level, kx0, kz0, kx1, kz1, baseY, keepH, ModBlocks.CASTLE_BRICKS);
-        Build.floor(level, kx0, kz0, kx1, kz1, baseY - 1, ModBlocks.CASTLE_BRICKS);
-        // Floors every 5 blocks.
-        for (int fy = baseY + 5; fy < baseY + keepH; fy += 5) {
-            Build.floor(level, kx0 + 1, kz0 + 1, kx1 - 1, kz1 - 1, fy, ModBlocks.CASTLE_BRICKS);
-        }
-        // Roof + crenellations + banners.
-        Build.floor(level, kx0, kz0, kx1, kz1, baseY + keepH, ModBlocks.CASTLE_BRICKS);
-        Build.crenellate(level, kx0, kz0, kx1, kz1, baseY + keepH + 1, ModBlocks.CASTLE_PILLAR);
-        Build.set(level, cx, baseY + keepH + 2, cz, ModBlocks.ROYAL_BANNER_BLOCK);
-        // Windows up the keep.
-        for (int fy = baseY + 2; fy < baseY + keepH; fy += 3) {
-            Build.set(level, kx0, fy, cz, Blocks.GLASS);
-            Build.set(level, kx1, fy, cz, Blocks.GLASS);
-            Build.set(level, cx, fy, kz0, Blocks.GLASS);
-        }
-        // Keep doorway facing the gate.
-        Build.clear(level, cx - 1, baseY, kz1, cx + 1, baseY + 2, kz1);
-
-        // Throne room: the governance node.
-        Build.floor(level, cx - 2, cz - 2, cx + 2, cz + 2, baseY, ModBlocks.ROYAL_BANNER_BLOCK);
-        Build.set(level, cx, baseY + 1, cz, ModBlocks.CIVIC_MARKER);
-        Build.set(level, cx - 3, baseY + 1, cz - 3, ModBlocks.STREET_LAMP);
-        Build.set(level, cx + 3, baseY + 1, cz - 3, ModBlocks.STREET_LAMP);
-
-        // A ring of street lamps along the courtyard and a few houses.
+        // Wall torches along the rampart.
         for (int x = x0 + 4; x <= x1 - 4; x += 8) {
-            lampPost(level, x, baseY, z0 + 3);
-            lampPost(level, x, baseY, z1 - 3);
+            Build.set(level, x, baseY + wallH, z0 + 1, ModBlocks.STREET_LAMP);
+            Build.set(level, x, baseY + wallH, z1 - 1, ModBlocks.STREET_LAMP);
         }
-        buildHouse(level, x0 + 4, z0 + 4, baseY, 7, 6, 4, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
-        buildHouse(level, x1 - 11, z0 + 4, baseY, 7, 6, 4, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
-        buildHouse(level, x0 + 4, z1 - 10, baseY, 7, 6, 4, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
 
-        // Inner wall walkway (one block in from the parapet) so the ramparts are walkable.
-        Build.walls(level, x0 + 1, z0 + 1, x1 - 1, z1 - 1, baseY + wallH - 1, 1, ModBlocks.CASTLE_BRICKS);
-        // Courtyard greenery flanking the approach.
-        Build.garden(level, cx - 6, cz + 4, cx - 3, cz + 10, baseY, rng);
-        Build.garden(level, cx + 3, cz + 4, cx + 6, cz + 10, baseY, rng);
-        Build.tree(level, cx - 8, baseY, cz + 8);
-        Build.tree(level, cx + 8, baseY, cz + 8);
+        // Four grand corner towers.
+        cornerTower(level, x0 - 1, z0 - 1, baseY, wallH + 6);
+        cornerTower(level, x1 - 5, z0 - 1, baseY, wallH + 6);
+        cornerTower(level, x0 - 1, z1 - 5, baseY, wallH + 6);
+        cornerTower(level, x1 - 5, z1 - 5, baseY, wallH + 6);
+
+        // South gatehouse: two flanking towers + a 5-wide gate.
+        gateTower(level, cx - 6, z1 - 4, baseY, wallH + 4);
+        gateTower(level, cx + 2, z1 - 4, baseY, wallH + 4);
+        Build.clear(level, cx - 2, baseY, z1 - 1, cx + 2, baseY + 4, z1 + 1);
+        Build.set(level, cx - 3, baseY + wallH + 1, z1, ModBlocks.ROYAL_BANNER_BLOCK);
+        Build.set(level, cx + 3, baseY + wallH + 1, z1, ModBlocks.ROYAL_BANNER_BLOCK);
+
+        // Packed inner districts (medieval houses on a street grid), reserving the centre
+        // for the royal palace and the central avenue.
+        int m = 6;
+        districtFill(level, x0 + m, z0 + m, x1 - m, z1 - m, baseY, 12, cx, cz, 13,
+                rng, ModBlocks.COBBLE_STREET, false);
+
+        // Grand processional avenue from the gate to the palace steps.
+        Build.clear(level, cx - 2, baseY, cz + 11, cx + 2, baseY + 7, z1 - 1);
+        Build.floor(level, cx - 2, cz + 11, cx + 2, z1 - 1, baseY - 1, ModBlocks.PAVED_ROAD);
+        for (int z = cz + 13; z <= z1 - 3; z += 6) {
+            lampPost(level, cx - 3, baseY, z);
+            lampPost(level, cx + 3, baseY, z);
+        }
+
+        // The royal palace — governance node — at the heart of the bailey.
+        buildKeep(level, cx, cz, baseY, 11, 26, rng);
+
+        // Formal gardens flanking the palace approach.
+        Build.garden(level, cx - 9, cz + 4, cx - 4, cz + 10, baseY, rng);
+        Build.garden(level, cx + 4, cz + 4, cx + 9, cz + 10, baseY, rng);
+        Build.tree(level, cx - 11, baseY, cz + 9);
+        Build.tree(level, cx + 11, baseY, cz + 9);
+        Build.tree(level, cx - 11, baseY, cz - 9);
+        Build.tree(level, cx + 11, baseY, cz - 9);
     }
 
-    private static void cornerTower(ServerLevel level, int x, int z, int baseY, Block block) {
-        int h = 12;
-        Build.walls(level, x, z, x + 4, z + 4, baseY, h, block);
-        Build.crenellate(level, x, z, x + 4, z + 4, baseY + h, block);
-        Build.set(level, x + 2, baseY + h, z + 2, ModBlocks.STREET_LAMP);
+    /** A grand multi-storey palace/keep used as the capital governance node. */
+    private static void buildKeep(ServerLevel level, int cx, int cz, int baseY, int half, int height, Random rng) {
+        int x0 = cx - half, z0 = cz - half, x1 = cx + half, z1 = cz + half;
+        Build.clear(level, x0, baseY, z0, x1, baseY + height + 8, z1);
+        Build.foundation(level, x0, z0, x1, z1, baseY, ModBlocks.CASTLE_BRICKS);
+        Build.floor(level, x0, z0, x1, z1, baseY - 1, ModBlocks.CASTLE_BRICKS);
+        Build.walls(level, x0, z0, x1, z1, baseY, height, ModBlocks.CASTLE_BRICKS);
+
+        // Pillared corners running the full height.
+        Build.cube(level, x0, baseY, z0, x0, baseY + height, z0, ModBlocks.CASTLE_PILLAR);
+        Build.cube(level, x1, baseY, z0, x1, baseY + height, z0, ModBlocks.CASTLE_PILLAR);
+        Build.cube(level, x0, baseY, z1, x0, baseY + height, z1, ModBlocks.CASTLE_PILLAR);
+        Build.cube(level, x1, baseY, z1, x1, baseY + height, z1, ModBlocks.CASTLE_PILLAR);
+
+        // Interior floors every 5 blocks.
+        for (int fy = baseY + 5; fy < baseY + height; fy += 5) {
+            Build.floor(level, x0 + 1, z0 + 1, x1 - 1, z1 - 1, fy, ModBlocks.CASTLE_BRICKS);
+        }
+        // Window bands.
+        for (int fy = baseY + 2; fy < baseY + height; fy += 4) {
+            for (int x = x0 + 2; x < x1; x += 3) {
+                Build.set(level, x, fy, z0, Blocks.GLASS);
+                Build.set(level, x, fy, z1, Blocks.GLASS);
+            }
+            for (int z = z0 + 2; z < z1; z += 3) {
+                Build.set(level, x0, fy, z, Blocks.GLASS);
+                Build.set(level, x1, fy, z, Blocks.GLASS);
+            }
+        }
+        // Battlemented roof + corner banners.
+        Build.floor(level, x0, z0, x1, z1, baseY + height, ModBlocks.CASTLE_BRICKS);
+        Build.crenellate(level, x0, z0, x1, z1, baseY + height + 1, ModBlocks.CASTLE_PILLAR);
+        Build.set(level, x0 + 1, baseY + height + 2, z0 + 1, ModBlocks.ROYAL_BANNER_BLOCK);
+        Build.set(level, x1 - 1, baseY + height + 2, z0 + 1, ModBlocks.ROYAL_BANNER_BLOCK);
+        Build.set(level, x0 + 1, baseY + height + 2, z1 - 1, ModBlocks.ROYAL_BANNER_BLOCK);
+        Build.set(level, x1 - 1, baseY + height + 2, z1 - 1, ModBlocks.ROYAL_BANNER_BLOCK);
+        Build.set(level, cx, baseY + height + 3, cz, ModBlocks.ROYAL_BANNER_BLOCK);
+
+        // Grand south entrance with steps.
+        Build.clear(level, cx - 2, baseY, z1, cx + 2, baseY + 4, z1);
+        for (int dx = -2; dx <= 2; dx++) Build.stair(level, cx + dx, baseY - 1, z1 + 1, Blocks.DARK_OAK_STAIRS, Direction.NORTH);
+
+        // Throne room: the governance node, carpeted in royal red.
+        Build.floor(level, cx - 3, cz - 3, cx + 3, cz + 3, baseY, ModBlocks.ROYAL_BANNER_BLOCK);
+        Build.set(level, cx, baseY + 1, cz, ModBlocks.CIVIC_MARKER);
+        Build.set(level, cx - 4, baseY + 1, cz - 4, ModBlocks.STREET_LAMP);
+        Build.set(level, cx + 4, baseY + 1, cz - 4, ModBlocks.STREET_LAMP);
+        Build.set(level, cx - 4, baseY + 1, cz + 4, ModBlocks.STREET_LAMP);
+        Build.set(level, cx + 4, baseY + 1, cz + 4, ModBlocks.STREET_LAMP);
+    }
+
+    private static void cornerTower(ServerLevel level, int x, int z, int baseY, int h) {
+        int s = 6;
+        Build.foundation(level, x, z, x + s, z + s, baseY, ModBlocks.CASTLE_PILLAR);
+        Build.walls(level, x, z, x + s, z + s, baseY, h, ModBlocks.CASTLE_PILLAR);
+        Build.crenellate(level, x, z, x + s, z + s, baseY + h, ModBlocks.CASTLE_PILLAR);
+        for (int fy = baseY + 3; fy < baseY + h; fy += 4) {
+            Build.set(level, x + s / 2, fy, z, Blocks.GLASS);
+            Build.set(level, x, fy, z + s / 2, Blocks.GLASS);
+        }
+        Build.set(level, x + s / 2, baseY + h, z + s / 2, ModBlocks.STREET_LAMP);
+        Build.set(level, x + s / 2, baseY + h + 1, z + s / 2, ModBlocks.ROYAL_BANNER_BLOCK);
+    }
+
+    private static void gateTower(ServerLevel level, int x, int z, int baseY, int h) {
+        int s = 4;
+        Build.foundation(level, x, z, x + s, z + s, baseY, ModBlocks.CASTLE_BRICKS);
+        Build.walls(level, x, z, x + s, z + s, baseY, h, ModBlocks.CASTLE_BRICKS);
+        Build.crenellate(level, x, z, x + s, z + s, baseY + h, ModBlocks.CASTLE_BRICKS);
+        Build.set(level, x + s / 2, baseY + h, z + s / 2, ModBlocks.STREET_LAMP);
     }
 
     // ------------------------------------------------------------------
@@ -172,73 +224,85 @@ public final class SettlementGenerator {
     // ------------------------------------------------------------------
 
     private static void buildCity(ServerLevel level, int cx, int cz, int baseY, Random rng) {
-        int half = 32;
+        int half = 50; // 100x100
         int x0 = cx - half, z0 = cz - half, x1 = cx + half, z1 = cz + half;
 
-        Build.clear(level, x0, baseY, z0, x1, baseY + 24, z1);
-        Build.foundation(level, x0, z0, x1, z1, baseY, ModBlocks.MODERN_FACADE);
+        Build.clear(level, x0, baseY, z0, x1, baseY + 36, z1);
         Build.floor(level, x0, z0, x1, z1, baseY - 1, ModBlocks.PAVED_ROAD);
 
-        // Street grid every 12 blocks -> 8x8 building plots between.
-        int step = 12;
-        for (int gx = x0; gx <= x1; gx += step) Build.cube(level, gx, baseY - 1, z0, gx + 1, baseY - 1, z1, ModBlocks.COBBLE_STREET);
-        for (int gz = z0; gz <= z1; gz += step) Build.cube(level, x0, baseY - 1, gz, x1, baseY - 1, gz + 1, ModBlocks.COBBLE_STREET);
+        // Varied modern blocks on a 14-block street grid, central plaza reserved.
+        districtFill(level, x0, z0, x1, z1, baseY, 14, cx, cz, 14, rng, ModBlocks.PAVED_ROAD, true);
 
-        for (int bx = x0 + 2; bx + 8 <= x1 - 2; bx += step) {
-            for (int bz = z0 + 2; bz + 8 <= z1 - 2; bz += step) {
-                if (Math.abs(bx - cx) < 8 && Math.abs(bz - cz) < 8) continue; // leave room for town hall
-                int floors = 2 + rng.nextInt(5);
-                buildModernBuilding(level, bx, bz, baseY, 8, 8, floors, rng);
-                lampPost(level, bx - 1, baseY, bz - 1);
-            }
+        // Central civic plaza: park, fountain, and the town hall.
+        Build.floor(level, cx - 12, cz - 12, cx + 12, cz + 12, baseY - 1, ModBlocks.PAVED_ROAD);
+        Build.garden(level, cx - 11, cz + 5, cx - 5, cz + 11, baseY, rng);
+        Build.garden(level, cx + 5, cz + 5, cx + 11, cz + 11, baseY, rng);
+        Build.tree(level, cx - 9, baseY, cz + 8);
+        Build.tree(level, cx + 9, baseY, cz + 8);
+        Build.tree(level, cx - 9, baseY, cz - 9);
+        Build.tree(level, cx + 9, baseY, cz - 9);
+        fountain(level, cx, cz - 9, baseY);
+        for (int a = -11; a <= 11; a += 11) {
+            lampPost(level, cx + a, baseY, cz - 11);
+            lampPost(level, cx + a, baseY, cz + 11);
         }
-
-        // Central town hall = governance node.
         buildTownHall(level, cx, cz, baseY, rng);
     }
 
     private static void buildModernBuilding(ServerLevel level, int x, int z, int baseY, int w, int d, int floors, Random rng) {
         int h = floors * 3;
-        Build.walls(level, x, z, x + w - 1, z + d - 1, baseY, h, ModBlocks.MODERN_FACADE);
-        Build.floor(level, x, z, x + w - 1, z + d - 1, baseY - 1, ModBlocks.MODERN_FACADE);
-        Build.floor(level, x, z, x + w - 1, z + d - 1, baseY + h, ModBlocks.MODERN_FACADE);
+        Block facade = rng.nextInt(4) == 0 ? ModBlocks.TOWN_HALL_BRICKS : ModBlocks.MODERN_FACADE;
+        Build.clear(level, x, baseY, z, x + w - 1, baseY + h + 2, z + d - 1);
+        Build.foundation(level, x, z, x + w - 1, z + d - 1, baseY, facade);
+        Build.walls(level, x, z, x + w - 1, z + d - 1, baseY, h, facade);
+        Build.floor(level, x, z, x + w - 1, z + d - 1, baseY - 1, facade);
+        Build.floor(level, x, z, x + w - 1, z + d - 1, baseY + h, facade);
         // Window bands on each floor.
         for (int f = 0; f < floors; f++) {
             int wy = baseY + 1 + f * 3;
-            for (int wx = x + 1; wx < x + w - 1; wx += 2) {
+            for (int wx = x + 1; wx < x + w - 1; wx++) {
                 Build.set(level, wx, wy, z, ModBlocks.MODERN_WINDOW);
                 Build.set(level, wx, wy, z + d - 1, ModBlocks.MODERN_WINDOW);
+                Build.set(level, wx, wy + 1, z, ModBlocks.MODERN_WINDOW);
+                Build.set(level, wx, wy + 1, z + d - 1, ModBlocks.MODERN_WINDOW);
             }
-            for (int wz = z + 1; wz < z + d - 1; wz += 2) {
+            for (int wz = z + 1; wz < z + d - 1; wz++) {
                 Build.set(level, x, wy, wz, ModBlocks.MODERN_WINDOW);
                 Build.set(level, x + w - 1, wy, wz, ModBlocks.MODERN_WINDOW);
+                Build.set(level, x, wy + 1, wz, ModBlocks.MODERN_WINDOW);
+                Build.set(level, x + w - 1, wy + 1, wz, ModBlocks.MODERN_WINDOW);
             }
         }
-        // Ground-floor entrance.
+        // Ground-floor glass entrance + rooftop beacon.
+        Build.set(level, x + w / 2, baseY, z, Blocks.GLASS);
         Build.clear(level, x + w / 2, baseY, z, x + w / 2, baseY + 1, z);
         Build.set(level, x + w / 2, baseY + h + 1, z + d / 2, ModBlocks.STREET_LAMP);
     }
 
     private static void buildTownHall(ServerLevel level, int cx, int cz, int baseY, Random rng) {
-        int half = 6;
+        int half = 8;
         int x0 = cx - half, z0 = cz - half, x1 = cx + half, z1 = cz + half;
-        Build.clear(level, x0, baseY, z0, x1, baseY + 12, z1);
+        Build.clear(level, x0, baseY, z0, x1, baseY + 16, z1);
+        Build.foundation(level, x0, z0, x1, z1, baseY, ModBlocks.TOWN_HALL_BRICKS);
         Build.floor(level, x0, z0, x1, z1, baseY - 1, ModBlocks.TOWN_HALL_BRICKS);
-        Build.walls(level, x0, z0, x1, z1, baseY, 8, ModBlocks.TOWN_HALL_BRICKS);
-        Build.floor(level, x0, z0, x1, z1, baseY + 8, ModBlocks.TOWN_HALL_BRICKS);
-        Build.crenellate(level, x0, z0, x1, z1, baseY + 9, ModBlocks.CASTLE_PILLAR);
-        // Columned facade + entrance.
-        for (int x = x0; x <= x1; x += 2) Build.cube(level, x, baseY, z1, x, baseY + 6, z1, ModBlocks.CASTLE_PILLAR);
-        Build.clear(level, cx - 1, baseY, z1, cx + 1, baseY + 3, z1);
-        // Windows.
-        for (int x = x0 + 1; x < x1; x += 2) {
+        Build.walls(level, x0, z0, x1, z1, baseY, 11, ModBlocks.TOWN_HALL_BRICKS);
+        Build.floor(level, x0, z0, x1, z1, baseY + 11, ModBlocks.TOWN_HALL_BRICKS);
+        Build.crenellate(level, x0, z0, x1, z1, baseY + 12, ModBlocks.CASTLE_PILLAR);
+        // Pillared portico across the front, with a clock tower above the door.
+        for (int x = x0; x <= x1; x += 2) Build.cube(level, x, baseY, z1, x, baseY + 8, z1, ModBlocks.CASTLE_PILLAR);
+        Build.clear(level, cx - 1, baseY, z1, cx + 1, baseY + 4, z1);
+        Build.cube(level, cx - 1, baseY + 12, cz, cx + 1, baseY + 16, cz, ModBlocks.TOWN_HALL_BRICKS);
+        Build.set(level, cx, baseY + 17, cz, ModBlocks.STREET_LAMP);
+        // Window bands.
+        for (int x = x0 + 2; x < x1; x += 2) {
             Build.set(level, x, baseY + 3, z0, ModBlocks.MODERN_WINDOW);
+            Build.set(level, x, baseY + 6, z0, ModBlocks.MODERN_WINDOW);
         }
-        // Governance node.
+        // Governance node + banners.
         Build.set(level, cx, baseY + 1, cz, ModBlocks.CIVIC_MARKER);
-        Build.set(level, cx, baseY + 7, cz, ModBlocks.ROYAL_BANNER_BLOCK);
-        Build.set(level, cx - 2, baseY + 1, cz, ModBlocks.STREET_LAMP);
-        Build.set(level, cx + 2, baseY + 1, cz, ModBlocks.STREET_LAMP);
+        Build.set(level, cx, baseY + 10, cz, ModBlocks.ROYAL_BANNER_BLOCK);
+        Build.set(level, cx - 3, baseY + 1, cz, ModBlocks.STREET_LAMP);
+        Build.set(level, cx + 3, baseY + 1, cz, ModBlocks.STREET_LAMP);
     }
 
     // ------------------------------------------------------------------
@@ -246,79 +310,145 @@ public final class SettlementGenerator {
     // ------------------------------------------------------------------
 
     private static void buildTown(ServerLevel level, int cx, int cz, int baseY, Random rng) {
-        int half = 16;
+        int half = 30; // 60x60
         int x0 = cx - half, z0 = cz - half, x1 = cx + half, z1 = cz + half;
-        Build.clear(level, x0, baseY, z0, x1, baseY + 14, z1);
-        Build.foundation(level, x0, z0, x1, z1, baseY, ModBlocks.COBBLE_STREET);
+        Build.clear(level, x0, baseY, z0, x1, baseY + 18, z1);
         Build.floor(level, x0, z0, x1, z1, baseY - 1, Blocks.GRASS_BLOCK);
-        // Cross streets.
-        Build.cube(level, cx - 1, baseY - 1, z0, cx + 1, baseY - 1, z1, ModBlocks.COBBLE_STREET);
-        Build.cube(level, x0, baseY - 1, cz - 1, x1, baseY - 1, cz + 1, ModBlocks.COBBLE_STREET);
 
+        districtFill(level, x0, z0, x1, z1, baseY, 12, cx, cz, 10, rng, Blocks.GRASS_BLOCK, false);
+
+        // Central market square with the town hall.
+        Build.floor(level, cx - 8, cz - 8, cx + 8, cz + 8, baseY - 1, ModBlocks.COBBLE_STREET);
         buildTownHall(level, cx, cz, baseY, rng);
-
-        // Ring of houses.
-        int[][] spots = {
-                {x0 + 3, z0 + 3}, {x1 - 10, z0 + 3}, {x0 + 3, z1 - 9}, {x1 - 10, z1 - 9},
-                {cx - 4, z0 + 3}, {cx - 4, z1 - 9}
-        };
-        for (int[] sp : spots) {
-            buildHouse(level, sp[0], sp[1], baseY, 7, 6, 4, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
+        well(level, cx + 6, cz + 6, baseY);
+        Build.tree(level, cx - 7, baseY, cz + 7);
+        Build.tree(level, cx - 7, baseY, cz - 7);
+        for (int a = -8; a <= 8; a += 8) {
+            lampPost(level, cx + a, baseY, cz - 8);
+            lampPost(level, cx + a, baseY, cz + 8);
         }
-        for (int x = x0 + 4; x <= x1 - 4; x += 10) {
-            lampPost(level, x, baseY, cz - 2);
-            lampPost(level, x, baseY, cz + 2);
-        }
-        // Greenery: corner gardens and a few trees.
-        Build.garden(level, x0 + 1, z0 + 1, x0 + 5, z0 + 5, baseY, rng);
-        Build.garden(level, x1 - 5, z1 - 5, x1 - 1, z1 - 1, baseY, rng);
-        Build.tree(level, x0 + 7, baseY, cz + 7);
-        Build.tree(level, x1 - 7, baseY, cz - 7);
     }
 
     private static void buildVillage(ServerLevel level, int cx, int cz, int baseY, Random rng) {
-        int half = 9;
+        int half = 20; // 40x40
         int x0 = cx - half, z0 = cz - half, x1 = cx + half, z1 = cz + half;
-        Build.clear(level, x0, baseY, z0, x1, baseY + 10, z1);
+        Build.clear(level, x0, baseY, z0, x1, baseY + 14, z1);
         Build.floor(level, x0, z0, x1, z1, baseY - 1, Blocks.GRASS_BLOCK);
-        Build.cube(level, cx - 1, baseY - 1, z0, cx + 1, baseY - 1, z1, ModBlocks.COBBLE_STREET);
 
-        // Small civic plinth (governance node) at the centre.
+        districtFill(level, x0, z0, x1, z1, baseY, 10, cx, cz, 5, rng, Blocks.GRASS_BLOCK, false);
+
+        // Village green: civic plinth, well, gardens.
+        Build.floor(level, cx - 4, cz - 4, cx + 4, cz + 4, baseY - 1, Blocks.GRASS_BLOCK);
         Build.cube(level, cx - 1, baseY, cz - 1, cx + 1, baseY, cz + 1, ModBlocks.TOWN_HALL_BRICKS);
         Build.set(level, cx, baseY + 1, cz, ModBlocks.CIVIC_MARKER);
-        lampPost(level, cx - 2, baseY, cz - 2);
-        lampPost(level, cx + 2, baseY, cz + 2);
+        well(level, cx + 3, cz + 3, baseY);
+        Build.garden(level, cx - 4, cz - 4, cx - 1, cz - 1, baseY, rng);
+        Build.tree(level, cx - 3, baseY, cz + 3);
+        lampPost(level, cx - 3, baseY, cz - 3);
+        lampPost(level, cx + 3, baseY, cz - 3);
+    }
 
-        buildHouse(level, x0 + 2, z0 + 2, baseY, 6, 5, 3, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
-        buildHouse(level, x1 - 8, z0 + 2, baseY, 6, 5, 3, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
-        buildHouse(level, x0 + 2, z1 - 7, baseY, 6, 5, 3, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
-        Build.garden(level, x1 - 6, z1 - 6, x1 - 1, z1 - 1, baseY, rng);
-        Build.tree(level, x1 - 4, baseY, z0 + 3);
+    // ------------------------------------------------------------------
+    // District filler — street grid + plots of buildings
+    // ------------------------------------------------------------------
+
+    /**
+     * Lays a cobbled street grid over a rectangle and fills each plot with a building,
+     * skipping any plot that overlaps the reserved central box (centre {@code rcx,rcz},
+     * half-extent {@code rHalf}). {@code modern} chooses glassy towers vs. timbered houses.
+     */
+    private static void districtFill(ServerLevel level, int x0, int z0, int x1, int z1, int baseY,
+                                     int step, int rcx, int rcz, int rHalf, Random rng,
+                                     Block ground, boolean modern) {
+        Build.floor(level, x0, z0, x1, z1, baseY - 1, ground);
+        Block street = modern ? ModBlocks.COBBLE_STREET : ModBlocks.COBBLE_STREET;
+        for (int gx = x0; gx <= x1; gx += step) Build.cube(level, gx, baseY - 1, z0, gx, baseY - 1, z1, street);
+        for (int gz = z0; gz <= z1; gz += step) Build.cube(level, x0, baseY - 1, gz, x1, baseY - 1, gz, street);
+
+        for (int px = x0 + 1; px + step - 2 <= x1; px += step) {
+            for (int pz = z0 + 1; pz + step - 2 <= z1; pz += step) {
+                int hx0 = px + 1, hz0 = pz + 1;
+                int w = step - 3, d = step - 3;
+                boolean overlapX = hx0 <= rcx + rHalf && (hx0 + w) >= rcx - rHalf;
+                boolean overlapZ = hz0 <= rcz + rHalf && (hz0 + d) >= rcz - rHalf;
+                if (overlapX && overlapZ) continue;
+
+                if (modern) {
+                    int floors = 2 + rng.nextInt(7);
+                    buildModernBuilding(level, hx0, hz0, baseY, w, d, floors, rng);
+                    lampPost(level, px, baseY, pz);
+                } else if (rng.nextInt(7) == 0) {
+                    Build.garden(level, hx0, hz0, hx0 + w - 1, hz0 + d - 1, baseY, rng);
+                    Build.tree(level, hx0 + w / 2, baseY, hz0 + d / 2);
+                } else {
+                    buildHouse(level, hx0, hz0, baseY, w, d, rng);
+                    lampPost(level, px, baseY, pz);
+                }
+            }
+        }
     }
 
     // ------------------------------------------------------------------
     // Shared pieces
     // ------------------------------------------------------------------
 
-    private static void buildHouse(ServerLevel level, int x, int z, int baseY, int w, int d, int wallH,
-                                   Block wall, Block roof, Random rng) {
-        int span = (Math.max(x, x + w - 1) - Math.min(x, x + w - 1)) / 2 + 2;
-        Build.clear(level, x, baseY, z, x + w - 1, baseY + wallH + span + 1, z + d - 1);
-        Build.floor(level, x, z, x + w - 1, z + d - 1, baseY - 1, Blocks.OAK_PLANKS);
-        Build.walls(level, x, z, x + w - 1, z + d - 1, baseY, wallH, wall);
-        // Ceiling, then a pitched gable roof on top.
-        Build.floor(level, x, z, x + w - 1, z + d - 1, baseY + wallH, Blocks.OAK_PLANKS);
-        Build.gableRoof(level, x, z, x + w - 1, z + d - 1, baseY + wallH, Blocks.DARK_OAK_STAIRS, Blocks.DARK_OAK_PLANKS);
-        // Door (south centre) + glass windows on each wall.
+    private static final Block[] HOUSE_WALLS = {
+            ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, Blocks.OAK_PLANKS, ModBlocks.MODERN_FACADE
+    };
+
+    private static void buildHouse(ServerLevel level, int x, int z, int baseY, int w, int d, Random rng) {
+        Block wall = HOUSE_WALLS[rng.nextInt(HOUSE_WALLS.length)];
+        boolean twoStorey = w >= 7 && d >= 7 && rng.nextInt(3) == 0;
+        int wallH = twoStorey ? 7 : 4;
+        int x1 = x + w - 1, z1 = z + d - 1;
+        int roofRise = w / 2 + 1;
+
+        Build.clear(level, x, baseY, z, x1, baseY + wallH + roofRise + 2, z1);
+        Build.foundation(level, x, z, x1, z1, baseY, ModBlocks.CASTLE_BRICKS);
+        Build.floor(level, x, z, x1, z1, baseY - 1, Blocks.OAK_PLANKS);
+        Build.walls(level, x, z, x1, z1, baseY, wallH, wall);
+        if (twoStorey) Build.floor(level, x + 1, z + 1, x1 - 1, z1 - 1, baseY + 3, Blocks.OAK_PLANKS);
+        Build.floor(level, x, z, x1, z1, baseY + wallH, Blocks.OAK_PLANKS);
+        Build.gableRoof(level, x, z, x1, z1, baseY + wallH, Blocks.DARK_OAK_STAIRS, Blocks.DARK_OAK_PLANKS);
+
+        // South door + glazed windows on each storey/wall.
         Build.clear(level, x + w / 2, baseY, z, x + w / 2, baseY + 1, z);
-        Build.set(level, x + 1, baseY + 1, z, Blocks.GLASS);
-        Build.set(level, x + w - 2, baseY + 1, z, Blocks.GLASS);
-        Build.set(level, x, baseY + 1, z + d / 2, Blocks.GLASS);
-        Build.set(level, x + w - 1, baseY + 1, z + d / 2, Blocks.GLASS);
-        // Interior lamp so homes glow at night.
+        houseWindows(level, x, z, x1, z1, baseY + 1);
+        if (twoStorey) houseWindows(level, x, z, x1, z1, baseY + 4);
+
+        // Interior lighting + a doorstep slab.
         Build.set(level, x + 1, baseY + wallH - 1, z + 1, ModBlocks.STREET_LAMP);
-        // A doorstep lamp.
-        Build.set(level, x + w / 2, baseY, z - 1, ModBlocks.COBBLE_STREET);
+        if (twoStorey) Build.set(level, x + 1, baseY + 2, z + 1, ModBlocks.STREET_LAMP);
+        Build.set(level, x + w / 2, baseY - 1, z - 1, ModBlocks.COBBLE_STREET);
+    }
+
+    private static void houseWindows(ServerLevel level, int x0, int z0, int x1, int z1, int y) {
+        for (int x = x0 + 1; x < x1; x += 2) {
+            Build.set(level, x, y, z0, Blocks.GLASS);
+            Build.set(level, x, y, z1, Blocks.GLASS);
+        }
+        for (int z = z0 + 1; z < z1; z += 2) {
+            Build.set(level, x0, y, z, Blocks.GLASS);
+            Build.set(level, x1, y, z, Blocks.GLASS);
+        }
+    }
+
+    private static void well(ServerLevel level, int cx, int cz, int baseY) {
+        Build.walls(level, cx - 1, cz - 1, cx + 1, cz + 1, baseY, 1, ModBlocks.COBBLE_STREET);
+        Build.set(level, cx, baseY, cz, Blocks.WATER);
+        Build.cube(level, cx - 1, baseY + 1, cz - 1, cx - 1, baseY + 3, cz - 1, Blocks.OAK_LOG);
+        Build.cube(level, cx + 1, baseY + 1, cz + 1, cx + 1, baseY + 3, cz + 1, Blocks.OAK_LOG);
+        Build.cube(level, cx - 1, baseY + 1, cz + 1, cx - 1, baseY + 3, cz + 1, Blocks.OAK_LOG);
+        Build.cube(level, cx + 1, baseY + 1, cz - 1, cx + 1, baseY + 3, cz - 1, Blocks.OAK_LOG);
+        Build.floor(level, cx - 1, cz - 1, cx + 1, cz + 1, baseY + 4, Blocks.DARK_OAK_PLANKS);
+        Build.set(level, cx, baseY + 3, cz, ModBlocks.STREET_LAMP);
+    }
+
+    private static void fountain(ServerLevel level, int cx, int cz, int baseY) {
+        Build.walls(level, cx - 2, cz - 2, cx + 2, cz + 2, baseY, 1, ModBlocks.CASTLE_PILLAR);
+        Build.floor(level, cx - 1, cz - 1, cx + 1, cz + 1, baseY, Blocks.WATER);
+        Build.cube(level, cx, baseY, cz, cx, baseY + 2, cz, ModBlocks.CASTLE_PILLAR);
+        Build.set(level, cx, baseY + 3, cz, ModBlocks.STREET_LAMP);
     }
 
     private static void lampPost(ServerLevel level, int x, int baseY, int z) {
