@@ -51,6 +51,7 @@ public class RpgPoliticsMod implements ModInitializer {
     @Override
     public void onInitialize() {
         ModItems.register();
+        com.political.content.ModBlocks.register();
         ModNetworking.registerS2CTypes();
         ModNetworking.registerC2STypes();
         CourtDomainManager.registerEvents();

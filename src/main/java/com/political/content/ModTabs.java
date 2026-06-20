@@ -55,6 +55,11 @@ public final class ModTabs {
             for (Item item : GovItems.items()) out.accept(new ItemStack(item));
             out.accept(DevMenuItem.stack());
         });
+
+        // Settlements & Build (the neo-medieval modern palette)
+        tab("build", "RPG \u2014 Settlements & Build", () -> new ItemStack(ModBlocks.CASTLE_BRICKS), (params, out) -> {
+            for (var block : ModBlocks.list()) out.accept(new ItemStack(block));
+        });
     }
 
     private static ItemStack cursed(Item item, int amount) {
