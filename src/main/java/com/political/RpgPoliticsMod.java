@@ -66,6 +66,7 @@ public class RpgPoliticsMod implements ModInitializer {
         com.political.dev.DevMenuItem.register();
         com.political.content.ModTabs.register();
         VillagerManager.register();
+        com.political.world.SettlementManager.register();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             CourtCommands.register(dispatcher);

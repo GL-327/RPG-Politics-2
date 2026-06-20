@@ -29,6 +29,46 @@ public final class SettlementManager {
 
     private SettlementManager() {}
 
+    /** Right-clicking a Civic Marker opens the local political readout. */
+    public static void register() {
+        net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
+            if (world.isClientSide() || hand != net.minecraft.world.InteractionHand.MAIN_HAND) {
+                return net.minecraft.world.InteractionResult.PASS;
+            }
+            if (!(player instanceof ServerPlayer sp) || !(world instanceof ServerLevel level)) {
+                return net.minecraft.world.InteractionResult.PASS;
+            }
+            BlockPos pos = hit.getBlockPos();
+            if (level.getBlockState(pos).getBlock() != com.political.content.ModBlocks.CIVIC_MARKER) {
+                return net.minecraft.world.InteractionResult.PASS;
+            }
+            Settlement s = nearestSettlement(level, pos.getX(), pos.getZ());
+            if (s == null) return net.minecraft.world.InteractionResult.PASS;
+            showCivicReadout(sp, s);
+            return net.minecraft.world.InteractionResult.SUCCESS;
+        });
+    }
+
+    private static void showCivicReadout(ServerPlayer p, Settlement s) {
+        p.sendSystemMessage(Component.literal("\u2014 " + s.name + " (" + s.type.display + ") \u2014")
+                .withStyle(s.type.color, ChatFormatting.BOLD));
+        p.sendSystemMessage(Component.literal("Leader: " + (s.leader.isEmpty() ? "vacant" : DataManager.nameOf(s.leader))
+                + (s.governedBy.isEmpty() ? "  (sovereign)" : "  (under " + nameOf(s.governedBy) + ")"))
+                .withStyle(ChatFormatting.GRAY));
+        CivicRank r = DataManager.civicRank(p.getStringUUID());
+        boolean citizen = s.id.equals(DataManager.citizenshipOf(p.getStringUUID()));
+        p.sendSystemMessage(Component.literal("You: " + (citizen ? "citizen, " : "visitor, ") + "rank " + r.display
+                + (DataManager.canStandForElection(p.getStringUUID()) ? " (eligible for Leader)" : ""))
+                .withStyle(r.color));
+        p.sendSystemMessage(Component.literal("Use /settlement advance to climb the ranks, /settlement here for details.")
+                .withStyle(ChatFormatting.DARK_GRAY));
+    }
+
+    private static String nameOf(String id) {
+        Settlement s = DataManager.settlement(id);
+        return s == null ? id : s.name;
+    }
+
     // ------------------------------------------------------------------
     // World spawn capital
     // ------------------------------------------------------------------

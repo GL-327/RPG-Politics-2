@@ -18,7 +18,10 @@ public enum DevConfigKey {
     ATTRACT_CHANCE("Cursed Lure Chance", false, 0.01f, 0f, 1f),
     MANA_REGEN("Mana Regen Rate", false, 0.005f, 0f, 0.5f),
     POWER_COST_MULT("Power Cost x", false, 0.1f, 0f, 3f),
-    TAX_PERCENT("Tax Percent", false, 1f, 0f, 50f);
+    TAX_PERCENT("Tax Percent", false, 1f, 0f, 50f),
+    SETTLEMENT_GEN("Settlement Scatter", true, 1, 0, 1),
+    SETTLEMENT_GRID("Settlement Grid (chunks)", false, 4f, 16f, 256f),
+    SETTLEMENT_CHANCE("Settlement Spawn Chance", false, 0.05f, 0f, 1f);
 
     public final String label;
     public final boolean isBool;

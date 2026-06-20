@@ -33,6 +33,9 @@ public final class DevConfig {
             case MANA_REGEN -> (float) d.manaRegenRate;
             case POWER_COST_MULT -> (float) d.powerCostMultiplier;
             case TAX_PERCENT -> d.taxPercent;
+            case SETTLEMENT_GEN -> d.settlementGenEnabled ? 1 : 0;
+            case SETTLEMENT_GRID -> d.settlementGridChunks;
+            case SETTLEMENT_CHANCE -> (float) d.settlementSpawnChance;
         };
     }
 
@@ -53,6 +56,9 @@ public final class DevConfig {
             case MANA_REGEN -> d.manaRegenRate = v;
             case POWER_COST_MULT -> d.powerCostMultiplier = v;
             case TAX_PERCENT -> d.taxPercent = Math.round(v);
+            case SETTLEMENT_GEN -> d.settlementGenEnabled = v >= 0.5f;
+            case SETTLEMENT_GRID -> d.settlementGridChunks = Math.round(v);
+            case SETTLEMENT_CHANCE -> d.settlementSpawnChance = v;
         }
     }
 }
