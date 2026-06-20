@@ -124,4 +124,22 @@ public class PoliticsData {
     public double cursedObjectAttractChance = 0.02; // per-check chance a carried cursed object lures a curse
     public double manaRegenRate = 0.02;             // fraction of max mana restored per second
     public double powerCostMultiplier = 1.0;        // global multiplier on power energy costs
+
+    // --- Settlements & political geography ---
+    // All settlements, keyed by id.
+    public Map<String, Settlement> settlements = new HashMap<>();
+    // Player citizenship: uuid -> settlement id.
+    public Map<String, String> citizenship = new HashMap<>();
+    // Civic rank within the home settlement: uuid -> CivicRank ordinal.
+    public Map<String, Integer> civicRank = new HashMap<>();
+    // The world-spawn capital's settlement id ("" until generated).
+    public String capitalId = "";
+    // Grid cells already considered for settlement generation ("dim|cx|cz").
+    public List<String> generatedCells = new ArrayList<>();
+
+    // --- Worldgen tuning (editable via the Developer Menu) ---
+    public boolean settlementGenEnabled = true;     // auto-scatter settlements as players explore
+    public int settlementGridChunks = 48;           // size of each candidate grid cell, in chunks
+    public double settlementSpawnChance = 0.55;      // chance a suitable grid cell receives a settlement
+    public long settlementTermMillis = 7L * 24 * 60 * 60 * 1000; // local term length
 }

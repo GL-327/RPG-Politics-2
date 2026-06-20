@@ -79,6 +79,7 @@ public class RpgPoliticsMod implements ModInitializer {
             GovExtrasCommands.register(dispatcher);
             PowerCommands.register(dispatcher);
             CurseCommands.register(dispatcher);
+            com.political.world.SettlementCommands.register(dispatcher);
         });
 
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
@@ -91,6 +92,7 @@ public class RpgPoliticsMod implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             DataManager.load(server);
             MarketManager.ensureSeeded();
+            com.political.world.SettlementManager.onServerStarted(server);
         });
         ServerLifecycleEvents.SERVER_STOPPING.register(DataManager::save);
 
@@ -107,6 +109,7 @@ public class RpgPoliticsMod implements ModInitializer {
             BountyManager.tick(server);
             PowerManager.tick(server);
             CurseManager.tick(server);
+            com.political.world.SettlementManager.tick(server);
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
@@ -116,6 +119,7 @@ public class RpgPoliticsMod implements ModInitializer {
             PrisonManager.checkPlayerJoin(player);
             PerkManager.applyActivePerks(player);
             StatManager.apply(player);
+            com.political.world.SettlementManager.ensureCitizenship(player);
         });
 
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {

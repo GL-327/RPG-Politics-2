@@ -1,0 +1,225 @@
+package com.political.world;
+
+import com.political.politics.CivicRank;
+import com.political.politics.DataManager;
+import com.political.politics.PoliticsData;
+import com.political.politics.Settlement;
+import com.political.politics.SettlementType;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+/**
+ * Drives settlement generation and political geography: builds the capital at world
+ * spawn, scatters more settlements as players explore, enrols citizens, and runs each
+ * settlement's rank-gated local election.
+ */
+public final class SettlementManager {
+
+    private static long lastScatterTick = 0L;
+
+    private SettlementManager() {}
+
+    // ------------------------------------------------------------------
+    // World spawn capital
+    // ------------------------------------------------------------------
+
+    public static void onServerStarted(MinecraftServer server) {
+        PoliticsData d = DataManager.data();
+        if (!d.capitalId.isEmpty() && DataManager.settlement(d.capitalId) != null) return;
+
+        ServerLevel level = server.overworld();
+        BlockPos spawn = level.getRespawnData().pos();
+        int cx = spawn.getX();
+        int cz = spawn.getZ();
+
+        Random rng = new Random(((long) cx << 32) ^ cz);
+        Settlement capital = SettlementGenerator.generateCapital(level, cx, cz, SettlementGenerator.pickName(rng));
+        d.capitalId = capital.id;
+        markCell(d, level, cx, cz);
+
+        // Relocate world spawn just inside the gate of the capital, facing the keep.
+        BlockPos newSpawn = new BlockPos(cx, capital.y + 1, cz + 18);
+        level.setRespawnData(net.minecraft.world.level.storage.LevelData.RespawnData.of(
+                level.dimension(), newSpawn, 180.0f, 0.0f));
+
+        server.getPlayerList().broadcastSystemMessage(
+                Component.literal("The capital of " + capital.name + " has been founded at world spawn.")
+                        .withStyle(ChatFormatting.GOLD), false);
+    }
+
+    // ------------------------------------------------------------------
+    // Exploration scatter + local elections
+    // ------------------------------------------------------------------
+
+    public static void tick(MinecraftServer server) {
+        PoliticsData d = DataManager.data();
+        long now = System.currentTimeMillis();
+
+        // Local elections every server tick (cheap; guarded inside).
+        tickElections(server, d, now);
+
+        // Scatter at most one new settlement every ~3 seconds.
+        if (!d.settlementGenEnabled) return;
+        long tick = server.overworld().getGameTime();
+        if (tick - lastScatterTick < 60) return;
+        lastScatterTick = tick;
+
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            if (!(player.level() instanceof ServerLevel level)) continue;
+            if (tryScatterAround(level, d, player.getBlockX(), player.getBlockZ())) break; // one per pass
+        }
+
+        // Keep online players enrolled as citizens of their nearest settlement.
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            ensureCitizenship(player);
+        }
+    }
+
+    private static int cellSize(PoliticsData d) {
+        return Math.max(16, d.settlementGridChunks * 16);
+    }
+
+    private static String cellKey(ServerLevel level, int cx, int cz, int cell) {
+        return level.dimension().identifier() + "|" + Math.floorDiv(cx, cell) + "|" + Math.floorDiv(cz, cell);
+    }
+
+    private static void markCell(PoliticsData d, ServerLevel level, int x, int z) {
+        int cell = cellSize(d);
+        String key = cellKey(level, x, z, cell);
+        if (!d.generatedCells.contains(key)) d.generatedCells.add(key);
+    }
+
+    private static boolean tryScatterAround(ServerLevel level, PoliticsData d, int px, int pz) {
+        int cell = cellSize(d);
+        String key = cellKey(level, px, pz, cell);
+        if (d.generatedCells.contains(key)) return false;
+        d.generatedCells.add(key);
+
+        int gx = Math.floorDiv(px, cell);
+        int gz = Math.floorDiv(pz, cell);
+        // Deterministic centre, jittered within the cell.
+        Random rng = new Random((((long) gx * 73428767L) ^ ((long) gz * 912931L)) ^ 0x5DEECE66DL);
+        if (rng.nextDouble() > d.settlementSpawnChance) return false;
+
+        int jitter = cell / 4;
+        int cx = gx * cell + cell / 2 + rng.nextInt(jitter * 2 + 1) - jitter;
+        int cz = gz * cell + cell / 2 + rng.nextInt(jitter * 2 + 1) - jitter;
+
+        // Don't crowd existing settlements.
+        Settlement near = DataManager.nearestSettlement(level.dimension().identifier().toString(), cx, cz);
+        if (near != null && near.distSq(cx, cz) < (double) cell * cell * 0.36) return false;
+
+        SettlementType type = rollType(rng);
+        String name = SettlementGenerator.pickName(rng);
+        Settlement s = SettlementGenerator.generate(level, cx, cz, type, name);
+
+        level.getServer().getPlayerList().broadcastSystemMessage(
+                Component.literal("A new " + type.display.toLowerCase() + ", " + name
+                        + (s.governedBy.isEmpty() ? "" : " (under " + DataManager.settlement(s.governedBy).name + ")")
+                        + ", has risen at " + cx + ", " + cz + ".").withStyle(type.color), false);
+        return true;
+    }
+
+    private static SettlementType rollType(Random rng) {
+        double r = rng.nextDouble();
+        if (r < 0.06) return SettlementType.CAPITAL;
+        if (r < 0.20) return SettlementType.CITY;
+        if (r < 0.50) return SettlementType.TOWN;
+        return SettlementType.VILLAGE;
+    }
+
+    // ------------------------------------------------------------------
+    // Citizenship
+    // ------------------------------------------------------------------
+
+    public static void ensureCitizenship(ServerPlayer player) {
+        String uuid = player.getStringUUID();
+        if (DataManager.citizenshipOf(uuid) != null) return;
+        if (!(player.level() instanceof ServerLevel level)) return;
+        Settlement s = DataManager.nearestSettlement(level.dimension().identifier().toString(),
+                player.getBlockX(), player.getBlockZ());
+        if (s == null) return;
+        DataManager.setCitizenship(uuid, s.id);
+        DataManager.setCivicRank(uuid, CivicRank.CITIZEN);
+        player.sendSystemMessage(Component.literal("You are now a citizen of " + s.name + " (" + s.type.display + ").")
+                .withStyle(s.type.color));
+    }
+
+    /** Returns the nearest settlement's name for an entity position, or null. */
+    public static Settlement nearestSettlement(ServerLevel level, double x, double z) {
+        return DataManager.nearestSettlement(level.dimension().identifier().toString(), (int) x, (int) z);
+    }
+
+    // ------------------------------------------------------------------
+    // Local (per-settlement) elections — rank-gated candidacy
+    // ------------------------------------------------------------------
+
+    private static void tickElections(MinecraftServer server, PoliticsData d, long now) {
+        for (Settlement s : d.settlements.values()) {
+            if (s.electionActive) {
+                if (now >= s.electionEnd) endElection(server, s);
+            }
+        }
+    }
+
+    public static List<String> eligibleCandidates(Settlement s) {
+        List<String> out = new ArrayList<>();
+        for (Map.Entry<String, String> e : DataManager.data().citizenship.entrySet()) {
+            if (!s.id.equals(e.getValue())) continue;
+            if (DataManager.canStandForElection(e.getKey())) out.add(e.getKey());
+        }
+        return out;
+    }
+
+    public static boolean startElection(MinecraftServer server, Settlement s) {
+        List<String> pool = eligibleCandidates(s);
+        if (pool.isEmpty()) return false;
+        s.candidates = new ArrayList<>(pool);
+        s.votes.clear();
+        s.voted.clear();
+        for (String c : s.candidates) s.votes.put(c, 0);
+        s.electionActive = true;
+        s.electionEnd = System.currentTimeMillis() + Math.min(DataManager.data().settlementTermMillis, 24L * 60 * 60 * 1000);
+        StringBuilder sb = new StringBuilder();
+        for (String c : s.candidates) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(DataManager.nameOf(c));
+        }
+        server.getPlayerList().broadcastSystemMessage(Component.literal(
+                "Election for Leader of " + s.name + " has begun. Councilors standing: " + sb
+                        + ". Use /settlement vote " + s.id + " <player>.").withStyle(ChatFormatting.GOLD), false);
+        return true;
+    }
+
+    public static boolean castVote(Settlement s, ServerPlayer voter, String candidateUuid) {
+        if (!s.electionActive) return false;
+        String id = voter.getStringUUID();
+        if (!s.id.equals(DataManager.citizenshipOf(id))) return false; // only citizens vote
+        if (s.voted.contains(id)) return false;
+        if (!s.candidates.contains(candidateUuid)) return false;
+        s.voted.add(id);
+        s.votes.merge(candidateUuid, 1, Integer::sum);
+        return true;
+    }
+
+    public static void endElection(MinecraftServer server, Settlement s) {
+        s.electionActive = false;
+        String winner = s.votes.entrySet().stream()
+                .max(Comparator.comparingInt(Map.Entry::getValue))
+                .map(Map.Entry::getKey).orElse("");
+        s.leader = winner;
+        server.getPlayerList().broadcastSystemMessage(Component.literal(
+                "New Leader of " + s.name + ": " + (winner.isEmpty() ? "vacant" : DataManager.nameOf(winner)))
+                .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
+    }
+}

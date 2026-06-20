@@ -40,7 +40,13 @@ public final class ElectionManager {
 
     public static void startElection(MinecraftServer server) {
         PoliticsData d = DataManager.data();
-        List<String> pool = new ArrayList<>(d.playerNames.keySet());
+        // Hybrid model: only settlement Leaders may stand for the national Chair.
+        // Fall back to the whole roster if no Leaders have emerged yet.
+        List<String> pool = new ArrayList<>();
+        for (Settlement s : d.settlements.values()) {
+            if (!s.leader.isEmpty() && !pool.contains(s.leader)) pool.add(s.leader);
+        }
+        if (pool.isEmpty()) pool = new ArrayList<>(d.playerNames.keySet());
         Collections.shuffle(pool);
         d.candidates = new ArrayList<>(pool.subList(0, Math.min(MAX_CANDIDATES, pool.size())));
         d.votes.clear();

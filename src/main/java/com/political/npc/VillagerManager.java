@@ -62,6 +62,7 @@ public final class VillagerManager {
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
             if (entity instanceof Villager villager && !villager.hasCustomName()) {
                 nameVillager(villager);
+                enroll(villager, world);
             }
         });
 
@@ -89,6 +90,17 @@ public final class VillagerManager {
         String name = nameOf(villager.getUUID());
         villager.setCustomName(Component.literal(name + " the " + role.title).withStyle(role.color));
         villager.setCustomNameVisible(true);
+    }
+
+    /** Villagers are citizens by default: enrol each into the nearest settlement's politics. */
+    private static void enroll(Villager villager, net.minecraft.server.level.ServerLevel level) {
+        com.political.politics.Settlement s = com.political.world.SettlementManager.nearestSettlement(
+                level, villager.getX(), villager.getZ());
+        if (s == null) return;
+        DataManager.setCitizenship(villager.getStringUUID(), s.id);
+        if (DataManager.civicRank(villager.getStringUUID()).ordinal() == 0) {
+            DataManager.setCivicRank(villager.getStringUUID(), com.political.politics.CivicRank.CITIZEN);
+        }
     }
 
     private static boolean offCooldown(Villager v, ServerPlayer p, String service, long ms) {

@@ -241,4 +241,92 @@ public final class DataManager {
         }
         return com.political.curse.CursedTrait.byId(existing);
     }
+
+    // --- Settlements & political geography ---
+
+    public static java.util.Map<String, Settlement> settlements() {
+        return data.settlements;
+    }
+
+    public static Settlement settlement(String id) {
+        return id == null ? null : data.settlements.get(id);
+    }
+
+    public static void addSettlement(Settlement s) {
+        data.settlements.put(s.id, s);
+        // Non-sovereign settlements fall under the nearest sovereign city/capital.
+        if (!s.isSovereign()) {
+            Settlement ruler = nearestSovereign(s.dimension, s.x, s.z, s.id);
+            s.governedBy = ruler == null ? "" : ruler.id;
+        }
+    }
+
+    /** Nearest sovereign (Capital/City) settlement in a dimension, excluding {@code excludeId}. */
+    public static Settlement nearestSovereign(String dimension, int x, int z, String excludeId) {
+        Settlement best = null;
+        double bestSq = Double.MAX_VALUE;
+        for (Settlement s : data.settlements.values()) {
+            if (!s.isSovereign() || !s.dimension.equals(dimension)) continue;
+            if (s.id.equals(excludeId)) continue;
+            double dsq = s.distSq(x, z);
+            if (dsq < bestSq) { bestSq = dsq; best = s; }
+        }
+        return best;
+    }
+
+    /** Nearest settlement of any tier in a dimension (used to enrol citizens). */
+    public static Settlement nearestSettlement(String dimension, int x, int z) {
+        Settlement best = null;
+        double bestSq = Double.MAX_VALUE;
+        for (Settlement s : data.settlements.values()) {
+            if (!s.dimension.equals(dimension)) continue;
+            double dsq = s.distSq(x, z);
+            if (dsq < bestSq) { bestSq = dsq; best = s; }
+        }
+        return best;
+    }
+
+    // --- Citizenship & civic rank ---
+
+    public static String citizenshipOf(String uuid) {
+        return data.citizenship.get(uuid);
+    }
+
+    public static void setCitizenship(String uuid, String settlementId) {
+        if (settlementId == null) data.citizenship.remove(uuid);
+        else data.citizenship.put(uuid, settlementId);
+    }
+
+    public static CivicRank civicRank(String uuid) {
+        return CivicRank.byOrdinal(data.civicRank.getOrDefault(uuid, 0));
+    }
+
+    public static void setCivicRank(String uuid, CivicRank rank) {
+        data.civicRank.put(uuid, rank.ordinal());
+    }
+
+    /** Promotes one step; returns the new rank (capped at the top climbable rank). */
+    public static CivicRank promote(String uuid) {
+        int next = Math.min(CivicRank.values().length - 1, data.civicRank.getOrDefault(uuid, 0) + 1);
+        data.civicRank.put(uuid, next);
+        return CivicRank.byOrdinal(next);
+    }
+
+    public static CivicRank demote(String uuid) {
+        int next = Math.max(0, data.civicRank.getOrDefault(uuid, 0) - 1);
+        data.civicRank.put(uuid, next);
+        return CivicRank.byOrdinal(next);
+    }
+
+    public static boolean canStandForElection(String uuid) {
+        return civicRank(uuid).ordinal() >= CivicRank.CANDIDATE_THRESHOLD.ordinal();
+    }
+
+    /** True if the player currently leads any settlement. */
+    public static boolean isSettlementLeader(String uuid) {
+        for (Settlement s : data.settlements.values()) {
+            if (uuid.equals(s.leader)) return true;
+        }
+        return false;
+    }
 }
