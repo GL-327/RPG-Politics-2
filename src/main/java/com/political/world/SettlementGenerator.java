@@ -45,7 +45,7 @@ public final class SettlementGenerator {
     public static Settlement generateCapital(ServerLevel level, int cx, int cz, String name) {
         Random rng = new Random(((long) cx << 32) ^ cz ^ 0xCA571E);
         int baseY = Math.max(level.getMinY() + 6, Build.groundY(level, cx, cz));
-        buildCastle(level, cx, cz, baseY, rng);
+        buildCastle(level, cx, cz, baseY, sizeFor(SettlementType.CAPITAL, rng), rng);
 
         Settlement s = new Settlement("cap_" + cx + "_" + cz, name, SettlementType.CAPITAL,
                 cx, baseY, cz, dimId(level));
@@ -71,11 +71,14 @@ public final class SettlementGenerator {
     public static Settlement generate(ServerLevel level, int cx, int cz, SettlementType type, String name) {
         Random rng = new Random(((long) cx << 32) ^ cz ^ type.ordinal());
         int baseY = Math.max(level.getMinY() + 6, Build.groundY(level, cx, cz));
+        // Per-instance size: most settlements are large, a few are small, and the biggest
+        // capitals are genuinely enormous mega-builds.
+        int half = sizeFor(type, rng);
         switch (type) {
-            case CAPITAL -> buildCastle(level, cx, cz, baseY, rng);
-            case CITY -> buildCity(level, cx, cz, baseY, rng);
-            case TOWN -> buildTown(level, cx, cz, baseY, rng);
-            case VILLAGE -> buildVillage(level, cx, cz, baseY, rng);
+            case CAPITAL -> buildCastle(level, cx, cz, baseY, half, rng);
+            case CITY -> buildCity(level, cx, cz, baseY, half, rng);
+            case TOWN -> buildTown(level, cx, cz, baseY, half, rng);
+            case VILLAGE -> buildVillage(level, cx, cz, baseY, half, rng);
         }
         Settlement s = new Settlement(type.name().toLowerCase() + "_" + cx + "_" + cz, name, type,
                 cx, baseY, cz, dimId(level));
@@ -83,21 +86,33 @@ public final class SettlementGenerator {
         return s;
     }
 
+    /** Half-extent (radius in blocks) for a tier. Skewed so most are big; capitals can be huge. */
+    public static int sizeFor(SettlementType type, Random rng) {
+        double roll = rng.nextDouble();
+        return switch (type) {
+            // ~20% modest, ~60% large, ~20% colossal (up to ~220 blocks across).
+            case CAPITAL -> roll < 0.2 ? 48 + rng.nextInt(16) : roll < 0.8 ? 64 + rng.nextInt(32) : 96 + rng.nextInt(16);
+            case CITY    -> roll < 0.25 ? 36 + rng.nextInt(12) : roll < 0.85 ? 48 + rng.nextInt(24) : 72 + rng.nextInt(12);
+            case TOWN    -> roll < 0.3 ? 18 + rng.nextInt(8) : 26 + rng.nextInt(16);
+            case VILLAGE -> roll < 0.35 ? 9 + rng.nextInt(5) : 14 + rng.nextInt(8);
+        };
+    }
+
     // ------------------------------------------------------------------
     // Capital castle — a HUGE fortified town inside curtain walls
     // ------------------------------------------------------------------
 
-    private static void buildCastle(ServerLevel level, int cx, int cz, int baseY, Random rng) {
-        int half = 46; // ~92x92 walled bailey
+    private static void buildCastle(ServerLevel level, int cx, int cz, int baseY, int half, Random rng) {
         int x0 = cx - half, z0 = cz - half, x1 = cx + half, z1 = cz + half;
+        int palaceHalf = Math.max(9, Math.min(24, half / 5));
+        int wallH = 10 + half / 40;
 
         // Clear the build volume and lay the bailey ground + foundation.
-        Build.clear(level, x0 - 2, baseY, z0 - 2, x1 + 2, baseY + 34, z1 + 2);
+        Build.clear(level, x0 - 2, baseY, z0 - 2, x1 + 2, baseY + wallH + 24, z1 + 2);
         Build.foundation(level, x0 - 1, z0 - 1, x1 + 1, z1 + 1, baseY, ModBlocks.CASTLE_BRICKS);
         Build.floor(level, x0, z0, x1, z1, baseY - 1, ModBlocks.COBBLE_STREET);
 
         // Double-thick curtain wall with a walkable rampart + crenellations.
-        int wallH = 11;
         Build.walls(level, x0, z0, x1, z1, baseY, wallH, ModBlocks.CASTLE_BRICKS);
         Build.walls(level, x0 + 1, z0 + 1, x1 - 1, z1 - 1, baseY, wallH, ModBlocks.CASTLE_BRICKS);
         Build.borderRing(level, x0, z0, x1, z1, baseY + wallH - 1, 2, ModBlocks.CASTLE_BRICKS);
@@ -108,11 +123,16 @@ public final class SettlementGenerator {
             Build.set(level, x, baseY + wallH, z1 - 1, ModBlocks.STREET_LAMP);
         }
 
-        // Four grand corner towers.
+        // Four grand corner towers + mid-wall towers on long walls of big castles.
         cornerTower(level, x0 - 1, z0 - 1, baseY, wallH + 6);
         cornerTower(level, x1 - 5, z0 - 1, baseY, wallH + 6);
         cornerTower(level, x0 - 1, z1 - 5, baseY, wallH + 6);
         cornerTower(level, x1 - 5, z1 - 5, baseY, wallH + 6);
+        if (half >= 70) {
+            gateTower(level, x0 - 1, cz - 2, baseY, wallH + 3);
+            gateTower(level, x1 - 3, cz - 2, baseY, wallH + 3);
+            gateTower(level, cx - 2, z0 - 1, baseY, wallH + 3);
+        }
 
         // South gatehouse: two flanking towers + a 5-wide gate.
         gateTower(level, cx - 6, z1 - 4, baseY, wallH + 4);
@@ -123,28 +143,28 @@ public final class SettlementGenerator {
 
         // Packed inner districts (medieval houses on a street grid), reserving the centre
         // for the royal palace and the central avenue.
-        int m = 6;
-        districtFill(level, x0 + m, z0 + m, x1 - m, z1 - m, baseY, 12, cx, cz, 13,
+        int m = Math.max(6, half / 12);
+        districtFill(level, x0 + m, z0 + m, x1 - m, z1 - m, baseY, 12, cx, cz, palaceHalf + 2,
                 rng, ModBlocks.COBBLE_STREET, false);
 
         // Grand processional avenue from the gate to the palace steps.
-        Build.clear(level, cx - 2, baseY, cz + 11, cx + 2, baseY + 7, z1 - 1);
-        Build.floor(level, cx - 2, cz + 11, cx + 2, z1 - 1, baseY - 1, ModBlocks.PAVED_ROAD);
-        for (int z = cz + 13; z <= z1 - 3; z += 6) {
+        Build.clear(level, cx - 2, baseY, cz + palaceHalf, cx + 2, baseY + 7, z1 - 1);
+        Build.floor(level, cx - 2, cz + palaceHalf, cx + 2, z1 - 1, baseY - 1, ModBlocks.PAVED_ROAD);
+        for (int z = cz + palaceHalf + 2; z <= z1 - 3; z += 6) {
             lampPost(level, cx - 3, baseY, z);
             lampPost(level, cx + 3, baseY, z);
         }
 
         // The royal palace — governance node — at the heart of the bailey.
-        buildKeep(level, cx, cz, baseY, 11, 26, rng);
+        buildKeep(level, cx, cz, baseY, palaceHalf, 18 + palaceHalf, rng);
 
         // Formal gardens flanking the palace approach.
-        Build.garden(level, cx - 9, cz + 4, cx - 4, cz + 10, baseY, rng);
-        Build.garden(level, cx + 4, cz + 4, cx + 9, cz + 10, baseY, rng);
-        Build.tree(level, cx - 11, baseY, cz + 9);
-        Build.tree(level, cx + 11, baseY, cz + 9);
-        Build.tree(level, cx - 11, baseY, cz - 9);
-        Build.tree(level, cx + 11, baseY, cz - 9);
+        Build.garden(level, cx - palaceHalf + 2, cz + 4, cx - 4, cz + palaceHalf - 1, baseY, rng);
+        Build.garden(level, cx + 4, cz + 4, cx + palaceHalf - 2, cz + palaceHalf - 1, baseY, rng);
+        Build.tree(level, cx - palaceHalf, baseY, cz + palaceHalf - 2);
+        Build.tree(level, cx + palaceHalf, baseY, cz + palaceHalf - 2);
+        Build.tree(level, cx - palaceHalf, baseY, cz - palaceHalf + 2);
+        Build.tree(level, cx + palaceHalf, baseY, cz - palaceHalf + 2);
     }
 
     /** A grand multi-storey palace/keep used as the capital governance node. */
@@ -223,28 +243,28 @@ public final class SettlementGenerator {
     // Modern suburb city
     // ------------------------------------------------------------------
 
-    private static void buildCity(ServerLevel level, int cx, int cz, int baseY, Random rng) {
-        int half = 50; // 100x100
+    private static void buildCity(ServerLevel level, int cx, int cz, int baseY, int half, Random rng) {
         int x0 = cx - half, z0 = cz - half, x1 = cx + half, z1 = cz + half;
+        int plaza = Math.max(11, Math.min(24, half / 4));
 
-        Build.clear(level, x0, baseY, z0, x1, baseY + 36, z1);
+        Build.clear(level, x0, baseY, z0, x1, baseY + 40, z1);
         Build.floor(level, x0, z0, x1, z1, baseY - 1, ModBlocks.PAVED_ROAD);
 
         // Varied modern blocks on a 14-block street grid, central plaza reserved.
-        districtFill(level, x0, z0, x1, z1, baseY, 14, cx, cz, 14, rng, ModBlocks.PAVED_ROAD, true);
+        districtFill(level, x0, z0, x1, z1, baseY, 14, cx, cz, plaza, rng, ModBlocks.PAVED_ROAD, true);
 
         // Central civic plaza: park, fountain, and the town hall.
-        Build.floor(level, cx - 12, cz - 12, cx + 12, cz + 12, baseY - 1, ModBlocks.PAVED_ROAD);
-        Build.garden(level, cx - 11, cz + 5, cx - 5, cz + 11, baseY, rng);
-        Build.garden(level, cx + 5, cz + 5, cx + 11, cz + 11, baseY, rng);
-        Build.tree(level, cx - 9, baseY, cz + 8);
-        Build.tree(level, cx + 9, baseY, cz + 8);
-        Build.tree(level, cx - 9, baseY, cz - 9);
-        Build.tree(level, cx + 9, baseY, cz - 9);
-        fountain(level, cx, cz - 9, baseY);
-        for (int a = -11; a <= 11; a += 11) {
-            lampPost(level, cx + a, baseY, cz - 11);
-            lampPost(level, cx + a, baseY, cz + 11);
+        Build.floor(level, cx - plaza, cz - plaza, cx + plaza, cz + plaza, baseY - 1, ModBlocks.PAVED_ROAD);
+        Build.garden(level, cx - plaza + 1, cz + 5, cx - 5, cz + plaza - 1, baseY, rng);
+        Build.garden(level, cx + 5, cz + 5, cx + plaza - 1, cz + plaza - 1, baseY, rng);
+        Build.tree(level, cx - plaza + 2, baseY, cz + plaza - 3);
+        Build.tree(level, cx + plaza - 2, baseY, cz + plaza - 3);
+        Build.tree(level, cx - plaza + 2, baseY, cz - plaza + 2);
+        Build.tree(level, cx + plaza - 2, baseY, cz - plaza + 2);
+        fountain(level, cx, cz - plaza + 2, baseY);
+        for (int a = -plaza; a <= plaza; a += plaza) {
+            lampPost(level, cx + a, baseY, cz - plaza);
+            lampPost(level, cx + a, baseY, cz + plaza);
         }
         buildTownHall(level, cx, cz, baseY, rng);
     }
@@ -309,28 +329,27 @@ public final class SettlementGenerator {
     // Medieval town & village
     // ------------------------------------------------------------------
 
-    private static void buildTown(ServerLevel level, int cx, int cz, int baseY, Random rng) {
-        int half = 30; // 60x60
+    private static void buildTown(ServerLevel level, int cx, int cz, int baseY, int half, Random rng) {
         int x0 = cx - half, z0 = cz - half, x1 = cx + half, z1 = cz + half;
-        Build.clear(level, x0, baseY, z0, x1, baseY + 18, z1);
+        int sq = Math.max(8, half / 4);
+        Build.clear(level, x0, baseY, z0, x1, baseY + 20, z1);
         Build.floor(level, x0, z0, x1, z1, baseY - 1, Blocks.GRASS_BLOCK);
 
-        districtFill(level, x0, z0, x1, z1, baseY, 12, cx, cz, 10, rng, Blocks.GRASS_BLOCK, false);
+        districtFill(level, x0, z0, x1, z1, baseY, 12, cx, cz, sq + 2, rng, Blocks.GRASS_BLOCK, false);
 
         // Central market square with the town hall.
-        Build.floor(level, cx - 8, cz - 8, cx + 8, cz + 8, baseY - 1, ModBlocks.COBBLE_STREET);
+        Build.floor(level, cx - sq, cz - sq, cx + sq, cz + sq, baseY - 1, ModBlocks.COBBLE_STREET);
         buildTownHall(level, cx, cz, baseY, rng);
-        well(level, cx + 6, cz + 6, baseY);
-        Build.tree(level, cx - 7, baseY, cz + 7);
-        Build.tree(level, cx - 7, baseY, cz - 7);
-        for (int a = -8; a <= 8; a += 8) {
-            lampPost(level, cx + a, baseY, cz - 8);
-            lampPost(level, cx + a, baseY, cz + 8);
+        well(level, cx + sq - 2, cz + sq - 2, baseY);
+        Build.tree(level, cx - sq + 1, baseY, cz + sq - 1);
+        Build.tree(level, cx - sq + 1, baseY, cz - sq + 1);
+        for (int a = -sq; a <= sq; a += sq) {
+            lampPost(level, cx + a, baseY, cz - sq);
+            lampPost(level, cx + a, baseY, cz + sq);
         }
     }
 
-    private static void buildVillage(ServerLevel level, int cx, int cz, int baseY, Random rng) {
-        int half = 20; // 40x40
+    private static void buildVillage(ServerLevel level, int cx, int cz, int baseY, int half, Random rng) {
         int x0 = cx - half, z0 = cz - half, x1 = cx + half, z1 = cz + half;
         Build.clear(level, x0, baseY, z0, x1, baseY + 14, z1);
         Build.floor(level, x0, z0, x1, z1, baseY - 1, Blocks.GRASS_BLOCK);

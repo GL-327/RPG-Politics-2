@@ -32,7 +32,7 @@ public final class SettlementManager {
 
     // Streaming build queue: large structures are placed a few thousand blocks per tick.
     private static final java.util.ArrayDeque<Pending> PENDING = new java.util.ArrayDeque<>();
-    private static final int PLACE_BUDGET_PER_TICK = 4000;
+    private static final int PLACE_BUDGET_PER_TICK = 16000;
 
     private static final class Pending {
         final ServerLevel level;
@@ -173,13 +173,25 @@ public final class SettlementManager {
             level.getChunk(cx >> 4, cz >> 4);
 
             Random rng = new Random(((long) cx << 32) ^ cz);
-            Settlement capital = SettlementGenerator.generateCapital(level, cx, cz, SettlementGenerator.pickName(rng));
+            // Stream the (potentially enormous) capital in over many ticks so world creation
+            // never freezes; first lay a small synchronous safe pad so the player can't fall.
+            int baseY = Math.max(level.getMinY() + 6, Build.groundY(level, cx, cz));
+            for (int dx = -3; dx <= 3; dx++) {
+                for (int dz = -3; dz <= 3; dz++) {
+                    level.setBlock(new BlockPos(cx + dx, baseY - 1, cz + dz),
+                            com.political.content.ModBlocks.CASTLE_BRICKS.defaultBlockState(), 2);
+                    for (int dy = 0; dy <= 3; dy++) {
+                        level.setBlock(new BlockPos(cx + dx, baseY + dy, cz + dz),
+                                net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+                    }
+                }
+            }
+            Settlement capital = queueBuild(level, cx, cz, SettlementType.CAPITAL, SettlementGenerator.pickName(rng));
             d.capitalId = capital.id;
             markCell(d, level, cx, cz);
-            populate(level, capital);
 
-            // Relocate world spawn just inside the gate of the capital, facing the keep.
-            BlockPos newSpawn = new BlockPos(cx, capital.y + 1, cz + 18);
+            // Relocate world spawn onto the safe pad at the heart of the capital.
+            BlockPos newSpawn = new BlockPos(cx + 2, baseY + 1, cz + 2);
             level.setRespawnData(net.minecraft.world.level.storage.LevelData.RespawnData.of(
                     level.dimension(), newSpawn, 180.0f, 0.0f));
 
