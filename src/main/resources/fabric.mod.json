@@ -1,0 +1,22 @@
+{
+	"schemaVersion": 1,
+	"id": "politicalserver",
+	"version": "${version}",
+	"name": "RPG Politics 2",
+	"description": "An RPG civilization mod for Minecraft 26.2: elected government with perks, a judiciary with Court Domains, RPG combat stats and abilities, legendary gear, bounty-hunt slayer progression, a coin/credit economy with crypto & stock markets, banking, auctions, homes, checkpoints, parties, and live mob scaling. Runs on client and server.",
+	"authors": ["Arthur"],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/politicalserver/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["com.political.RpgPoliticsMod"],
+		"client": ["com.political.client.PoliticalClient"]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.0",
+		"minecraft": ">=26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
