@@ -43,6 +43,18 @@ public final class PowerCommands {
         TECHNIQUE_GRADE.put(Power.INFINITY, 4);
         TECHNIQUE_GRADE.put(Power.DOMAIN_EXPANSION, 5);
         TECHNIQUE_GRADE.put(Power.SIX_EYES, 5);
+        TECHNIQUE_GRADE.put(Power.SWAP_PLACES, 1);
+        TECHNIQUE_GRADE.put(Power.BLOOD_EDGE, 1);
+        TECHNIQUE_GRADE.put(Power.SHADOW_SERPENT, 2);
+        TECHNIQUE_GRADE.put(Power.PIERCING_BLOOD, 2);
+        TECHNIQUE_GRADE.put(Power.DECAY, 2);
+        TECHNIQUE_GRADE.put(Power.CURSED_BOMB, 2);
+        TECHNIQUE_GRADE.put(Power.FALLING_BLOSSOM, 2);
+        TECHNIQUE_GRADE.put(Power.IDLE_TRANSFIGURATION, 3);
+        TECHNIQUE_GRADE.put(Power.DISASTER_FLAMES, 3);
+        TECHNIQUE_GRADE.put(Power.PROJECTION_SORCERY, 3);
+        TECHNIQUE_GRADE.put(Power.CURSED_CLONE, 3);
+        TECHNIQUE_GRADE.put(Power.WHEEL_ADAPTATION, 5);
     }
 
     private PowerCommands() {}

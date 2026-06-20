@@ -341,7 +341,176 @@ public final class PowerManager {
                 p.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 3, false, true));
                 StatManager.addCursedEnergy(p, 15);
             }
+
+            // ---- New Compound V powers ----
+            case ELECTROKINESIS -> {
+                LivingEntity t = lookTarget(p, 30);
+                if (t != null) {
+                    strike(level, t.position());
+                    t.hurtServer(level, level.damageSources().magic(), 6.0f);
+                }
+                for (LivingEntity e : around(p, 8)) {
+                    if (e == p) continue;
+                    e.hurtServer(level, level.damageSources().magic(), 5.0f);
+                }
+                level.sendParticles(ParticleTypes.ELECTRIC_SPARK, p.getX(), p.getY() + 1, p.getZ(), 60, 4, 2, 4, 0.2);
+            }
+            case ACID_SPRAY -> {
+                for (LivingEntity e : cone(p, 10, 0.55)) {
+                    e.addEffect(new MobEffectInstance(MobEffects.POISON, 140, 2));
+                    e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 140, 1));
+                    e.hurtServer(level, level.damageSources().magic(), 5.0f);
+                }
+                particleCone(level, p, ParticleTypes.SNEEZE);
+            }
+            case PHASE_SHIFT -> {
+                p.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 200, 0, false, false));
+                p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 200, 2, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.SPEED, 200, 1, false, true));
+            }
+            case TERRAKINESIS -> {
+                for (LivingEntity e : around(p, 7)) {
+                    if (e == p) continue;
+                    e.push(0, 1.2, 0);
+                    e.hurtMarked = true;
+                    e.hurtServer(level, level.damageSources().magic(), 5.0f);
+                }
+                level.sendParticles(ParticleTypes.EXPLOSION, p.getX(), p.getY(), p.getZ(), 6, 3, 0.1, 3, 0.0);
+            }
+            case ELASTIC_REACH -> {
+                for (LivingEntity e : cone(p, 9, 0.3)) {
+                    e.hurtServer(level, level.damageSources().playerAttack(p), 7.0f);
+                    launchEntity(e, p, -1.0, 0.3);
+                }
+                particleCone(level, p, ParticleTypes.CRIT);
+            }
+            case BLOODLUST -> {
+                p.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 300, 3, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.SPEED, 300, 2, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.HASTE, 300, 2, false, true));
+            }
+            case GRAVITY_CRUSH -> {
+                for (LivingEntity e : around(p, 12)) {
+                    if (e == p) continue;
+                    launchEntity(e, p, 3.0, -0.2);
+                    e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 120, 4));
+                    e.hurtServer(level, level.damageSources().magic(), 7.0f);
+                }
+                level.sendParticles(ParticleTypes.REVERSE_PORTAL, p.getX(), p.getY() + 1, p.getZ(), 80, 4, 2, 4, 0.05);
+            }
+            case MAGNETISM -> {
+                for (LivingEntity e : around(p, 14)) launchEntity(e, p, 3.0, 0.1);
+                level.sendParticles(ParticleTypes.ENCHANTED_HIT, p.getX(), p.getY() + 1, p.getZ(), 40, 2, 1, 2, 0.0);
+            }
+            case LIGHT_FLARE -> {
+                for (LivingEntity e : cone(p, 12, 0.2)) {
+                    e.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 120, 0));
+                    e.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 120, 0));
+                    e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 120, 2));
+                }
+                level.sendParticles(ParticleTypes.END_ROD, p.getX(), p.getEyeY(), p.getZ(), 80, 1, 1, 1, 0.1);
+            }
+            case VENOM_CLOUD -> {
+                for (LivingEntity e : around(p, 8)) {
+                    if (e == p) continue;
+                    e.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 2));
+                    e.addEffect(new MobEffectInstance(MobEffects.WITHER, 120, 1));
+                }
+                level.sendParticles(ParticleTypes.SNEEZE, p.getX(), p.getY() + 1, p.getZ(), 60, 4, 2, 4, 0.02);
+            }
+            case THERMAL_LANCE -> beam(p, level, 22, 18.0f, true, true);
+            case KINETIC_ABSORPTION -> {
+                p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 400, 3, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 400, 1, false, true));
+            }
+
+            // ---- New cursed techniques ----
+            case SHADOW_SERPENT -> summonShadows(p, level, 4);
+            case CURSED_CLONE -> summonShadows(p, level, 2);
+            case BLOOD_EDGE -> {
+                p.hurtServer(level, level.damageSources().magic(), 4.0f);
+                for (LivingEntity e : cone(p, 12, 0.4)) {
+                    e.hurtServer(level, level.damageSources().playerAttack(p), 9.0f);
+                    e.addEffect(new MobEffectInstance(MobEffects.WITHER, 80, 1));
+                }
+                particleCone(level, p, ParticleTypes.CRIT);
+            }
+            case PIERCING_BLOOD -> {
+                p.hurtServer(level, level.damageSources().magic(), 4.0f);
+                beam(p, level, 30, 16.0f, false, false);
+            }
+            case DECAY -> {
+                for (LivingEntity e : around(p, 8)) {
+                    if (e == p) continue;
+                    e.addEffect(new MobEffectInstance(MobEffects.WITHER, 160, 2));
+                    e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 160, 2));
+                    e.hurtServer(level, level.damageSources().magic(), 6.0f);
+                }
+                level.sendParticles(ParticleTypes.SCULK_SOUL, p.getX(), p.getY() + 1, p.getZ(), 40, 3, 1, 3, 0.02);
+            }
+            case IDLE_TRANSFIGURATION -> {
+                LivingEntity t = lookTarget(p, 16);
+                if (t != null) {
+                    t.hurtServer(level, level.damageSources().magic(), 14.0f);
+                    t.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 2));
+                    t.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 3));
+                    t.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 200, 3));
+                }
+            }
+            case DISASTER_FLAMES -> {
+                for (LivingEntity e : cone(p, 12, 0.45)) {
+                    e.setRemainingFireTicks(160);
+                    e.hurtServer(level, level.damageSources().playerAttack(p), 12.0f);
+                }
+                particleCone(level, p, ParticleTypes.FLAME);
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 1.4f, 0.7f);
+            }
+            case PROJECTION_SORCERY -> {
+                p.addEffect(new MobEffectInstance(MobEffects.SPEED, 200, 4, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.HASTE, 200, 3, false, true));
+                for (LivingEntity e : cone(p, 12, 0.3)) e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 100, 6));
+            }
+            case SWAP_PLACES -> {
+                LivingEntity t = lookTarget(p, 30);
+                if (t != null) {
+                    double px = p.getX(), py = p.getY(), pz = p.getZ();
+                    p.teleportTo(t.getX(), t.getY(), t.getZ());
+                    t.teleportTo(px, py, pz);
+                    level.sendParticles(ParticleTypes.PORTAL, px, py + 1, pz, 40, 0.5, 1, 0.5, 0.3);
+                }
+            }
+            case CURSED_BOMB -> {
+                Vec3 at = aimPoint(p, 14);
+                for (LivingEntity e : nearPoint(level, at, 5, p)) {
+                    e.hurtServer(level, level.damageSources().magic(), 14.0f);
+                    launchEntity(e, p, -2.0, 0.5);
+                }
+                level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, at.x, at.y, at.z, 1, 0, 0, 0, 0.0);
+                level.playSound(null, at.x, at.y, at.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.4f, 0.9f);
+            }
+            case FALLING_BLOSSOM -> {
+                p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 200, 3, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 200, 2, false, true));
+                for (LivingEntity e : around(p, 5)) {
+                    if (e == p) continue;
+                    e.hurtServer(level, level.damageSources().magic(), 7.0f);
+                    launchEntity(e, p, -1.8, 0.4);
+                }
+                level.sendParticles(ParticleTypes.ENCHANTED_HIT, p.getX(), p.getY() + 1, p.getZ(), 60, 3, 1, 3, 0.0);
+            }
+            case WHEEL_ADAPTATION -> {
+                p.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 600, 2, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 600, 3, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 600, 2, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 600, 4, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 600, 0, false, true));
+            }
         }
+    }
+
+    private static List<LivingEntity> nearPoint(ServerLevel level, Vec3 c, double r, LivingEntity exclude) {
+        AABB box = new AABB(c.x - r, c.y - r, c.z - r, c.x + r, c.y + r, c.z + r);
+        return level.getEntitiesOfClass(LivingEntity.class, box, x -> x != exclude && x.isAlive());
     }
 
     // ---------------- Effect helpers ----------------
