@@ -27,7 +27,43 @@ public final class SettlementManager {
 
     private static long lastScatterTick = 0L;
 
+    // Streaming build queue: large structures are placed a few thousand blocks per tick.
+    private static final java.util.ArrayDeque<Pending> PENDING = new java.util.ArrayDeque<>();
+    private static final int PLACE_BUDGET_PER_TICK = 4000;
+
+    private static final class Pending {
+        final ServerLevel level;
+        final BuildBuffer buffer;
+        int cursor = 0;
+        Pending(ServerLevel level, BuildBuffer buffer) {
+            this.level = level;
+            this.buffer = buffer;
+        }
+    }
+
     private SettlementManager() {}
+
+    /** Plans + queues a settlement for streamed building; returns the registered settlement. */
+    public static Settlement queueBuild(ServerLevel level, int cx, int cz, SettlementType type, String name) {
+        BuildBuffer buffer = new BuildBuffer();
+        Settlement s = SettlementGenerator.planInto(buffer, level, cx, cz, type, name);
+        PENDING.addLast(new Pending(level, buffer));
+        return s;
+    }
+
+    private static void drainPending() {
+        int budget = PLACE_BUDGET_PER_TICK;
+        while (budget > 0 && !PENDING.isEmpty()) {
+            Pending p = PENDING.peekFirst();
+            java.util.List<BuildBuffer.Op> ops = p.buffer.ops;
+            while (budget > 0 && p.cursor < ops.size()) {
+                BuildBuffer.Op op = ops.get(p.cursor++);
+                p.level.setBlock(new BlockPos(op.x, op.y, op.z), op.state, 2);
+                budget--;
+            }
+            if (p.cursor >= ops.size()) PENDING.removeFirst();
+        }
+    }
 
     /** Right-clicking a Civic Marker opens the local political readout. */
     public static void register() {
@@ -110,11 +146,14 @@ public final class SettlementManager {
         PoliticsData d = DataManager.data();
         long now = System.currentTimeMillis();
 
+        // Stream any in-progress structures into the world.
+        drainPending();
+
         // Local elections every server tick (cheap; guarded inside).
         tickElections(server, d, now);
 
-        // Scatter at most one new settlement every ~3 seconds.
-        if (!d.settlementGenEnabled) return;
+        // Don't queue a new settlement while one is still building.
+        if (!d.settlementGenEnabled || !PENDING.isEmpty()) return;
         long tick = server.overworld().getGameTime();
         if (tick - lastScatterTick < 60) return;
         lastScatterTick = tick;
@@ -171,12 +210,14 @@ public final class SettlementManager {
         SettlementType type = rollType(rng);
         String name = SettlementGenerator.pickName(rng);
         Settlement s;
+        BuildBuffer buffer = new BuildBuffer();
         try {
-            s = SettlementGenerator.generate(level, cx, cz, type, name);
+            s = SettlementGenerator.planInto(buffer, level, cx, cz, type, name);
         } catch (RuntimeException e) {
             com.political.RpgPoliticsMod.LOGGER.error("Settlement generation failed at {},{}", cx, cz, e);
             return false;
         }
+        PENDING.addLast(new Pending(level, buffer));
 
         level.getServer().getPlayerList().broadcastSystemMessage(
                 Component.literal("A new " + type.display.toLowerCase() + ", " + name

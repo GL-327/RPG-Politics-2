@@ -195,9 +195,9 @@ public final class SettlementCommands {
         ServerPlayer p = c.getSource().getPlayerOrException();
         if (!(p.level() instanceof ServerLevel level)) return 0;
         String name = SettlementGenerator.pickName(new java.util.Random());
-        Settlement s = SettlementGenerator.generate(level, p.getBlockX(), p.getBlockZ(), type, name);
-        c.getSource().sendSuccess(() -> Component.literal("Built " + type.display + " '" + name + "' at your location.")
-                .withStyle(type.color), false);
+        SettlementManager.queueBuild(level, p.getBlockX(), p.getBlockZ(), type, name);
+        c.getSource().sendSuccess(() -> Component.literal("Building " + type.display + " '" + name
+                + "' at your location (streaming in).").withStyle(type.color), false);
         return 1;
     }
 }

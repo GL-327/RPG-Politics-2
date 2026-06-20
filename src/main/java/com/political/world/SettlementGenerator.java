@@ -52,6 +52,20 @@ public final class SettlementGenerator {
         return s;
     }
 
+    /**
+     * Plans a settlement into {@code buffer} (no blocks placed yet) and registers it
+     * immediately so governance/citizenship work while the structure streams in.
+     */
+    public static Settlement planInto(BuildBuffer buffer, ServerLevel level, int cx, int cz,
+                                      SettlementType type, String name) {
+        Build.beginDeferred(buffer);
+        try {
+            return generate(level, cx, cz, type, name);
+        } finally {
+            Build.endDeferred();
+        }
+    }
+
     /** Builds a settlement of a chosen tier at a centre and registers it. */
     public static Settlement generate(ServerLevel level, int cx, int cz, SettlementType type, String name) {
         Random rng = new Random(((long) cx << 32) ^ cz ^ type.ordinal());
@@ -136,6 +150,14 @@ public final class SettlementGenerator {
         buildHouse(level, x0 + 4, z0 + 4, baseY, 7, 6, 4, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
         buildHouse(level, x1 - 11, z0 + 4, baseY, 7, 6, 4, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
         buildHouse(level, x0 + 4, z1 - 10, baseY, 7, 6, 4, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
+
+        // Inner wall walkway (one block in from the parapet) so the ramparts are walkable.
+        Build.walls(level, x0 + 1, z0 + 1, x1 - 1, z1 - 1, baseY + wallH - 1, 1, ModBlocks.CASTLE_BRICKS);
+        // Courtyard greenery flanking the approach.
+        Build.garden(level, cx - 6, cz + 4, cx - 3, cz + 10, baseY, rng);
+        Build.garden(level, cx + 3, cz + 4, cx + 6, cz + 10, baseY, rng);
+        Build.tree(level, cx - 8, baseY, cz + 8);
+        Build.tree(level, cx + 8, baseY, cz + 8);
     }
 
     private static void cornerTower(ServerLevel level, int x, int z, int baseY, Block block) {
@@ -247,6 +269,11 @@ public final class SettlementGenerator {
             lampPost(level, x, baseY, cz - 2);
             lampPost(level, x, baseY, cz + 2);
         }
+        // Greenery: corner gardens and a few trees.
+        Build.garden(level, x0 + 1, z0 + 1, x0 + 5, z0 + 5, baseY, rng);
+        Build.garden(level, x1 - 5, z1 - 5, x1 - 1, z1 - 1, baseY, rng);
+        Build.tree(level, x0 + 7, baseY, cz + 7);
+        Build.tree(level, x1 - 7, baseY, cz - 7);
     }
 
     private static void buildVillage(ServerLevel level, int cx, int cz, int baseY, Random rng) {
@@ -265,6 +292,8 @@ public final class SettlementGenerator {
         buildHouse(level, x0 + 2, z0 + 2, baseY, 6, 5, 3, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
         buildHouse(level, x1 - 8, z0 + 2, baseY, 6, 5, 3, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
         buildHouse(level, x0 + 2, z1 - 7, baseY, 6, 5, 3, ModBlocks.TOWN_HALL_BRICKS, ModBlocks.CASTLE_BRICKS, rng);
+        Build.garden(level, x1 - 6, z1 - 6, x1 - 1, z1 - 1, baseY, rng);
+        Build.tree(level, x1 - 4, baseY, z0 + 3);
     }
 
     // ------------------------------------------------------------------
@@ -273,17 +302,23 @@ public final class SettlementGenerator {
 
     private static void buildHouse(ServerLevel level, int x, int z, int baseY, int w, int d, int wallH,
                                    Block wall, Block roof, Random rng) {
-        Build.clear(level, x, baseY, z, x + w - 1, baseY + wallH + 2, z + d - 1);
-        Build.floor(level, x, z, x + w - 1, z + d - 1, baseY - 1, wall);
+        int span = (Math.max(x, x + w - 1) - Math.min(x, x + w - 1)) / 2 + 2;
+        Build.clear(level, x, baseY, z, x + w - 1, baseY + wallH + span + 1, z + d - 1);
+        Build.floor(level, x, z, x + w - 1, z + d - 1, baseY - 1, Blocks.OAK_PLANKS);
         Build.walls(level, x, z, x + w - 1, z + d - 1, baseY, wallH, wall);
-        // Flat roof with a small parapet.
-        Build.floor(level, x, z, x + w - 1, z + d - 1, baseY + wallH, roof);
-        // Door (south centre) + a couple of windows.
+        // Ceiling, then a pitched gable roof on top.
+        Build.floor(level, x, z, x + w - 1, z + d - 1, baseY + wallH, Blocks.OAK_PLANKS);
+        Build.gableRoof(level, x, z, x + w - 1, z + d - 1, baseY + wallH, Blocks.DARK_OAK_STAIRS, Blocks.DARK_OAK_PLANKS);
+        // Door (south centre) + glass windows on each wall.
         Build.clear(level, x + w / 2, baseY, z, x + w / 2, baseY + 1, z);
         Build.set(level, x + 1, baseY + 1, z, Blocks.GLASS);
         Build.set(level, x + w - 2, baseY + 1, z, Blocks.GLASS);
         Build.set(level, x, baseY + 1, z + d / 2, Blocks.GLASS);
         Build.set(level, x + w - 1, baseY + 1, z + d / 2, Blocks.GLASS);
+        // Interior lamp so homes glow at night.
+        Build.set(level, x + 1, baseY + wallH - 1, z + 1, ModBlocks.STREET_LAMP);
+        // A doorstep lamp.
+        Build.set(level, x + w / 2, baseY, z - 1, ModBlocks.COBBLE_STREET);
     }
 
     private static void lampPost(ServerLevel level, int x, int baseY, int z) {
