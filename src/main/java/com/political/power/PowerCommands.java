@@ -34,8 +34,12 @@ public final class PowerCommands {
         TECHNIQUE_GRADE.put(Power.LIMITLESS_RED, 3);
         TECHNIQUE_GRADE.put(Power.REVERSE_CURSED, 3);
         TECHNIQUE_GRADE.put(Power.TEN_SHADOWS, 3);
+        TECHNIQUE_GRADE.put(Power.SIMPLE_DOMAIN, 2);
+        TECHNIQUE_GRADE.put(Power.WORLD_CUTTING_SLASH, 3);
         TECHNIQUE_GRADE.put(Power.HOLLOW_PURPLE, 4);
+        TECHNIQUE_GRADE.put(Power.INFINITY, 4);
         TECHNIQUE_GRADE.put(Power.DOMAIN_EXPANSION, 5);
+        TECHNIQUE_GRADE.put(Power.SIX_EYES, 5);
     }
 
     private PowerCommands() {}
@@ -164,15 +168,22 @@ public final class PowerCommands {
 
     private static int cursedInfo(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
         ServerPlayer p = self(c);
-        int grade = DataManager.sorcererGrade(p.getStringUUID());
-        int exorcised = DataManager.data().cursesExorcised.getOrDefault(p.getStringUUID(), 0);
-        return ok(c, DataManager.gradeLabel(grade) + " | Curses exorcised: " + exorcised
-                + " | Learn techniques with /cursed learn <id>.");
+        String uuid = p.getStringUUID();
+        int grade = DataManager.sorcererGrade(uuid);
+        int exorcised = DataManager.data().cursesExorcised.getOrDefault(uuid, 0);
+        var trait = DataManager.cursedTrait(uuid);
+        return ok(c, "Aptitude: " + trait.display + " | " + DataManager.gradeLabel(grade)
+                + " | Curses exorcised: " + exorcised
+                + (trait.canUseTechniques() ? " | Learn techniques with /cursed learn <id>."
+                        : " | You channel no cursed energy, but cursed tools answer to you."));
     }
 
     private static int awaken(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
         ServerPlayer p = self(c);
         String uuid = p.getStringUUID();
+        var trait = DataManager.cursedTrait(uuid);
+        if (!trait.canUseTechniques())
+            return fail(c, "Your body holds no cursed energy (" + trait.display + "). You cannot channel techniques, but you wield cursed tools with ease.");
         if (DataManager.sorcererGrade(uuid) > 0) return fail(c, "You have already awakened your cursed energy.");
         DataManager.setSorcererGrade(uuid, 1);
         // Learn a random starter technique.

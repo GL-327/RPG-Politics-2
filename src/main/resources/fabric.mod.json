@@ -3,7 +3,7 @@
 	"id": "politicalserver",
 	"version": "${version}",
 	"name": "RPG Politics 2",
-	"description": "An RPG civilization mod for Minecraft 26.2: elected government with perks, a judiciary with Court Domains, RPG combat stats and abilities, legendary gear, bounty-hunt slayer progression, a coin/credit economy with crypto & stock markets, banking, auctions, homes, checkpoints, parties, and live mob scaling. Adds a unified Energy power system merging The Boys' Compound V serums with Jujutsu Kaisen cursed techniques, a graded Curses faction to exorcise, and RPG-style interactive villager NPCs. Runs on client and server.",
+	"description": "An RPG civilization mod for Minecraft 26.2: elected government with perks, a judiciary with Court Domains, RPG combat stats and abilities, legendary gear, bounty-hunt slayer progression, a coin/credit economy with crypto & stock markets, banking, auctions, homes, checkpoints, parties, and live mob scaling. Two distinct power systems: Mana fuels existing items and serum-granted superhuman powers, while innate Cursed Energy (with traits from Heavenly Restriction to the Six Eyes) fuels cursed techniques like Infinity and Domain Expansion. Adds cursed objects, custom Curse mobs to exorcise, cursed weapons, physical governance items, a Developer config menu, and interactive RPG villager NPCs. Runs on client and server.",
 	"authors": ["Arthur"],
 	"contact": {},
 	"license": "MIT",

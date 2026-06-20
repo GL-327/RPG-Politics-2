@@ -68,7 +68,7 @@ public final class RpgItemCommands {
         if (def.health != 0) sb.append("  Health +").append(def.health).append('\n');
         if (def.defense != 0) sb.append("  Defense +").append(def.defense).append('\n');
         if (def.strength != 0) sb.append("  Strength +").append(def.strength).append('\n');
-        if (def.intelligence != 0) sb.append("  Energy +").append(def.intelligence).append('\n');
+        if (def.intelligence != 0) sb.append("  Mana +").append(def.intelligence).append('\n');
         for (Ability a : def.abilities) {
             sb.append("  \u25C6 ").append(a.displayName).append(": ").append(a.description).append('\n');
         }

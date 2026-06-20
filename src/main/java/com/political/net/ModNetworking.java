@@ -15,6 +15,7 @@ public final class ModNetworking {
     /** Clientbound payload types. Call during common init. */
     public static void registerS2CTypes() {
         PayloadTypeRegistry.clientboundPlay().register(StatSyncS2C.TYPE, StatSyncS2C.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(DevMenuOpenS2C.TYPE, DevMenuOpenS2C.CODEC);
     }
 
     /** Serverbound payload types + receivers. Call during common init. */
@@ -25,6 +26,16 @@ public final class ModNetworking {
             context.server().execute(() -> {
                 Component result = PowerManager.activateSelected(player);
                 player.sendSystemMessage(result, true);
+            });
+        });
+
+        PayloadTypeRegistry.serverboundPlay().register(DevConfigSetC2S.TYPE, DevConfigSetC2S.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(DevConfigSetC2S.TYPE, (payload, context) -> {
+            ServerPlayer player = context.player();
+            context.server().execute(() -> {
+                if (!com.political.dev.DevMenuItem.isDev(player)) return;
+                com.political.dev.DevConfigKey key = com.political.dev.DevConfigKey.byName(payload.key());
+                if (key != null) com.political.dev.DevConfig.set(key, payload.value());
             });
         });
     }

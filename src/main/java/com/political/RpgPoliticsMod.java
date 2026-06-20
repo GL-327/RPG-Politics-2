@@ -57,7 +57,13 @@ public class RpgPoliticsMod implements ModInitializer {
         AbilityEngine.register();
         HealthScalingManager.register();
         PowerManager.register();
+        com.political.curse.ModEntities.register();
         CurseManager.register();
+        com.political.curse.CursedObjects.register();
+        com.political.curse.CursedGear.register();
+        com.political.gov.GovItems.register();
+        com.political.dev.DevMenuItem.register();
+        com.political.content.ModTabs.register();
         VillagerManager.register();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
@@ -99,11 +105,13 @@ public class RpgPoliticsMod implements ModInitializer {
             MarketManager.tick(server);
             BountyManager.tick(server);
             PowerManager.tick(server);
+            CurseManager.tick(server);
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayer player = handler.player;
             DataManager.registerPlayer(player);
+            DataManager.ensureTrait(player.getStringUUID());
             PrisonManager.checkPlayerJoin(player);
             PerkManager.applyActivePerks(player);
             StatManager.apply(player);

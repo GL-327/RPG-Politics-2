@@ -111,4 +111,17 @@ public class PoliticsData {
     // Lifetime curses exorcised (drives grade progression and bragging rights).
     public Map<String, Integer> cursesExorcised = new HashMap<>();
     public boolean curseSpawningEnabled = true;
+
+    // --- Cursed energy (separate resource from Mana) ---
+    // Innate aptitude per player (CursedTrait name). Rolled once on first join.
+    public Map<String, String> cursedTrait = new HashMap<>();
+
+    // --- Tunable config (editable via the Developer Menu) ---
+    public double curseNaturalSpawnChance = 0.04;   // chance a hostile manifests as a curse
+    public double cursedObjectLootChance = 0.01;    // chance eligible dungeon loot is cursed
+    public int deathCurseThreshold = 25;            // deaths in an area before items can curse
+    public double deathCurseChance = 0.05;          // chance an eligible item curses once threshold hit
+    public double cursedObjectAttractChance = 0.02; // per-check chance a carried cursed object lures a curse
+    public double manaRegenRate = 0.02;             // fraction of max mana restored per second
+    public double powerCostMultiplier = 1.0;        // global multiplier on power energy costs
 }

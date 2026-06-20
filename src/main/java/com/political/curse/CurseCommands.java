@@ -27,7 +27,21 @@ public final class CurseCommands {
                                 .executes(c -> spawn(c, 1))
                                 .then(Commands.argument("count", IntegerArgumentType.integer(1, 20))
                                         .executes(c -> spawn(c, IntegerArgumentType.getInteger(c, "count"))))))
-                .then(Commands.literal("toggle").requires(OP).executes(CurseCommands::toggle)));
+                .then(Commands.literal("toggle").requires(OP).executes(CurseCommands::toggle))
+                .then(Commands.literal("object").requires(OP)
+                        .executes(c -> object(c, 30))
+                        .then(Commands.argument("amount", IntegerArgumentType.integer(1, 500))
+                                .executes(c -> object(c, IntegerArgumentType.getInteger(c, "amount"))))));
+    }
+
+    private static int object(CommandContext<CommandSourceStack> c, int amount) throws CommandSyntaxException {
+        ServerPlayer p = c.getSource().getPlayerOrException();
+        var stack = p.getMainHandItem();
+        if (stack.isEmpty()) return 0;
+        CursedObjects.makeCursed(stack, amount);
+        c.getSource().sendSuccess(() -> Component.literal("Steeped your held item in " + amount + " cursed energy.")
+                .withStyle(ChatFormatting.DARK_PURPLE), false);
+        return 1;
     }
 
     private static int spawn(CommandContext<CommandSourceStack> c, int count) throws CommandSyntaxException {

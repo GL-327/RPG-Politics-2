@@ -50,6 +50,10 @@ public enum Power {
             "Bend a nearby creature to fight for you."),
     HEAD_POP("Head Pop", Origin.COMPOUND_V, 70, 300,
             "Focus lethal force on whatever you are looking at."),
+    ADAPTIVE_BIOLOGY("Adaptive Biology", Origin.COMPOUND_V, 30, 200,
+            "Your rewritten body resonates with latent cursed energy, deepening your reserves.", 80),
+    REGENERATIVE_CODE("Regenerative Code", Origin.COMPOUND_V, 40, 220,
+            "Cellular overdrive heals you and awakens dormant cursed energy.", 40),
 
     // ---------------- Jujutsu Kaisen cursed techniques ----------------
     LIMITLESS_BLUE("Cursed Technique: Blue", Origin.CURSED_TECHNIQUE, 30, 80,
@@ -73,7 +77,15 @@ public enum Power {
     CURSED_SPEECH("Cursed Speech", Origin.CURSED_TECHNIQUE, 35, 120,
             "Speak a command imbued with cursed energy, stunning all ahead."),
     DOMAIN_EXPANSION("Domain Expansion", Origin.CURSED_TECHNIQUE, 100, 600,
-            "Manifest your innate domain: every foe within is struck without fail.");
+            "Manifest your innate domain: every foe within is struck without fail."),
+    INFINITY("Infinity", Origin.CURSED_TECHNIQUE, 55, 220,
+            "Fold the space before you so nothing can truly reach \u2014 briefly untouchable."),
+    SIX_EYES("Six Eyes", Origin.CURSED_TECHNIQUE, 0, 240,
+            "Perfect perception: instantly refill your cursed energy and sharpen your senses."),
+    SIMPLE_DOMAIN("Simple Domain", Origin.CURSED_TECHNIQUE, 40, 160,
+            "A defensive circle that wards and repels all who draw near."),
+    WORLD_CUTTING_SLASH("World-Cutting Slash", Origin.CURSED_TECHNIQUE, 60, 200,
+            "A single slash that severs everything in a wide arc before you.");
 
     /** Where a power comes from, which controls how it is acquired and displayed. */
     public enum Origin {
@@ -94,13 +106,30 @@ public enum Power {
     public final int energyCost;
     public final int cooldownTicks;
     public final String description;
+    /** Compound V powers that permanently raise the wielder's maximum Cursed Energy. */
+    public final int cursedEnergyBonus;
 
     Power(String displayName, Origin origin, int energyCost, int cooldownTicks, String description) {
+        this(displayName, origin, energyCost, cooldownTicks, description, 0);
+    }
+
+    Power(String displayName, Origin origin, int energyCost, int cooldownTicks, String description, int cursedEnergyBonus) {
         this.displayName = displayName;
         this.origin = origin;
         this.energyCost = energyCost;
         this.cooldownTicks = cooldownTicks;
         this.description = description;
+        this.cursedEnergyBonus = cursedEnergyBonus;
+    }
+
+    /** Sum of cursed-energy capacity granted by a player's known powers. */
+    public static double cursedEnergyBonus(java.util.List<String> knownPowerIds) {
+        double sum = 0;
+        for (String id : knownPowerIds) {
+            Power p = byId(id);
+            if (p != null) sum += p.cursedEnergyBonus;
+        }
+        return sum;
     }
 
     public String id() {

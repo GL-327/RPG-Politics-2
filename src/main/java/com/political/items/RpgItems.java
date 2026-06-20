@@ -45,7 +45,7 @@ public final class RpgItems {
         addStat(lore, "Health", def.health, ChatFormatting.RED);
         addStat(lore, "Defense", def.defense, ChatFormatting.GREEN);
         addStat(lore, "Strength", def.strength, ChatFormatting.YELLOW);
-        addStat(lore, "Energy", def.intelligence, ChatFormatting.AQUA);
+        addStat(lore, "Mana", def.intelligence, ChatFormatting.AQUA);
         if (def.abilities.length > 0) {
             lore.add(Component.literal(""));
             for (Ability a : def.abilities) {

@@ -29,17 +29,32 @@ import java.util.Random;
 public final class CurseManager {
 
     private static final Random RNG = new Random();
-    private static final float NATURAL_CURSE_CHANCE = 0.04f;
     private static final String CURSE_WORD = "Curse";
 
+    private static int attractCounter = 0;
+
     private CurseManager() {}
+
+    /** Cursed objects carried by players draw curses; checked roughly every 5 seconds. */
+    public static void tick(net.minecraft.server.MinecraftServer server) {
+        if (!DataManager.data().curseSpawningEnabled) return;
+        if (++attractCounter % 100 != 0) return;
+        double chance = DataManager.data().cursedObjectAttractChance;
+        for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+            if (CursedObjects.carriesCursedObject(p) && RNG.nextDouble() < chance) {
+                spawn(p, rollNaturalGrade());
+                p.sendSystemMessage(Component.literal("The cursed object you carry stirs something nearby...")
+                        .withStyle(ChatFormatting.DARK_PURPLE));
+            }
+        }
+    }
 
     public static void register() {
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
             if (!(entity instanceof Monster mob)) return;
             if (mob.hasCustomName()) return; // already special (scaled/boss/curse)
             if (!DataManager.data().curseSpawningEnabled) return;
-            if (RNG.nextFloat() >= NATURAL_CURSE_CHANCE) return;
+            if (RNG.nextFloat() >= DataManager.data().curseNaturalSpawnChance) return;
             manifest(mob, rollNaturalGrade());
         });
     }
@@ -107,12 +122,11 @@ public final class CurseManager {
 
     @SuppressWarnings("unchecked")
     private static EntityType<? extends Monster> baseFor(int grade) {
+        // Higher grades manifest as true custom Curses; lower grades borrow vanilla shells.
         return (EntityType<? extends Monster>) switch (grade) {
             case 1 -> EntityTypes.ZOMBIE;
             case 2 -> EntityTypes.HUSK;
-            case 3 -> EntityTypes.WITHER_SKELETON;
-            case 4 -> EntityTypes.VINDICATOR;
-            default -> EntityTypes.RAVAGER;
+            default -> ModEntities.CURSE_SPIRIT;
         };
     }
 
@@ -138,11 +152,11 @@ public final class CurseManager {
         int grade = gradeOf(dead);
         double energy = 8 + grade * 6;
         int coins = 12 + grade * 18;
-        StatManager.addEnergy(killer, energy);
+        int gained = (int) StatManager.addCursedEnergy(killer, energy);
         DataManager.addCoins(killer.getStringUUID(), coins);
         int total = DataManager.addExorcism(killer.getStringUUID());
         killer.sendSystemMessage(Component.literal("Exorcised a " + gradeLabel(grade)
-                + "! +" + (int) energy + " Cursed Energy, +" + coins + " coins. (" + total + " exorcised)")
+                + "! +" + gained + " Cursed Energy, +" + coins + " coins. (" + total + " exorcised)")
                 .withStyle(ChatFormatting.DARK_PURPLE));
     }
 }

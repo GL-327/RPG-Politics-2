@@ -119,7 +119,7 @@ public final class VillagerManager {
 
     private static void healer(ServerPlayer p, Villager v, String name) {
         int cost = 40;
-        if (p.getHealth() >= p.getMaxHealth() && StatManager.getEnergy(p) >= StatManager.getMaxEnergy(p)) {
+        if (p.getHealth() >= p.getMaxHealth() && StatManager.getMana(p) >= StatManager.getMaxMana(p)) {
             say(p, name, "You are already in fine health, traveller.", Role.HEALER.color);
             return;
         }
@@ -132,7 +132,8 @@ public final class VillagerManager {
             return;
         }
         p.setHealth(p.getMaxHealth());
-        StatManager.addEnergy(p, StatManager.getMaxEnergy(p));
+        StatManager.addMana(p, StatManager.getMaxMana(p));
+        StatManager.addCursedEnergy(p, StatManager.getMaxCursedEnergy(p));
         p.removeEffect(MobEffects.POISON);
         p.removeEffect(MobEffects.WITHER);
         say(p, name, "Be whole again. (-" + cost + " coins)", Role.HEALER.color);

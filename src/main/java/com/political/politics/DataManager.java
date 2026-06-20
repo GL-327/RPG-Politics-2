@@ -220,4 +220,25 @@ public final class DataManager {
         if (grade > sorcererGrade(uuid)) setSorcererGrade(uuid, grade);
         return v;
     }
+
+    // --- Cursed energy aptitude (trait) ---
+
+    public static com.political.curse.CursedTrait cursedTrait(String uuid) {
+        return com.political.curse.CursedTrait.byId(data.cursedTrait.get(uuid));
+    }
+
+    public static void setCursedTrait(String uuid, com.political.curse.CursedTrait trait) {
+        data.cursedTrait.put(uuid, trait.name());
+    }
+
+    /** Rolls a trait for a player the first time we see them; returns the (possibly existing) trait. */
+    public static com.political.curse.CursedTrait ensureTrait(String uuid) {
+        String existing = data.cursedTrait.get(uuid);
+        if (existing == null) {
+            com.political.curse.CursedTrait rolled = com.political.curse.CursedTrait.roll();
+            data.cursedTrait.put(uuid, rolled.name());
+            return rolled;
+        }
+        return com.political.curse.CursedTrait.byId(existing);
+    }
 }

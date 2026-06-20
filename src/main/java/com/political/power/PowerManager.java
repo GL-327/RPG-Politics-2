@@ -89,8 +89,17 @@ public final class PowerManager {
         if (power == null) return err("You have no power selected. Use /power select <id>.");
         if (!DataManager.hasPower(player.getStringUUID(), power.id())) return err("You have not awakened that power.");
         if (onCooldown(player, power)) return err(power.displayName + " is recharging (" + cooldownRemaining(player, power) + "s).");
-        if (!StatManager.spendEnergy(player, power.energyCost))
-            return err("Not enough Energy (" + power.energyCost + " needed).");
+
+        int cost = (int) Math.round(power.energyCost * DataManager.data().powerCostMultiplier);
+        if (power.origin == Power.Origin.CURSED_TECHNIQUE) {
+            if (StatManager.getMaxCursedEnergy(player) <= 0)
+                return err("You have no cursed energy to channel.");
+            if (!StatManager.spendCursedEnergy(player, cost))
+                return err("Not enough Cursed Energy (" + cost + " needed).");
+        } else {
+            if (!StatManager.spendMana(player, cost))
+                return err("Not enough Mana (" + cost + " needed).");
+        }
 
         ServerLevel level = player.level();
         cast(player, level, power);
@@ -238,6 +247,43 @@ public final class PowerManager {
                 }
                 level.sendParticles(ParticleTypes.REVERSE_PORTAL, p.getX(), p.getY() + 1, p.getZ(), 200, 12, 6, 12, 0.2);
                 level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 2.0f, 0.6f);
+            }
+            case INFINITY -> {
+                p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 160, 4, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 160, 3, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 160, 0, false, true));
+                for (LivingEntity e : around(p, 4)) launchEntity(e, p, -2.0, 0.4);
+                level.sendParticles(ParticleTypes.END_ROD, p.getX(), p.getY() + 1, p.getZ(), 60, 1.2, 1.2, 1.2, 0.02);
+            }
+            case SIX_EYES -> {
+                StatManager.addCursedEnergy(p, StatManager.getMaxCursedEnergy(p));
+                p.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 1200, 0, false, false));
+                p.addEffect(new MobEffectInstance(MobEffects.SPEED, 200, 1, false, true));
+                level.sendParticles(ParticleTypes.GLOW, p.getX(), p.getEyeY(), p.getZ(), 40, 0.4, 0.4, 0.4, 0.05);
+            }
+            case SIMPLE_DOMAIN -> {
+                p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 200, 2, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 200, 1, false, true));
+                for (LivingEntity e : around(p, 5)) {
+                    launchEntity(e, p, -1.5, 0.4);
+                    e.hurtServer(level, level.damageSources().magic(), 4.0f);
+                }
+                level.sendParticles(ParticleTypes.ENCHANTED_HIT, p.getX(), p.getY() + 1, p.getZ(), 60, 3, 1, 3, 0.0);
+            }
+            case WORLD_CUTTING_SLASH -> {
+                for (LivingEntity e : cone(p, 16, 0.35)) {
+                    e.hurtServer(level, level.damageSources().playerAttack(p), 16.0f);
+                }
+                particleCone(level, p, ParticleTypes.SWEEP_ATTACK);
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.4f, 0.6f);
+            }
+            case ADAPTIVE_BIOLOGY -> {
+                p.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 2400, 1, false, true));
+                StatManager.addCursedEnergy(p, 20);
+            }
+            case REGENERATIVE_CODE -> {
+                p.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 3, false, true));
+                StatManager.addCursedEnergy(p, 15);
             }
         }
     }
