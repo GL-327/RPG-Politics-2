@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/paper"
+    "model": "politicalserver:item/treasury_note"
   }
 }
