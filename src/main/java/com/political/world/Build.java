@@ -34,6 +34,61 @@ public final class Build {
         return level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z);
     }
 
+    /**
+     * Median {@link #groundY} over a footprint — a robust "sit here" height that ignores the
+     * odd spike or pit so a building rests naturally on the terrain instead of on a flat pad.
+     */
+    public static int medianGround(ServerLevel level, int x0, int z0, int x1, int z1) {
+        int minX = Math.min(x0, x1), maxX = Math.max(x0, x1);
+        int minZ = Math.min(z0, z1), maxZ = Math.max(z0, z1);
+        // Sample on a stride to stay cheap for very large footprints.
+        int strideX = Math.max(1, (maxX - minX) / 12);
+        int strideZ = Math.max(1, (maxZ - minZ) / 12);
+        java.util.ArrayList<Integer> hs = new java.util.ArrayList<>();
+        for (int x = minX; x <= maxX; x += strideX)
+            for (int z = minZ; z <= maxZ; z += strideZ)
+                hs.add(groundY(level, x, z));
+        if (hs.isEmpty()) return groundY(level, minX, minZ);
+        java.util.Collections.sort(hs);
+        return hs.get(hs.size() / 2);
+    }
+
+    /**
+     * Prepares a building footprint to rest on the terrain at {@code floorY}: fills a foundation
+     * skirt down to each column's own ground (so downhill edges never float) and clears the
+     * building's own air volume up to {@code floorY+clearHeight} (so uphill terrain never buries
+     * it). No settlement-wide flatten — just this footprint, like a vanilla village house.
+     */
+    public static void prepFootprint(ServerLevel level, int x0, int z0, int x1, int z1,
+                                     int floorY, int clearHeight, Block foundation) {
+        int minX = Math.min(x0, x1), maxX = Math.max(x0, x1);
+        int minZ = Math.min(z0, z1), maxZ = Math.max(z0, z1);
+        BlockState found = foundation.defaultBlockState();
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                int g = groundY(level, x, z);
+                for (int y = Math.min(g, floorY); y <= floorY - 1; y++) set(level, x, y, z, found);
+                int top = floorY + clearHeight;
+                for (int y = floorY; y <= top; y++) set(level, x, y, z, Blocks.AIR.defaultBlockState());
+            }
+        }
+    }
+
+    /** Lays a path/road that follows the terrain surface (one block per column at its ground top). */
+    public static void surfaceRoad(ServerLevel level, int x0, int z0, int x1, int z1, Block block) {
+        int minX = Math.min(x0, x1), maxX = Math.max(x0, x1);
+        int minZ = Math.min(z0, z1), maxZ = Math.max(z0, z1);
+        BlockState s = block.defaultBlockState();
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                int g = groundY(level, x, z);
+                set(level, x, g - 1, z, s);
+                // clear a head-height channel so paths aren't tunnels through a hillside lip
+                for (int y = g; y <= g + 2; y++) set(level, x, y, z, Blocks.AIR.defaultBlockState());
+            }
+        }
+    }
+
     public static void set(ServerLevel level, int x, int y, int z, BlockState state) {
         if (deferred != null) {
             deferred.add(x, y, z, state);
