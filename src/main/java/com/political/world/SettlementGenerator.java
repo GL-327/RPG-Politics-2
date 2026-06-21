@@ -380,9 +380,16 @@ public final class SettlementGenerator {
                                      int step, int rcx, int rcz, int rHalf, Random rng,
                                      Block ground, boolean modern) {
         Build.floor(level, x0, z0, x1, z1, baseY - 1, ground);
-        Block street = modern ? ModBlocks.COBBLE_STREET : ModBlocks.COBBLE_STREET;
-        for (int gx = x0; gx <= x1; gx += step) Build.cube(level, gx, baseY - 1, z0, gx, baseY - 1, z1, street);
-        for (int gz = z0; gz <= z1; gz += step) Build.cube(level, x0, baseY - 1, gz, x1, baseY - 1, gz, street);
+        Block street = modern ? ModBlocks.PAVED_ROAD : ModBlocks.COBBLE_STREET;
+        // Two-wide streets read more clearly as roads than single lines.
+        for (int gx = x0; gx <= x1; gx += step) {
+            Build.cube(level, gx, baseY - 1, z0, gx, baseY - 1, z1, street);
+            if (gx + 1 <= x1) Build.cube(level, gx + 1, baseY - 1, z0, gx + 1, baseY - 1, z1, street);
+        }
+        for (int gz = z0; gz <= z1; gz += step) {
+            Build.cube(level, x0, baseY - 1, gz, x1, baseY - 1, gz, street);
+            if (gz + 1 <= z1) Build.cube(level, x0, baseY - 1, gz + 1, x1, baseY - 1, gz + 1, street);
+        }
 
         for (int px = x0 + 1; px + step - 2 <= x1; px += step) {
             for (int pz = z0 + 1; pz + step - 2 <= z1; pz += step) {
