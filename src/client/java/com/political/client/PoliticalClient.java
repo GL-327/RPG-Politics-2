@@ -54,6 +54,8 @@ public class PoliticalClient implements ClientModInitializer {
         ModelLayerRegistry.registerModelLayer(CurseModels.CURSE_LAYER, CurseModels::createBodyLayer);
         EntityRendererRegistry.register(com.political.curse.ModEntities.CURSE_SPIRIT, CurseRenderer::new);
 
+        ItemTooltips.register();
+
         activatePowerKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.politicalserver.activate_power",
                 InputConstants.Type.KEYSYM,
