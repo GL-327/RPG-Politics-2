@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": { "min": 5, "max": 8 },
+      "entries": [
+        { "type": "minecraft:item", "name": "politicalserver:wpn_godslayer_blade", "weight": 2 },
+        { "type": "minecraft:item", "name": "politicalserver:wpn_ragnarok_axe", "weight": 2 },
+        { "type": "minecraft:item", "name": "politicalserver:acc_godslayer_relic", "weight": 3 },
+        { "type": "minecraft:item", "name": "politicalserver:reforge_stone", "weight": 5 },
+        { "type": "minecraft:item", "name": "politicalserver:treasury_note", "weight": 4 },
+        { "type": "minecraft:item", "name": "politicalserver:bounty_seal", "weight": 4 },
+        { "type": "minecraft:item", "name": "politicalserver:grade_scroll", "weight": 3 },
+        { "type": "minecraft:item", "name": "politicalserver:exorcism_token", "weight": 3 },
+        { "type": "minecraft:item", "name": "minecraft:netherite_ingot", "weight": 1 }
+      ]
+    }
+  ]
+}

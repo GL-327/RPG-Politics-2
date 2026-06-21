@@ -1,1 +1,6 @@
-{ "parent": "minecraft:block/cube_all", "textures": { "all": "politicalserver:block/modern_facade" } }
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "politicalserver:block/modern_facade"
+  }
+}

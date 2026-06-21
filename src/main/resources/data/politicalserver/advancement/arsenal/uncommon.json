@@ -1,0 +1,28 @@
+{
+  "parent": "politicalserver:arsenal/root",
+  "display": {
+    "icon": { "id": "politicalserver:wpn_steel_saber" },
+    "title": { "translate": "advancements.politicalserver.arsenal.uncommon.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.uncommon.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:wpn_steel_saber",
+            "politicalserver:wpn_hunters_kris",
+            "politicalserver:wpn_bearded_axe",
+            "politicalserver:wpn_war_pike",
+            "politicalserver:wpn_iron_morningstar"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

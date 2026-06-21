@@ -42,6 +42,9 @@ public final class PoliticsCommands {
                         .executes(PoliticsCommands::vote)));
 
         d.register(Commands.literal("gov").executes(PoliticsCommands::gov));
+        // Opens the Governance GUI.
+        d.register(Commands.literal("politics")
+                .executes(c -> { GovMenu.sendMenu(c.getSource().getPlayerOrException()); return 1; }));
         d.register(Commands.literal("coins").executes(PoliticsCommands::coins));
         d.register(Commands.literal("pay")
                 .then(Commands.argument("player", EntityArgument.player())
@@ -58,7 +61,10 @@ public final class PoliticsCommands {
                 .then(Commands.literal("collect").requires(OP).executes(PoliticsCommands::taxCollect))
                 .then(Commands.literal("percent").requires(OP)
                         .then(Commands.argument("percent", IntegerArgumentType.integer(0, 100))
-                                .executes(PoliticsCommands::taxPercent))));
+                                .executes(PoliticsCommands::taxPercent)))
+                .then(Commands.literal("tiers").requires(OP)
+                        .then(Commands.literal("enable").executes(c -> setTaxTiers(c, true)))
+                        .then(Commands.literal("disable").executes(c -> setTaxTiers(c, false)))));
 
         d.register(Commands.literal("treasury")
                 .executes(PoliticsCommands::treasury)
@@ -206,6 +212,12 @@ public final class PoliticsCommands {
     private static int taxPercent(CommandContext<CommandSourceStack> c) {
         DataManager.data().taxPercent = IntegerArgumentType.getInteger(c, "percent");
         return ok(c, "Tax rate set to " + DataManager.data().taxPercent + "%.");
+    }
+
+    private static int setTaxTiers(CommandContext<CommandSourceStack> c, boolean enabled) {
+        DataManager.data().taxTieredEnabled = enabled;
+        return ok(c, "Progressive tax brackets " + (enabled
+                ? "enabled (poverty exemption + wealth surcharge)." : "disabled (flat rate)."));
     }
 
     private static int treasury(CommandContext<CommandSourceStack> c) {

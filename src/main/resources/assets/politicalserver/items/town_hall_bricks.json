@@ -1,1 +1,6 @@
-{ "model": { "type": "minecraft:model", "model": "politicalserver:block/town_hall_bricks" } }
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "politicalserver:block/town_hall_bricks"
+  }
+}

@@ -102,6 +102,10 @@ public class PoliticsData {
     public Map<String, String> selectedPower = new HashMap<>();
     // Temp V powers expire: key = uuid -> epoch millis when temp powers are stripped (0 = none).
     public Map<String, Long> tempPowerExpiry = new HashMap<>();
+    // The specific power id granted by Temp V (so only it is stripped on expiry, not earned powers).
+    public Map<String, String> tempPowerId = new HashMap<>();
+    // The power that was selected before Temp V, restored when the temp power fades.
+    public Map<String, String> tempPowerPrevSelected = new HashMap<>();
     // Sorcerer grade per player (0 = not a sorcerer; 1..5 where 5 = Special Grade).
     public Map<String, Integer> sorcererGrade = new HashMap<>();
     // Lifetime curses exorcised (drives grade progression and bragging rights).
@@ -116,7 +120,7 @@ public class PoliticsData {
 
     // --- Tunable config (editable via the Developer Menu) ---
     public double curseNaturalSpawnChance = 0.04;   // chance a hostile manifests as a curse
-    public double cursedObjectLootChance = 0.01;    // chance eligible dungeon loot is cursed
+    public double cursedObjectLootChance = 0.01;    // chance eligible loot is cursed
     public int deathCurseThreshold = 25;            // deaths in an area before items can curse
     public double deathCurseChance = 0.05;          // chance an eligible item curses once threshold hit
     public double cursedObjectAttractChance = 0.02; // per-check chance a carried cursed object lures a curse
@@ -136,8 +140,56 @@ public class PoliticsData {
     public List<String> generatedCells = new ArrayList<>();
 
     // --- Worldgen tuning (editable via the Developer Menu) ---
-    public boolean settlementGenEnabled = true;     // auto-scatter settlements as players explore
+    public boolean settlementGenEnabled = false;    // procedural scatter off; vanilla villages + overlay
     public int settlementGridChunks = 48;           // size of each candidate grid cell, in chunks
     public double settlementSpawnChance = 0.55;      // chance a suitable grid cell receives a settlement
     public long settlementTermMillis = 7L * 24 * 60 * 60 * 1000; // local term length
+
+    // ========================================================================
+    // Expansion 3: Civics (jobs, offices, laws, justice, factions, treasury fund)
+    // All additive; older saves deserialize these as their defaults.
+    // ========================================================================
+
+    // --- Jobs & daily income ---
+    public Map<String, String> civicJob = new HashMap<>();        // uuid -> Job.name()
+    public Map<String, Integer> civicJobXp = new HashMap<>();     // uuid -> lifetime job xp
+    public Map<String, Long> civicJobLastWage = new HashMap<>();  // uuid -> epoch millis of last daily wage
+    public Map<String, Long> civicJobLastWork = new HashMap<>();  // uuid -> epoch millis of last /job work
+
+    // --- Taxation tiers (progressive brackets feeding the treasury) ---
+    public boolean taxTieredEnabled = false;        // when true, collect() uses bracket rates
+
+    // --- Civic offices (municipal: Mayor / Judge / Treasurer), separate from national roles ---
+    public Map<String, String> civicOffices = new HashMap<>();    // office id -> holder uuid
+    public boolean officeElectionActive = false;
+    public String officeElectionOffice = "";        // which office is being contested
+    public long officeElectionEnd = 0L;
+    public List<String> officeCandidates = new ArrayList<>();
+    public Map<String, Integer> officeVotes = new HashMap<>();
+    public List<String> officeVoted = new ArrayList<>();
+    public Map<String, String> manifestos = new HashMap<>();      // uuid -> campaign manifesto text
+    public Map<String, Integer> campaignFunds = new HashMap<>();  // uuid -> coins pledged to the current race
+
+    // --- Laws / decrees ---
+    public List<String> activeLaws = new ArrayList<>();           // CivicLaw.name()
+    public Map<String, Long> lawEnactedAt = new HashMap<>();      // CivicLaw.name() -> epoch millis
+    public long lastWelfareTime = 0L;                             // welfare-law stipend cadence
+
+    // --- Justice flow (fines, criminal records, wanted board, bail) ---
+    public Map<String, Integer> criminalRecord = new HashMap<>(); // uuid -> lifetime offenses
+    public Map<String, Integer> fines = new HashMap<>();          // uuid -> outstanding fine coins
+    public Map<String, Integer> wanted = new HashMap<>();         // uuid -> bounty reward for capturing/killing
+    public Map<String, Integer> bail = new HashMap<>();           // uuid -> coins to buy freedom from prison
+
+    // --- Treasury sovereign wealth fund + public works ---
+    public long treasuryFund = 0;                                 // coins principal placed in the fund
+    public double treasuryFundUnits = 0.0;                        // synthetic index units owned by the fund
+    public double treasuryFundIndex = 1000.0;                     // live index price (random walk)
+    public long lastFundTick = 0L;
+    public Map<String, Integer> publicWorks = new HashMap<>();    // project id -> coins invested so far
+    public List<String> completedWorks = new ArrayList<>();       // project ids that have been finished
+
+    // --- Factions / parties ---
+    public Map<String, com.political.civics.Faction> factions = new HashMap<>();
+    public Map<String, String> factionOf = new HashMap<>();       // uuid -> faction id
 }

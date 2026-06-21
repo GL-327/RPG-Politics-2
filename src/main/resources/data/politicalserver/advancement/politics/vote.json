@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:politics/root",
+  "display": {
+    "icon": { "id": "politicalserver:ballot" },
+    "title": { "translate": "advancements.politicalserver.politics.vote.title" },
+    "description": { "translate": "advancements.politicalserver.politics.vote.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

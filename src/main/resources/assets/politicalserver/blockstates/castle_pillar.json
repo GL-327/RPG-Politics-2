@@ -1,1 +1,7 @@
-{ "variants": { "": { "model": "politicalserver:block/castle_pillar" } } }
+{
+  "variants": {
+    "": {
+      "model": "politicalserver:block/castle_pillar"
+    }
+  }
+}

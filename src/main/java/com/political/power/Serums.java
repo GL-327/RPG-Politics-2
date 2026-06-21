@@ -33,18 +33,24 @@ public final class Serums {
         Power power = randomCompoundV(uuid, true);
         if (power == null) return msg(player, "Compound V courses through you, but you already command every power.", ChatFormatting.GRAY);
         DataManager.grantPower(uuid, power.id());
-        DataManager.data().tempPowerExpiry.remove(uuid); // make permanent if previously temp
         return msg(player, "Compound V surges through your veins! You manifest: " + power.displayName + ".", ChatFormatting.RED);
     }
 
-    /** Temporary random Compound V power that expires after a few minutes. */
+    /**
+     * Temporary random Compound V power that expires after a few minutes. Only ever grants a
+     * power the player does not already permanently know, and records exactly which power it
+     * granted so that when it expires it strips <i>only</i> that power (never earned ones).
+     */
     public static Component drinkTempV(ServerPlayer player) {
         String uuid = player.getStringUUID();
-        Power power = randomCompoundV(uuid, false);
-        if (power == null) return msg(player, "Nothing happens.", ChatFormatting.GRAY);
+        Power power = randomCompoundV(uuid, true);
+        if (power == null) return msg(player, "Temp V courses through you, but you already command every Compound V power.", ChatFormatting.GRAY);
+        String prevSelected = DataManager.selectedPower(uuid);
         DataManager.grantPower(uuid, power.id());
         DataManager.setSelectedPower(uuid, power.id());
         DataManager.data().tempPowerExpiry.put(uuid, System.currentTimeMillis() + TEMP_V_DURATION_MS);
+        DataManager.data().tempPowerId.put(uuid, power.id());
+        if (prevSelected != null) DataManager.data().tempPowerPrevSelected.put(uuid, prevSelected);
         return msg(player, "Temp V kicks in: " + power.displayName + " (5 minutes).", ChatFormatting.GOLD);
     }
 

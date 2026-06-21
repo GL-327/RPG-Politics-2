@@ -1,0 +1,41 @@
+{
+  "_comment": "JJK overhaul (Workstream A) lang fragment. These keys must be MERGED into assets/politicalserver/lang/en_us.json by the integrator (Minecraft only loads en_us.json). Gameplay does not depend on them — screens read English names from the technique/domain registries — but the keybind labels and any future i18n do.",
+
+  "key.politicalserver.open_techniques": "Open Cursed Techniques",
+  "key.politicalserver.expand_domain": "Expand Domain",
+  "key.politicalserver.cursed_technique_1": "Cursed Technique 1",
+  "key.politicalserver.cursed_technique_2": "Cursed Technique 2",
+  "key.politicalserver.cursed_technique_3": "Cursed Technique 3",
+  "key.politicalserver.cursed_technique_4": "Cursed Technique 4",
+
+  "technique.politicalserver.severing_edge": "Severing Edge",
+  "technique.politicalserver.severing_edge.desc": "A fanning cursed-energy slash that rends everything in front of you.",
+  "technique.politicalserver.hollow_lance": "Hollow Lance",
+  "technique.politicalserver.hollow_lance.desc": "A tight lance of hollow cursed energy that pierces a line of foes.",
+  "technique.politicalserver.riftpalm": "Riftpalm",
+  "technique.politicalserver.riftpalm.desc": "Releases a burst of cursed pressure, hurling nearby foes away.",
+  "technique.politicalserver.ashen_pyre": "Ashen Pyre",
+  "technique.politicalserver.ashen_pyre.desc": "A breath of cursed flame that scorches and ignites a wide cone.",
+  "technique.politicalserver.frostbind_coil": "Frostbind Coil",
+  "technique.politicalserver.frostbind_coil.desc": "A coil of frozen cursed energy that slows and saps those it strikes.",
+  "technique.politicalserver.stormcall_brand": "Stormcall Brand",
+  "technique.politicalserver.stormcall_brand.desc": "Brands the foe you face and calls a bolt of charged cursed energy onto them.",
+  "technique.politicalserver.grave_tether": "Grave Tether",
+  "technique.politicalserver.grave_tether.desc": "Tethers the nearest foe, draining their vitality to mend your own.",
+  "technique.politicalserver.warding_sigil": "Warding Sigil",
+  "technique.politicalserver.warding_sigil.desc": "Weaves a protective sigil of cursed energy, hardening and mending you.",
+  "technique.politicalserver.shade_step": "Shade Step",
+  "technique.politicalserver.shade_step.desc": "Reinforces your body and blinks a short distance in the direction you look.",
+  "technique.politicalserver.verdant_snare": "Verdant Snare",
+  "technique.politicalserver.verdant_snare.desc": "Erupts a barbed cursed bloom that roots and poisons everything around you.",
+
+  "domain.politicalserver.garden_of_severing_bloom": "Garden of Severing Bloom",
+  "domain.politicalserver.garden_of_severing_bloom.desc": "A barbed cursed garden unfurls; thorns bleed and root all who stand within.",
+  "domain.politicalserver.tomb_of_the_hollow_maw": "Tomb of the Hollow Maw",
+  "domain.politicalserver.tomb_of_the_hollow_maw.desc": "A yawning void seals the area; its hollow gravity smothers everything inside.",
+  "domain.politicalserver.cathedral_of_still_light": "Cathedral of Still Light",
+  "domain.politicalserver.cathedral_of_still_light.desc": "A silent cathedral of light manifests; its radiance scours foes and mends its master.",
+
+  "jjk.politicalserver.cursed_energy": "Cursed Energy",
+  "jjk.politicalserver.grade": "Sorcerer Grade"
+}

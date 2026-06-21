@@ -179,6 +179,18 @@ public final class DataManager {
         knownPowers(uuid).clear();
         data.selectedPower.remove(uuid);
         data.tempPowerExpiry.remove(uuid);
+        data.tempPowerId.remove(uuid);
+        data.tempPowerPrevSelected.remove(uuid);
+    }
+
+    /** Removes a single power; resets the selection to another known power if needed. */
+    public static void revokePower(String uuid, String powerId) {
+        java.util.List<String> list = knownPowers(uuid);
+        list.remove(powerId);
+        if (powerId.equals(data.selectedPower.get(uuid))) {
+            if (list.isEmpty()) data.selectedPower.remove(uuid);
+            else data.selectedPower.put(uuid, list.get(0));
+        }
     }
 
     public static String selectedPower(String uuid) {

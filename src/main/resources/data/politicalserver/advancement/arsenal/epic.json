@@ -1,0 +1,29 @@
+{
+  "parent": "politicalserver:arsenal/rare",
+  "display": {
+    "icon": { "id": "politicalserver:wpn_dragonbone_greatsword" },
+    "title": { "translate": "advancements.politicalserver.arsenal.epic.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.epic.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:wpn_dragonbone_greatsword",
+            "politicalserver:wpn_venom_claws",
+            "politicalserver:wpn_frost_cleaver",
+            "politicalserver:wpn_ember_waraxe",
+            "politicalserver:wpn_serpent_whip",
+            "politicalserver:wpn_thunderspike_spear"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

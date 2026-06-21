@@ -1,0 +1,7 @@
+{
+  "name": "politicalserver-tools",
+  "private": true,
+  "dependencies": {
+    "jimp": "^1.6.0"
+  }
+}

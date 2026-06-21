@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "politicalserver:block/dec2_tourmaline_glass"
+  }
+}

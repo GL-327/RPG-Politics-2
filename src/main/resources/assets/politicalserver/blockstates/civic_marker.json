@@ -1,1 +1,7 @@
-{ "variants": { "": { "model": "politicalserver:block/civic_marker" } } }
+{
+  "variants": {
+    "": {
+      "model": "politicalserver:block/civic_marker"
+    }
+  }
+}

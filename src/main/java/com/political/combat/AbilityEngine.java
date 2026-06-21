@@ -1,6 +1,7 @@
 package com.political.combat;
 
 import com.political.items.Ability;
+import com.political.items.ItemStats;
 import com.political.items.RpgItems;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -46,7 +47,6 @@ public final class AbilityEngine {
 
     private static final Random RNG = new Random();
     private static final ThreadLocal<Boolean> BREAKING = ThreadLocal.withInitial(() -> false);
-    private static final Set<UUID> GRANTED_FLIGHT = new HashSet<>();
     private static final int MAX_VEIN = 64;
 
     private static final EquipmentSlot[] ARMOR = {
@@ -60,8 +60,10 @@ public final class AbilityEngine {
             if (level.isClientSide()) return InteractionResult.PASS;
             if (!(player instanceof ServerPlayer sp)) return InteractionResult.PASS;
             if (!(entity instanceof LivingEntity target)) return InteractionResult.PASS;
+            // When the Skyblock damage system is disabled, defer to vanilla combat entirely.
+            if (!com.political.config.PoliticalConfig.get().combatDamageEnabled) return InteractionResult.PASS;
             onAttack(sp, target);
-            return InteractionResult.PASS;
+            return InteractionResult.SUCCESS; // Skyblock damage replaces vanilla hit
         });
 
         PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, blockEntity) -> {
@@ -76,7 +78,28 @@ public final class AbilityEngine {
 
     private static void onAttack(ServerPlayer attacker, LivingEntity target) {
         ServerLevel level = (ServerLevel) target.level();
-        applyCritAndFerocity(attacker, target, level);
+        com.political.config.PoliticalConfig cfg = com.political.config.PoliticalConfig.get();
+        ItemStats.Sheet sheet = ItemStats.compute(attacker.getMainHandItem());
+        RpgStats stats = StatManager.get(attacker);
+
+        // Skyblock hit = (flat base + weapon damage + scaled strength), tuned by config multipliers
+        // and clamped to a sane ceiling so stat-stacking / multipliers can't overflow.
+        double base = (cfg.damageBaseFlat + sheet.damage + stats.strength * cfg.strengthDamageScale)
+                * cfg.damageMultiplier;
+        float cursedBonus = com.political.curse.CursedGear.attackBonus(attacker, attacker.getMainHandItem());
+        if (cursedBonus > 0) {
+            base += cursedBonus;
+            com.political.curse.CursedGear.playHitFx(level, target);
+        }
+        base = Math.min(base, cfg.maxHitDamage);
+        target.invulnerableTime = 0;
+        target.hurtServer(level, level.damageSources().playerAttack(attacker), (float) base);
+
+        applyCritAndFerocity(attacker, target, level, base);
+
+        // Black Flash (cursed technique buff) must be consumed here: this engine returns SUCCESS
+        // from its AttackEntityCallback, which would short-circuit any other attack listener.
+        com.political.power.PowerManager.tryConsumeBlackFlash(attacker, target, level);
 
         List<Ability> abilities = RpgItems.abilitiesOf(attacker.getMainHandItem());
         if (abilities.isEmpty()) return;
@@ -115,22 +138,29 @@ public final class AbilityEngine {
         }
     }
 
-    /** Skyblock-style crit + ferocity, computed from the attacker's summed gear stats. */
-    private static void applyCritAndFerocity(ServerPlayer attacker, LivingEntity target, ServerLevel level) {
+    /** Skyblock-style crit + ferocity on top of the base Skyblock hit. */
+    private static void applyCritAndFerocity(ServerPlayer attacker, LivingEntity target, ServerLevel level, double base) {
         RpgStats s = StatManager.get(attacker);
-        double atk = Math.max(1.0, attacker.getAttributeValue(Attributes.ATTACK_DAMAGE));
+        com.political.config.PoliticalConfig cfg = com.political.config.PoliticalConfig.get();
 
-        if (s.critChance > 0 && RNG.nextDouble() * 100.0 < s.critChance) {
-            float bonus = (float) (atk * s.critDamage / 100.0);
-            target.hurtServer(level, level.damageSources().playerAttack(attacker), bonus);
-            level.sendParticles(ParticleTypes.CRIT, target.getX(),
-                    target.getY() + target.getBbHeight() * 0.6, target.getZ(), 12, 0.3, 0.3, 0.3, 0.1);
+        if (cfg.critEnabled) {
+            double critChance = Math.min(cfg.maxCritChancePercent, s.critChance * cfg.critChanceMultiplier);
+            if (critChance > 0 && RNG.nextDouble() * 100.0 < critChance) {
+                float bonus = (float) Math.min(cfg.maxHitDamage,
+                        base * (s.critDamage * cfg.critDamageMultiplier) / 100.0);
+                target.invulnerableTime = 0;
+                target.hurtServer(level, level.damageSources().playerAttack(attacker), bonus);
+                level.sendParticles(ParticleTypes.CRIT, target.getX(),
+                        target.getY() + target.getBbHeight() * 0.6, target.getZ(), 12, 0.3, 0.3, 0.3, 0.1);
+            }
         }
 
+        if (!cfg.ferocityEnabled) return;
         int extra = (int) (s.ferocity / 100.0);
         if (RNG.nextDouble() * 100.0 < s.ferocity % 100.0) extra++;
         for (int i = 0; i < extra; i++) {
-            target.hurtServer(level, level.damageSources().playerAttack(attacker), (float) atk);
+            target.invulnerableTime = 0;
+            target.hurtServer(level, level.damageSources().playerAttack(attacker), (float) (base * 0.6));
         }
     }
 
@@ -301,22 +331,9 @@ public final class AbilityEngine {
     }
 
     private static void manageFlight(ServerPlayer player, boolean shouldFly) {
-        UUID id = player.getUUID();
-        if (player.isCreative() || player.isSpectator()) {
-            GRANTED_FLIGHT.remove(id);
-            return;
-        }
-        if (shouldFly) {
-            if (!player.getAbilities().mayfly) {
-                player.getAbilities().mayfly = true;
-                player.onUpdateAbilities();
-            }
-            GRANTED_FLIGHT.add(id);
-        } else if (GRANTED_FLIGHT.remove(id)) {
-            player.getAbilities().mayfly = false;
-            player.getAbilities().flying = false;
-            player.onUpdateAbilities();
-        }
+        // Route gear-granted flight through the unified Viltrumite FlightManager rather than
+        // toggling raw mayfly here. Creative/spectator flight is left to vanilla by FlightManager.
+        com.political.flight.FlightManager.setArmorFlight(player, shouldFly);
     }
 
     /** Helper for other systems (e.g. economy boosts): is an ability worn/held anywhere? */
@@ -328,6 +345,6 @@ public final class AbilityEngine {
     }
 
     public static void onPlayerRemoved(UUID uuid) {
-        GRANTED_FLIGHT.remove(uuid);
+        com.political.flight.FlightManager.onPlayerRemoved(uuid);
     }
 }

@@ -1,1 +1,6 @@
-{ "model": { "type": "minecraft:model", "model": "politicalserver:block/modern_window" } }
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "politicalserver:block/modern_window"
+  }
+}

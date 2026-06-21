@@ -22,6 +22,7 @@ import java.util.List;
 public final class ItemStats {
 
     // NBT keys (the first five match the legacy keys StatManager already used).
+    public static final String DAMAGE = "rpg_damage";
     public static final String HEALTH = "rpg_health";
     public static final String DEFENSE = "rpg_defense";
     public static final String STRENGTH = "rpg_strength";
@@ -42,17 +43,17 @@ public final class ItemStats {
 
     /** A computed stat contribution from a single item. */
     public static final class Sheet {
-        public double health, defense, strength, intelligence, cursed;
+        public double health, defense, strength, intelligence, cursed, damage;
         public double critChance, critDamage, ferocity, speed, attackSpeed;
 
         void scale(double m) {
-            health *= m; defense *= m; strength *= m; intelligence *= m; cursed *= m;
+            health *= m; defense *= m; strength *= m; intelligence *= m; cursed *= m; damage *= m;
             critChance *= m; critDamage *= m; ferocity *= m; speed *= m; attackSpeed *= m;
         }
 
         boolean isEmpty() {
             return health == 0 && defense == 0 && strength == 0 && intelligence == 0 && cursed == 0
-                    && critChance == 0 && critDamage == 0 && ferocity == 0 && speed == 0 && attackSpeed == 0;
+                    && damage == 0 && critChance == 0 && critDamage == 0 && ferocity == 0 && speed == 0 && attackSpeed == 0;
         }
     }
 
@@ -155,6 +156,7 @@ public final class ItemStats {
             s.strength += tag.getIntOr(STRENGTH, 0);
             s.intelligence += tag.getIntOr(INTELLIGENCE, 0);
             s.cursed += tag.getIntOr(CURSED, 0);
+            s.damage += tag.getIntOr(DAMAGE, 0);
             s.critChance += tag.getIntOr(CRIT_CHANCE, 0);
             s.critDamage += tag.getIntOr(CRIT_DAMAGE, 0);
             s.ferocity += tag.getIntOr(FEROCITY, 0);
@@ -173,9 +175,9 @@ public final class ItemStats {
     private static void inferBase(Sheet s, Kind kind, int tier) {
         int t = tier + 1;
         switch (kind) {
-            case SWORD -> { s.strength += 5 * t; s.critChance += 5 + tier * 2; s.critDamage += 10 + tier * 5; }
-            case AXE -> { s.strength += 6 * t; s.critDamage += tier * 6; s.ferocity += 3; }
-            case RANGED -> { s.strength += 4 * t; s.critChance += 5 + tier; s.critDamage += tier * 4; }
+            case SWORD -> { s.damage += 8 * t; s.strength += 5 * t; s.critChance += 5 + tier * 2; s.critDamage += 10 + tier * 5; }
+            case AXE -> { s.damage += 10 * t; s.strength += 6 * t; s.critDamage += tier * 6; s.ferocity += 3; }
+            case RANGED -> { s.damage += 7 * t; s.strength += 4 * t; s.critChance += 5 + tier; s.critDamage += tier * 4; }
             case TOOL -> s.defense += t;
             case HELMET -> { s.health += 8 * t; s.defense += 4 * t; }
             case CHEST -> { s.health += 14 * t; s.defense += 8 * t; }
@@ -245,40 +247,19 @@ public final class ItemStats {
     public static void decorate(ItemStack stack) {
         Rarity rarity = rarityOf(stack);
         Variant variant = variantOf(stack);
-        Sheet s = compute(stack);
 
         Component baseName = Component.translatable(stack.getItem().getDescriptionId());
+        String rpgId = tagOf(stack).getStringOr(RpgItems.ITEM_ID_KEY, "");
+        if (!rpgId.isEmpty()) {
+            RpgItem def = RpgItem.byId(rpgId);
+            if (def != null) baseName = Component.literal(def.displayName);
+        }
         String prefix = variant == Variant.NONE ? "" : variant.display + " ";
         stack.set(DataComponents.CUSTOM_NAME,
                 Component.literal(prefix).append(baseName).withStyle(rarity.color, ChatFormatting.BOLD));
-
-        List<Component> lore = new ArrayList<>();
-        stat(lore, "Health", s.health, ChatFormatting.RED);
-        stat(lore, "Defense", s.defense, ChatFormatting.GREEN);
-        stat(lore, "Strength", s.strength, ChatFormatting.YELLOW);
-        stat(lore, "Crit Chance", s.critChance, "%", ChatFormatting.BLUE);
-        stat(lore, "Crit Damage", s.critDamage, "%", ChatFormatting.BLUE);
-        stat(lore, "Ferocity", s.ferocity, ChatFormatting.RED);
-        stat(lore, "Speed", s.speed, ChatFormatting.WHITE);
-        stat(lore, "Mana", s.intelligence, ChatFormatting.AQUA);
-        stat(lore, "Cursed Energy", s.cursed, ChatFormatting.DARK_PURPLE);
-        lore.add(Component.literal(""));
-        if (variant == Variant.CURSED) {
-            lore.add(Component.literal("Cursed (Grade " + cursedGradeOf(stack) + ")")
-                    .withStyle(variant.color, ChatFormatting.BOLD));
-        } else if (variant == Variant.UNIQUE) {
-            lore.add(Component.literal("Unique").withStyle(variant.color, ChatFormatting.BOLD));
-        }
-        lore.add(Component.literal(rarity.display.toUpperCase()).withStyle(rarity.color, ChatFormatting.BOLD));
-        stack.set(DataComponents.LORE, new ItemLore(lore));
-    }
-
-    private static void stat(List<Component> lore, String name, double value, ChatFormatting color) {
-        stat(lore, name, value, "", color);
-    }
-
-    private static void stat(List<Component> lore, String name, double value, String suffix, ChatFormatting color) {
-        if (value == 0) return;
-        lore.add(Component.literal(name + ": +" + (int) Math.round(value) + suffix).withStyle(color));
+        // Skyblock-governed gear carries no vanilla attribute modifiers (armor / attack damage).
+        stack.set(DataComponents.ATTRIBUTE_MODIFIERS,
+                net.minecraft.world.item.component.ItemAttributeModifiers.EMPTY);
+        stack.set(DataComponents.LORE, new ItemLore(SkyblockTooltipBuilder.build(stack)));
     }
 }

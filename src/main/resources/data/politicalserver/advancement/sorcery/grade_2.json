@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:sorcery/grade_3",
+  "display": {
+    "icon": { "id": "politicalserver:grade_scroll" },
+    "title": { "translate": "advancements.politicalserver.sorcery.grade_2.title" },
+    "description": { "translate": "advancements.politicalserver.sorcery.grade_2.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

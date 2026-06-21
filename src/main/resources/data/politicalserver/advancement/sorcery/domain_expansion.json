@@ -1,0 +1,16 @@
+{
+  "parent": "politicalserver:sorcery/grade_1",
+  "display": {
+    "icon": { "id": "minecraft:end_crystal" },
+    "title": { "translate": "advancements.politicalserver.sorcery.domain_expansion.title" },
+    "description": { "translate": "advancements.politicalserver.sorcery.domain_expansion.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": { "experience": 500 },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

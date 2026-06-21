@@ -1,0 +1,31 @@
+{
+  "parent": "politicalserver:arsenal/root",
+  "display": {
+    "icon": { "id": "politicalserver:acc_lucky_clover" },
+    "title": { "translate": "advancements.politicalserver.arsenal.accessory.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.accessory.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:acc_lucky_clover",
+            "politicalserver:acc_feather_charm",
+            "politicalserver:acc_vigor_ring",
+            "politicalserver:acc_swiftness_charm",
+            "politicalserver:acc_warding_talisman",
+            "politicalserver:acc_arcane_orb",
+            "politicalserver:acc_dragon_scale",
+            "politicalserver:acc_vampiric_charm"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

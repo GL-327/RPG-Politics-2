@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:politics/root",
+  "display": {
+    "icon": { "id": "minecraft:iron_chestplate" },
+    "title": { "translate": "advancements.politicalserver.politics.officer.title" },
+    "description": { "translate": "advancements.politicalserver.politics.officer.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

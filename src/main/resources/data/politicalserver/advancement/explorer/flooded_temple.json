@@ -1,0 +1,22 @@
+{
+  "parent": "politicalserver:explorer/root",
+  "display": {
+    "icon": { "id": "minecraft:prismarine_crystals" },
+    "title": { "translate": "advancements.politicalserver.explorer.flooded_temple.title" },
+    "description": { "translate": "advancements.politicalserver.explorer.flooded_temple.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "kill": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_frost_queen" } }
+        ]
+      }
+    }
+  },
+  "requirements": [["kill"]]
+}

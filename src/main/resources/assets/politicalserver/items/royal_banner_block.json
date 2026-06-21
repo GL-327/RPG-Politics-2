@@ -1,1 +1,6 @@
-{ "model": { "type": "minecraft:model", "model": "politicalserver:block/royal_banner_block" } }
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "politicalserver:block/royal_banner_block"
+  }
+}

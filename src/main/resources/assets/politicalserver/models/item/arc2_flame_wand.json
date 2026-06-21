@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "politicalserver:item/arc2_flame_wand"
+  }
+}

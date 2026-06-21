@@ -1,1 +1,6 @@
-{ "model": { "type": "minecraft:model", "model": "politicalserver:block/paved_road" } }
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "politicalserver:block/paved_road"
+  }
+}

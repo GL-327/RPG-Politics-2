@@ -37,6 +37,14 @@ config/
 !config/political/
 !config/political/custom_recipes.json
 
+# reference material extracted from other mods (research only, never shipped)
+
+reference/
+
+# manually dropped optional mod jars (JEI, sound physics, NEA, ...)
+
+libs/*.jar
+
 # java
 
 hs_err_*.log

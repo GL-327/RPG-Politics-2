@@ -1,1 +1,6 @@
-{ "parent": "minecraft:block/cube_all", "textures": { "all": "politicalserver:block/cobble_street" } }
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "politicalserver:block/cobble_street"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "parent": "politicalserver:arsenal/accessory",
+  "display": {
+    "icon": { "id": "politicalserver:acc_godslayer_relic" },
+    "title": { "translate": "advancements.politicalserver.arsenal.godslayer_relic.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.godslayer_relic.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": ["politicalserver:acc_godslayer_relic"] } ] }
+    }
+  },
+  "requirements": [["obtain"]]
+}

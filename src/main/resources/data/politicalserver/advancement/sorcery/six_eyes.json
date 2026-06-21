@@ -1,0 +1,16 @@
+{
+  "parent": "politicalserver:sorcery/grade_2",
+  "display": {
+    "icon": { "id": "minecraft:ender_eye" },
+    "title": { "translate": "advancements.politicalserver.sorcery.six_eyes.title" },
+    "description": { "translate": "advancements.politicalserver.sorcery.six_eyes.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

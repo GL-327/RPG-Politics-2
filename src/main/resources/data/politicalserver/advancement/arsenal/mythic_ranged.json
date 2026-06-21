@@ -1,0 +1,27 @@
+{
+  "parent": "politicalserver:arsenal/ranged",
+  "display": {
+    "icon": { "id": "politicalserver:arc_voidbow" },
+    "title": { "translate": "advancements.politicalserver.arsenal.mythic_ranged.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.mythic_ranged.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": { "experience": 400 },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:arc_voidbow",
+            "politicalserver:arc_voidstaff",
+            "politicalserver:arc_necro_tome"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

@@ -1,0 +1,40 @@
+{
+  "parent": "politicalserver:arsenal/root",
+  "display": {
+    "icon": { "id": "politicalserver:arm_frostguard_chestplate" },
+    "title": { "translate": "advancements.politicalserver.arsenal.armor.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.armor.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:arm_frostguard_helmet",
+            "politicalserver:arm_frostguard_chestplate",
+            "politicalserver:arm_frostguard_leggings",
+            "politicalserver:arm_frostguard_boots",
+            "politicalserver:arm_emberforge_helmet",
+            "politicalserver:arm_emberforge_chestplate",
+            "politicalserver:arm_emberforge_leggings",
+            "politicalserver:arm_emberforge_boots",
+            "politicalserver:arm_tempest_chestplate",
+            "politicalserver:arm_verdant_chestplate",
+            "politicalserver:arm_abyssal_chestplate",
+            "politicalserver:arm_shadowstalker_chestplate",
+            "politicalserver:arm_bloodmoon_chestplate",
+            "politicalserver:arm_solaris_chestplate",
+            "politicalserver:arm_wraith_chestplate",
+            "politicalserver:arm_titanforge_chestplate",
+            "politicalserver:arm_celestial_chestplate"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

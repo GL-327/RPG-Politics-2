@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:politics/officer",
+  "display": {
+    "icon": { "id": "minecraft:lapis_lazuli" },
+    "title": { "translate": "advancements.politicalserver.politics.councilor.title" },
+    "description": { "translate": "advancements.politicalserver.politics.councilor.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

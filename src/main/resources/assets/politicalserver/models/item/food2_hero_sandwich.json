@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "politicalserver:item/food2_hero_sandwich"
+  }
+}

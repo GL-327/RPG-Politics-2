@@ -1,8 +1,9 @@
 package com.political.power;
 
 import com.political.combat.StatManager;
+import com.political.net.ModNetworking;
+import com.political.net.PowerMenuS2C;
 import com.political.politics.DataManager;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -12,7 +13,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -38,30 +38,12 @@ import java.util.UUID;
 public final class PowerManager {
 
     private static final Map<String, Long> COOLDOWNS = new HashMap<>(); // "uuid|POWER" -> ready-at ms
-    private static final Map<UUID, Long> FLIGHT_UNTIL = new HashMap<>();
     private static final Map<UUID, Long> BLACK_FLASH_UNTIL = new HashMap<>();
     private static int tickCounter = 0;
 
     private PowerManager() {}
 
     public static void register() {
-        // Black Flash: the next melee hit after activation deals bonus distorted damage.
-        AttackEntityCallback.EVENT.register((player, level, hand, entity, hit) -> {
-            if (level.isClientSide()) return InteractionResult.PASS;
-            if (!(player instanceof ServerPlayer sp)) return InteractionResult.PASS;
-            if (!(entity instanceof LivingEntity target)) return InteractionResult.PASS;
-            Long until = BLACK_FLASH_UNTIL.get(sp.getUUID());
-            if (until != null && System.currentTimeMillis() < until) {
-                BLACK_FLASH_UNTIL.remove(sp.getUUID());
-                ServerLevel sl = (ServerLevel) level;
-                target.hurtServer(sl, sl.damageSources().playerAttack(sp), 12.0f);
-                sl.sendParticles(ParticleTypes.CRIT, target.getX(), target.getY() + 1, target.getZ(), 40, 0.4, 0.6, 0.4, 0.4);
-                sl.playSound(null, target.getX(), target.getY(), target.getZ(),
-                        SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1.2f, 0.7f);
-            }
-            return InteractionResult.PASS;
-        });
-
         // Infinity (passive): knowing the technique lets cursed energy auto-negate incoming hits.
         net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> {
             if (!(entity instanceof ServerPlayer sp)) return true;
@@ -81,6 +63,22 @@ public final class PowerManager {
     }
 
     private static final java.util.Random RNG = new java.util.Random();
+
+    /**
+     * Consumes a pending Black Flash on the attacker (set by activating the technique), dealing
+     * bonus distorted damage on this hit. Called from {@link com.political.combat.AbilityEngine}
+     * because that engine consumes the attack event first (returning SUCCESS), which would
+     * otherwise prevent a second {@code AttackEntityCallback} listener from ever running.
+     */
+    public static void tryConsumeBlackFlash(ServerPlayer sp, LivingEntity target, ServerLevel sl) {
+        Long until = BLACK_FLASH_UNTIL.get(sp.getUUID());
+        if (until == null || System.currentTimeMillis() >= until) return;
+        BLACK_FLASH_UNTIL.remove(sp.getUUID());
+        target.hurtServer(sl, sl.damageSources().playerAttack(sp), 12.0f);
+        sl.sendParticles(ParticleTypes.CRIT, target.getX(), target.getY() + 1, target.getZ(), 40, 0.4, 0.6, 0.4, 0.4);
+        sl.playSound(null, target.getX(), target.getY(), target.getZ(),
+                SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1.2f, 0.7f);
+    }
 
     // ---------------- Cooldowns ----------------
 
@@ -103,6 +101,8 @@ public final class PowerManager {
 
     /** Activates the player's currently selected power. Returns a status component. */
     public static Component activateSelected(ServerPlayer player) {
+        if (!com.political.config.PoliticalConfig.get().powersEnabled)
+            return err("Powers are disabled on this server.");
         String sel = DataManager.selectedPower(player.getStringUUID());
         Power power = Power.byId(sel);
         if (power == null) return err("You have no power selected. Use /power select <id>.");
@@ -528,6 +528,172 @@ public final class PowerManager {
                 level.sendParticles(ParticleTypes.SCULK_SOUL, p.getX(), p.getY() + 1, p.getZ(), 60, 4, 1, 4, 0.04);
                 level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 1.2f, 0.8f);
             }
+
+            // ---- New Compound V powers (heroes / Viltrumite) ----
+            case ICARUS_DIVE -> {
+                grantFlight(p, 30_000L);
+                launchSelf(p, p.getViewVector(1f).scale(2.2).add(0, 0.2, 0));
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.ENDER_DRAGON_FLAP, SoundSource.PLAYERS, 1.2f, 0.8f);
+            }
+            case HEAT_VISION_OVERLOAD -> beam(p, level, 30, 22.0f, true, true);
+            case GROUND_POUND -> {
+                for (LivingEntity e : around(p, 9)) {
+                    if (e == p) continue;
+                    launchEntity(e, p, -3.0, 0.7);
+                    e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 100, 2));
+                    e.hurtServer(level, level.damageSources().playerAttack(p), 9.0f);
+                }
+                level.sendParticles(ParticleTypes.EXPLOSION, p.getX(), p.getY(), p.getZ(), 8, 2.5, 0.2, 2.5, 0.0);
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.2f, 0.7f);
+            }
+            case SHOCK_PULSE -> {
+                LivingEntity t = lookTarget(p, 30);
+                if (t != null) {
+                    strike(level, t.position());
+                    t.hurtServer(level, level.damageSources().magic(), 6.0f);
+                }
+                for (LivingEntity e : around(p, 9)) {
+                    if (e == p) continue;
+                    e.hurtServer(level, level.damageSources().magic(), 5.0f);
+                }
+                level.sendParticles(ParticleTypes.ELECTRIC_SPARK, p.getX(), p.getY() + 1, p.getZ(), 70, 4, 2, 4, 0.2);
+            }
+            case TITAN_GRIP -> {
+                LivingEntity t = lookTarget(p, 8);
+                if (t == null) return false;
+                t.hurtServer(level, level.damageSources().playerAttack(p), 18.0f);
+                t.push(0, -0.6, 0);
+                t.hurtMarked = true;
+                level.sendParticles(ParticleTypes.CRIT, t.getX(), t.getY() + 1, t.getZ(), 30, 0.4, 0.6, 0.4, 0.3);
+            }
+            case AFTERIMAGE -> {
+                p.addEffect(new MobEffectInstance(MobEffects.SPEED, 200, 4, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, 200, 2, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60, 0, false, false));
+                level.sendParticles(ParticleTypes.CLOUD, p.getX(), p.getY() + 1, p.getZ(), 30, 0.4, 0.8, 0.4, 0.02);
+            }
+            case REGEN_SURGE -> {
+                p.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 240, 3, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 240, 3, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 240, 0, false, true));
+                p.removeEffect(MobEffects.POISON);
+                p.removeEffect(MobEffects.WITHER);
+                p.heal(6.0f);
+            }
+            case WIND_BLAST -> {
+                for (LivingEntity e : cone(p, 14, 0.3)) {
+                    launchEntity(e, p, -3.0, 0.4);
+                    e.hurtServer(level, level.damageSources().playerAttack(p), 4.0f);
+                }
+                particleCone(level, p, ParticleTypes.CLOUD);
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.2f, 1.0f);
+            }
+            case METEOR_DROP -> {
+                Vec3 at = aimPoint(p, 18);
+                for (LivingEntity e : nearPoint(level, at, 6, p)) {
+                    e.setRemainingFireTicks(120);
+                    e.hurtServer(level, level.damageSources().playerAttack(p), 16.0f);
+                    launchEntity(e, p, -1.5, 0.5);
+                }
+                level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, at.x, at.y, at.z, 1, 0, 0, 0, 0.0);
+                level.playSound(null, at.x, at.y, at.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.5f, 0.6f);
+            }
+            case SEISMIC_SLAM -> {
+                for (LivingEntity e : around(p, 8)) {
+                    if (e == p) continue;
+                    e.push(0, 1.3, 0);
+                    e.hurtMarked = true;
+                    e.hurtServer(level, level.damageSources().magic(), 7.0f);
+                }
+                level.sendParticles(ParticleTypes.EXPLOSION, p.getX(), p.getY(), p.getZ(), 6, 3, 0.1, 3, 0.0);
+            }
+
+            // ---- New cursed techniques (JJK) ----
+            case MAXIMUM_METEOR -> {
+                Vec3 at = aimPoint(p, 20);
+                for (LivingEntity e : nearPoint(level, at, 8, p)) {
+                    e.setRemainingFireTicks(160);
+                    e.hurtServer(level, level.damageSources().magic(), 30.0f);
+                    launchEntity(e, p, -2.0, 0.6);
+                }
+                level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, at.x, at.y, at.z, 1, 0, 0, 0, 0.0);
+                level.sendParticles(ParticleTypes.FLAME, at.x, at.y, at.z, 120, 4, 3, 4, 0.1);
+                level.playSound(null, at.x, at.y, at.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.6f, 0.5f);
+            }
+            case FIRE_ARROW_FUGA -> beam(p, level, 28, 18.0f, true, true);
+            case COFFIN_IRON_MOUNTAIN -> {
+                p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 300, 4, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 300, 3, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 300, 0, false, true));
+                for (LivingEntity e : around(p, 8)) {
+                    if (e == p) continue;
+                    launchEntity(e, p, -2.0, 0.4);
+                    e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 160, 3));
+                    e.hurtServer(level, level.damageSources().magic(), 10.0f);
+                }
+                level.sendParticles(ParticleTypes.BUBBLE, p.getX(), p.getY() + 1, p.getZ(), 120, 5, 2, 5, 0.1);
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 1.4f, 0.7f);
+            }
+            case SELF_EMBODIMENT -> {
+                p.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 200, 1, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 200, 2, false, true));
+                for (LivingEntity e : around(p, 12)) {
+                    if (e == p) continue;
+                    e.hurtServer(level, level.damageSources().magic(), 20.0f);
+                    e.addEffect(new MobEffectInstance(MobEffects.WITHER, 160, 2));
+                    e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 160, 3));
+                    e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 160, 3));
+                }
+                level.sendParticles(ParticleTypes.SCULK_SOUL, p.getX(), p.getY() + 1, p.getZ(), 200, 12, 6, 12, 0.05);
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 2.0f, 0.5f);
+            }
+            case SOUL_TRANSFIGURATION -> {
+                LivingEntity t = lookTarget(p, 16);
+                if (t == null) return false;
+                t.hurtServer(level, level.damageSources().magic(), 16.0f);
+                t.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 2));
+                t.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 3));
+                t.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 200, 3));
+                level.sendParticles(ParticleTypes.SCULK_SOUL, t.getX(), t.getEyeY(), t.getZ(), 30, 0.4, 0.6, 0.4, 0.04);
+            }
+            case CHIMERA_SHADOW_GARDEN -> {
+                summonShadows(p, level, 6);
+                p.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 300, 1, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 300, 2, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.SPEED, 300, 1, false, true));
+                level.sendParticles(ParticleTypes.SQUID_INK, p.getX(), p.getY() + 1, p.getZ(), 120, 6, 2, 6, 0.02);
+            }
+            case NUE_STRIKE -> {
+                LivingEntity t = lookTarget(p, 30);
+                Vec3 at = t != null ? t.position() : aimPoint(p, 20);
+                strike(level, at);
+                for (LivingEntity e : nearPoint(level, at, 5, p)) {
+                    e.hurtServer(level, level.damageSources().magic(), 7.0f);
+                }
+                level.sendParticles(ParticleTypes.ELECTRIC_SPARK, at.x, at.y + 1, at.z, 60, 2, 2, 2, 0.2);
+            }
+            case GRAVITY_WELL -> {
+                for (LivingEntity e : around(p, 14)) {
+                    if (e == p) continue;
+                    launchEntity(e, p, 3.5, -0.1);
+                    e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 140, 4));
+                    e.hurtServer(level, level.damageSources().magic(), 10.0f);
+                }
+                level.sendParticles(ParticleTypes.REVERSE_PORTAL, p.getX(), p.getY() + 1, p.getZ(), 120, 5, 3, 5, 0.05);
+            }
+            case MALEVOLENT_SHRINE -> {
+                for (LivingEntity e : cone(p, 18, 0.3)) {
+                    e.hurtServer(level, level.damageSources().playerAttack(p), 20.0f);
+                }
+                for (LivingEntity e : around(p, 8)) {
+                    if (e == p) continue;
+                    launchEntity(e, p, -1.5, 0.3);
+                    e.hurtServer(level, level.damageSources().magic(), 12.0f);
+                }
+                particleCone(level, p, ParticleTypes.SWEEP_ATTACK);
+                level.sendParticles(ParticleTypes.SCULK_SOUL, p.getX(), p.getY() + 1, p.getZ(), 80, 6, 3, 6, 0.05);
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 2.0f, 0.6f);
+            }
         }
         return true;
     }
@@ -668,12 +834,8 @@ public final class PowerManager {
     }
 
     private static void grantFlight(ServerPlayer p, long durationMs) {
-        if (p.isCreative() || p.isSpectator()) return;
-        FLIGHT_UNTIL.put(p.getUUID(), System.currentTimeMillis() + durationMs);
-        if (!p.getAbilities().mayfly) {
-            p.getAbilities().mayfly = true;
-            p.onUpdateAbilities();
-        }
+        // All non-creative flight is unified through the Viltrumite FlightManager.
+        com.political.flight.FlightManager.enableTimed(p, durationMs);
     }
 
     // ---------------- Tick & cleanup ----------------
@@ -682,30 +844,68 @@ public final class PowerManager {
         if (++tickCounter % 20 != 0) return;
         long now = System.currentTimeMillis();
         for (ServerPlayer p : server.getPlayerList().getPlayers()) {
-            // Expire temp powers (Temp V).
-            Long exp = DataManager.data().tempPowerExpiry.get(p.getStringUUID());
+            // Expire temp powers (Temp V) — strips ONLY the temp-granted power, never earned ones.
+            String uuid = p.getStringUUID();
+            Long exp = DataManager.data().tempPowerExpiry.get(uuid);
             if (exp != null && exp != 0 && now >= exp) {
-                DataManager.revokeAllPowers(p.getStringUUID());
-                DataManager.data().tempPowerExpiry.remove(p.getStringUUID());
-                p.sendSystemMessage(Component.literal("The Temp V wears off; your power fades.").withStyle(ChatFormatting.GRAY));
+                String tempId = DataManager.data().tempPowerId.remove(uuid);
+                DataManager.data().tempPowerExpiry.remove(uuid);
+                String prev = DataManager.data().tempPowerPrevSelected.remove(uuid);
+                if (tempId != null) {
+                    DataManager.revokePower(uuid, tempId);
+                    // Restore the previously selected power if the player still knows it.
+                    if (prev != null && DataManager.hasPower(uuid, prev)) {
+                        DataManager.setSelectedPower(uuid, prev);
+                    }
+                }
+                p.sendSystemMessage(Component.literal("The Temp V wears off; the borrowed power fades.").withStyle(ChatFormatting.GRAY));
             }
-            // Expire timed flight.
-            Long until = FLIGHT_UNTIL.get(p.getUUID());
-            if (until != null && now >= until && !p.isCreative() && !p.isSpectator()) {
-                FLIGHT_UNTIL.remove(p.getUUID());
-                p.getAbilities().mayfly = false;
-                p.getAbilities().flying = false;
-                p.onUpdateAbilities();
-            }
+            // Timed flight expiry is owned by FlightManager (see com.political.flight).
         }
     }
 
     public static void onPlayerRemoved(UUID uuid) {
-        FLIGHT_UNTIL.remove(uuid);
         BLACK_FLASH_UNTIL.remove(uuid);
+        com.political.flight.FlightManager.onPlayerRemoved(uuid);
     }
 
     private static Component err(String msg) {
         return Component.literal(msg).withStyle(ChatFormatting.RED);
+    }
+
+    // ---------------- Powers GUI ----------------
+
+    /** Builds and sends a fresh Powers &amp; Serums menu snapshot to the player's client. */
+    public static void sendMenu(ServerPlayer player) {
+        String uuid = player.getStringUUID();
+        String knownCsv = String.join(",", DataManager.knownPowers(uuid));
+        String selected = DataManager.selectedPower(uuid);
+        var trait = DataManager.cursedTrait(uuid);
+        ModNetworking.send(player, new PowerMenuS2C(
+                knownCsv,
+                selected == null ? "" : selected,
+                trait.display,
+                DataManager.sorcererGrade(uuid),
+                (int) Math.floor(StatManager.getMana(player)),
+                (int) Math.floor(StatManager.getMaxMana(player)),
+                (int) Math.floor(StatManager.getCursedEnergy(player)),
+                (int) Math.floor(StatManager.getMaxCursedEnergy(player))));
+    }
+
+    /** Handles a {@link com.political.net.PowerActionC2S} from the GUI, then resends the menu. */
+    public static void handleAction(ServerPlayer player, String action, String powerId) {
+        switch (action) {
+            case "select" -> {
+                Power p = Power.byId(powerId);
+                if (p != null && DataManager.hasPower(player.getStringUUID(), p.id())) {
+                    DataManager.setSelectedPower(player.getStringUUID(), p.id());
+                } else {
+                    player.sendSystemMessage(err("You have not awakened that power."), true);
+                }
+            }
+            case "activate" -> player.sendSystemMessage(activateSelected(player), true);
+            default -> { }
+        }
+        sendMenu(player);
     }
 }

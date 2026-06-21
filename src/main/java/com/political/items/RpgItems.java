@@ -4,8 +4,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.ItemLore;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public final class RpgItems {
         if (def.defense != 0) tag.putInt("rpg_defense", def.defense);
         if (def.strength != 0) tag.putInt("rpg_strength", def.strength);
         if (def.intelligence != 0) tag.putInt("rpg_intelligence", def.intelligence);
+        if (def.damage != 0) tag.putInt(ItemStats.DAMAGE, def.damage);
         if (def.abilities.length > 0) {
             StringBuilder sb = new StringBuilder();
             for (Ability a : def.abilities) {
@@ -39,31 +42,20 @@ public final class RpgItems {
         }
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
 
+        // Override the rendered model so each RpgItem shows its own custom texture
+        // (resolves to assets/politicalserver/items/<id>.json) instead of the vanilla base item.
+        stack.set(DataComponents.ITEM_MODEL, Identifier.fromNamespaceAndPath("politicalserver", def.id()));
+
+        // Custom gear is governed entirely by the Skyblock stat system: strip the base
+        // vanilla attribute modifiers (attack damage/speed, armor, armor toughness, etc.)
+        // so no "+N armor"/"+N attack damage" lines apply or show.
+        stack.set(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+
         stack.set(DataComponents.CUSTOM_NAME,
                 Component.literal(def.displayName).withStyle(def.rarity.color, ChatFormatting.BOLD));
-
-        List<Component> lore = new ArrayList<>();
-        addStat(lore, "Health", def.health, ChatFormatting.RED);
-        addStat(lore, "Defense", def.defense, ChatFormatting.GREEN);
-        addStat(lore, "Strength", def.strength, ChatFormatting.YELLOW);
-        addStat(lore, "Mana", def.intelligence, ChatFormatting.AQUA);
-        if (def.abilities.length > 0) {
-            lore.add(Component.literal(""));
-            for (Ability a : def.abilities) {
-                lore.add(Component.literal("\u25C6 " + a.displayName).withStyle(a.color, ChatFormatting.BOLD)
-                        .copy().append(Component.literal(" - " + a.description).withStyle(ChatFormatting.GRAY)));
-            }
-        }
-        lore.add(Component.literal(""));
-        lore.add(Component.literal(def.rarity.name()).withStyle(def.rarity.color, ChatFormatting.BOLD));
-        stack.set(DataComponents.LORE, new ItemLore(lore));
+        stack.set(DataComponents.LORE, new ItemLore(SkyblockTooltipBuilder.build(stack)));
 
         return stack;
-    }
-
-    private static void addStat(List<Component> lore, String name, int value, ChatFormatting color) {
-        if (value == 0) return;
-        lore.add(Component.literal(name + ": +" + value).withStyle(color));
     }
 
     public static String idOf(ItemStack stack) {

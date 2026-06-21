@@ -1,0 +1,22 @@
+{
+  "parent": "politicalserver:explorer/root",
+  "display": {
+    "icon": { "id": "minecraft:dragon_head" },
+    "title": { "translate": "advancements.politicalserver.explorer.dragons_vault.title" },
+    "description": { "translate": "advancements.politicalserver.explorer.dragons_vault.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "kill": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_infernal_sovereign" } }
+        ]
+      }
+    }
+  },
+  "requirements": [["kill"]]
+}

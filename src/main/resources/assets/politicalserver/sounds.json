@@ -1,0 +1,855 @@
+{
+  "power_cast_fire": {
+    "subtitle": "subtitles.politicalserver.power_cast_fire",
+    "sounds": [
+      {
+        "name": "minecraft:item.firecharge.use",
+        "type": "event",
+        "volume": 1,
+        "pitch": 1
+      },
+      {
+        "name": "minecraft:entity.blaze.shoot",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 0.9
+      }
+    ]
+  },
+  "power_cast_frost": {
+    "subtitle": "subtitles.politicalserver.power_cast_frost",
+    "sounds": [
+      {
+        "name": "minecraft:block.glass.break",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:block.powder_snow.break",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "power_cast_void": {
+    "subtitle": "subtitles.politicalserver.power_cast_void",
+    "sounds": [
+      {
+        "name": "minecraft:entity.enderman.teleport",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:particle.soul_escape",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 0.6
+      }
+    ]
+  },
+  "power_cast_lightning": {
+    "subtitle": "subtitles.politicalserver.power_cast_lightning",
+    "sounds": [
+      {
+        "name": "minecraft:entity.lightning_bolt.impact",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:item.trident.thunder",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.4
+      }
+    ]
+  },
+  "power_cast_heal": {
+    "subtitle": "subtitles.politicalserver.power_cast_heal",
+    "sounds": [
+      {
+        "name": "minecraft:block.amethyst_block.chime",
+        "type": "event",
+        "volume": 1,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:block.beacon.activate",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.5
+      }
+    ]
+  },
+  "power_cast_domain_open": {
+    "subtitle": "subtitles.politicalserver.power_cast_domain_open",
+    "sounds": [
+      {
+        "name": "minecraft:block.beacon.power_select",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity.warden.sonic_boom",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "power_cast_ultimate": {
+    "subtitle": "subtitles.politicalserver.power_cast_ultimate",
+    "sounds": [
+      {
+        "name": "minecraft:entity.warden.sonic_boom",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:entity.generic.explode",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 0.6
+      }
+    ]
+  },
+  "domain_collapse": {
+    "subtitle": "subtitles.politicalserver.domain_collapse",
+    "sounds": [
+      {
+        "name": "minecraft:block.glass.break",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity.wither.break_block",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 0.7
+      }
+    ]
+  },
+  "heal_pulse": {
+    "subtitle": "subtitles.politicalserver.heal_pulse",
+    "sounds": [
+      {
+        "name": "minecraft:block.amethyst_block.chime",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 1.6
+      }
+    ]
+  },
+  "shield_break": {
+    "subtitle": "subtitles.politicalserver.shield_break",
+    "sounds": [
+      {
+        "name": "minecraft:item.shield.break",
+        "type": "event",
+        "volume": 1,
+        "pitch": 1
+      },
+      {
+        "name": "minecraft:block.anvil.land",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.3
+      }
+    ]
+  },
+  "melee_crit": {
+    "subtitle": "subtitles.politicalserver.melee_crit",
+    "sounds": [
+      {
+        "name": "minecraft:entity.player.attack.crit",
+        "type": "event",
+        "volume": 1,
+        "pitch": 1
+      },
+      {
+        "name": "minecraft:entity.player.attack.strong",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 0.9
+      }
+    ]
+  },
+  "weapon_swing_heavy": {
+    "subtitle": "subtitles.politicalserver.weapon_swing_heavy",
+    "sounds": [
+      {
+        "name": "minecraft:entity.player.attack.sweep",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:item.mace.smash_ground",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1
+      }
+    ]
+  },
+  "melee_combo_finish": {
+    "subtitle": "subtitles.politicalserver.melee_combo_finish",
+    "sounds": [
+      {
+        "name": "minecraft:item.mace.smash_ground_heavy",
+        "type": "event",
+        "volume": 1,
+        "pitch": 1
+      },
+      {
+        "name": "minecraft:entity.player.attack.knockback",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.1
+      }
+    ]
+  },
+  "parry": {
+    "subtitle": "subtitles.politicalserver.parry",
+    "sounds": [
+      {
+        "name": "minecraft:item.shield.block",
+        "type": "event",
+        "volume": 1,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:block.anvil.use",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.6
+      }
+    ]
+  },
+  "spirit_screech": {
+    "subtitle": "subtitles.politicalserver.spirit_screech",
+    "sounds": [
+      {
+        "name": "minecraft:entity.warden.agitated",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity.ghast.scream",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 0.7
+      }
+    ]
+  },
+  "spirit_attack": {
+    "subtitle": "subtitles.politicalserver.spirit_attack",
+    "sounds": [
+      {
+        "name": "minecraft:entity.evoker.cast_spell",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity.ghast.shoot",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1
+      }
+    ]
+  },
+  "spirit_summon": {
+    "subtitle": "subtitles.politicalserver.spirit_summon",
+    "sounds": [
+      {
+        "name": "minecraft:entity.evoker.prepare_summon",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.7
+      }
+    ]
+  },
+  "spirit_death": {
+    "subtitle": "subtitles.politicalserver.spirit_death",
+    "sounds": [
+      {
+        "name": "minecraft:entity.zombie_villager.converted",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:particle.soul_escape",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "boss_roar": {
+    "subtitle": "subtitles.politicalserver.boss_roar",
+    "sounds": [
+      {
+        "name": "minecraft:entity.ravager.roar",
+        "type": "event",
+        "volume": 1.5,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:entity.ender_dragon.growl",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "boss_phase": {
+    "subtitle": "subtitles.politicalserver.boss_phase",
+    "sounds": [
+      {
+        "name": "minecraft:entity.wither.spawn",
+        "type": "event",
+        "volume": 1,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:entity.ender_dragon.flap",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "boss_spawn": {
+    "subtitle": "subtitles.politicalserver.boss_spawn",
+    "sounds": [
+      {
+        "name": "minecraft:entity.wither.spawn",
+        "type": "event",
+        "volume": 1.2,
+        "pitch": 1
+      }
+    ]
+  },
+  "ui_open": {
+    "subtitle": "subtitles.politicalserver.ui_open",
+    "sounds": [
+      {
+        "name": "minecraft:block.barrel.open",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:ui.toast.in",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.2
+      }
+    ]
+  },
+  "ui_click": {
+    "subtitle": "subtitles.politicalserver.ui_click",
+    "sounds": [
+      {
+        "name": "minecraft:ui.button.click",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1
+      }
+    ]
+  },
+  "ui_close": {
+    "subtitle": "subtitles.politicalserver.ui_close",
+    "sounds": [
+      {
+        "name": "minecraft:block.barrel.close",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:ui.toast.out",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1
+      }
+    ]
+  },
+  "ui_error": {
+    "subtitle": "subtitles.politicalserver.ui_error",
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.bass",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity.villager.no",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1
+      }
+    ]
+  },
+  "ui_tab": {
+    "subtitle": "subtitles.politicalserver.ui_tab",
+    "sounds": [
+      {
+        "name": "minecraft:item.book.page_turn",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 1
+      }
+    ]
+  },
+  "dungeon_ambient": {
+    "subtitle": "subtitles.politicalserver.dungeon_ambient",
+    "sounds": [
+      {
+        "name": "minecraft:ambient.cave",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:entity.warden.heartbeat",
+        "type": "event",
+        "volume": 0.4,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "dungeon_trap": {
+    "subtitle": "subtitles.politicalserver.dungeon_trap",
+    "sounds": [
+      {
+        "name": "minecraft:block.piston.extend",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity.tnt.primed",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1
+      }
+    ]
+  },
+  "dungeon_chest_unlock": {
+    "subtitle": "subtitles.politicalserver.dungeon_chest_unlock",
+    "sounds": [
+      {
+        "name": "minecraft:block.chest.locked",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:block.vault.open_shutter",
+        "type": "event",
+        "volume": 1,
+        "pitch": 1
+      }
+    ]
+  },
+  "dungeon_secret": {
+    "subtitle": "subtitles.politicalserver.dungeon_secret",
+    "sounds": [
+      {
+        "name": "minecraft:block.amethyst_cluster.place",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:ui.toast.challenge_complete",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1
+      }
+    ]
+  },
+  "dungeon_boss_gate": {
+    "subtitle": "subtitles.politicalserver.dungeon_boss_gate",
+    "sounds": [
+      {
+        "name": "minecraft:block.end_portal.spawn",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:block.iron_door.open",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 0.7
+      }
+    ]
+  },
+  "level_up": {
+    "subtitle": "subtitles.politicalserver.level_up",
+    "sounds": [
+      {
+        "name": "minecraft:entity.player.levelup",
+        "type": "event",
+        "volume": 1,
+        "pitch": 1
+      },
+      {
+        "name": "minecraft:ui.toast.challenge_complete",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.2
+      }
+    ]
+  },
+  "rank_up": {
+    "subtitle": "subtitles.politicalserver.rank_up",
+    "sounds": [
+      {
+        "name": "minecraft:ui.toast.challenge_complete",
+        "type": "event",
+        "volume": 1,
+        "pitch": 1
+      },
+      {
+        "name": "minecraft:block.beacon.power_select",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.4
+      }
+    ]
+  },
+  "quest_complete": {
+    "subtitle": "subtitles.politicalserver.quest_complete",
+    "sounds": [
+      {
+        "name": "minecraft:entity.player.levelup",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.5
+      }
+    ]
+  },
+  "coin_gain": {
+    "subtitle": "subtitles.politicalserver.coin_gain",
+    "sounds": [
+      {
+        "name": "minecraft:entity.experience_orb.pickup",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:block.amethyst_block.hit",
+        "type": "event",
+        "volume": 0.4,
+        "pitch": 1.6
+      }
+    ]
+  },
+  "coin_large": {
+    "subtitle": "subtitles.politicalserver.coin_large",
+    "sounds": [
+      {
+        "name": "minecraft:entity.experience_orb.pickup",
+        "type": "event",
+        "volume": 1,
+        "pitch": 1
+      },
+      {
+        "name": "minecraft:block.vault.eject_item",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.1
+      }
+    ]
+  },
+  "trade_complete": {
+    "subtitle": "subtitles.politicalserver.trade_complete",
+    "sounds": [
+      {
+        "name": "minecraft:entity.villager.yes",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 1
+      },
+      {
+        "name": "minecraft:entity.experience_orb.pickup",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.2
+      }
+    ]
+  },
+  "election_win": {
+    "subtitle": "subtitles.politicalserver.election_win",
+    "sounds": [
+      {
+        "name": "minecraft:ui.toast.challenge_complete",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.9
+      },
+      {
+        "name": "minecraft:entity.firework_rocket.launch",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1
+      }
+    ]
+  },
+  "flight_boom": {
+    "subtitle": "subtitles.politicalserver.flight_boom",
+    "sounds": [
+      {
+        "name": "minecraft:entity.warden.sonic_boom",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.6
+      },
+      {
+        "name": "minecraft:entity.generic.explode",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.4
+      }
+    ]
+  },
+  "flight_loop": {
+    "subtitle": "subtitles.politicalserver.flight_loop",
+    "sounds": [
+      {
+        "name": "minecraft:item.elytra.flying",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1
+      }
+    ]
+  },
+  "dash": {
+    "subtitle": "subtitles.politicalserver.dash",
+    "sounds": [
+      {
+        "name": "minecraft:entity.player.attack.sweep",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.5
+      },
+      {
+        "name": "minecraft:item.trident.riptide_1",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.2
+      }
+    ]
+  },
+  "curse_absorb": {
+    "subtitle": "subtitles.politicalserver.curse_absorb",
+    "sounds": [
+      {
+        "name": "minecraft:particle.soul_escape",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:block.soul_sand.break",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 0.9
+      }
+    ]
+  },
+  "curse_apply": {
+    "subtitle": "subtitles.politicalserver.curse_apply",
+    "sounds": [
+      {
+        "name": "minecraft:entity.elder_guardian.curse",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:block.sculk.spread",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 0.7
+      }
+    ]
+  },
+  "curse_cleanse": {
+    "subtitle": "subtitles.politicalserver.curse_cleanse",
+    "sounds": [
+      {
+        "name": "minecraft:block.amethyst_block.chime",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 1.1
+      },
+      {
+        "name": "minecraft:entity.zombie_villager.cure",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.2
+      }
+    ]
+  },
+  "vfx_chain_lightning": {
+    "subtitle": "subtitles.politicalserver.vfx_chain_lightning",
+    "sounds": [
+      {
+        "name": "minecraft:entity.lightning_bolt.impact",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:block.amethyst_block.chime",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.6
+      }
+    ]
+  },
+  "vfx_black_hole_charge": {
+    "subtitle": "subtitles.politicalserver.vfx_black_hole_charge",
+    "sounds": [
+      {
+        "name": "minecraft:block.beacon.power_select",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:entity.warden.heartbeat",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.7
+      }
+    ]
+  },
+  "vfx_black_hole_collapse": {
+    "subtitle": "subtitles.politicalserver.vfx_black_hole_collapse",
+    "sounds": [
+      {
+        "name": "minecraft:entity.warden.sonic_boom",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:entity.generic.explode",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 0.6
+      }
+    ]
+  },
+  "vfx_channel_loop": {
+    "subtitle": "subtitles.politicalserver.vfx_channel_loop",
+    "sounds": [
+      {
+        "name": "minecraft:block.beacon.ambient",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.2
+      }
+    ]
+  },
+  "vfx_rune_hum": {
+    "subtitle": "subtitles.politicalserver.vfx_rune_hum",
+    "sounds": [
+      {
+        "name": "minecraft:block.enchantment_table.use",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.9
+      },
+      {
+        "name": "minecraft:block.amethyst_block.resonate",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "vfx_domain_wall": {
+    "subtitle": "subtitles.politicalserver.vfx_domain_wall",
+    "sounds": [
+      {
+        "name": "minecraft:block.conduit.ambient",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 0.7
+      }
+    ]
+  },
+  "vfx_meteor_impact": {
+    "subtitle": "subtitles.politicalserver.vfx_meteor_impact",
+    "sounds": [
+      {
+        "name": "minecraft:entity.generic.explode",
+        "type": "event",
+        "volume": 1,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:block.fire.extinguish",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "vfx_slash": {
+    "subtitle": "subtitles.politicalserver.vfx_slash",
+    "sounds": [
+      {
+        "name": "minecraft:item.trident.riptide_1",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:entity.player.attack.sweep",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 1.1
+      }
+    ]
+  },
+  "vfx_implosion": {
+    "subtitle": "subtitles.politicalserver.vfx_implosion",
+    "sounds": [
+      {
+        "name": "minecraft:block.glass.break",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity.enderman.teleport",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 0.6
+      }
+    ]
+  }
+}

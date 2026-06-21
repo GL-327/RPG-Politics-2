@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:hero/root",
+  "display": {
+    "icon": { "id": "minecraft:dragon_breath" },
+    "title": { "translate": "advancements.politicalserver.hero.manifest.title" },
+    "description": { "translate": "advancements.politicalserver.hero.manifest.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

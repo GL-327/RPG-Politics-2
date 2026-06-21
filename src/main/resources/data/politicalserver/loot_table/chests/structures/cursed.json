@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": { "min": 3, "max": 5 },
+      "entries": [
+        { "type": "minecraft:item", "name": "politicalserver:cursed_essence", "weight": 6 },
+        { "type": "minecraft:item", "name": "politicalserver:exorcism_token", "weight": 4 },
+        { "type": "minecraft:item", "name": "politicalserver:wpn_grave_scythe", "weight": 2 },
+        { "type": "minecraft:item", "name": "politicalserver:acc_warding_talisman", "weight": 3 },
+        { "type": "minecraft:item", "name": "minecraft:soul_torch", "weight": 5, "functions": [ { "function": "minecraft:set_count", "count": { "min": 1, "max": 4 } } ] },
+        { "type": "minecraft:item", "name": "minecraft:bone", "weight": 5, "functions": [ { "function": "minecraft:set_count", "count": { "min": 1, "max": 5 } } ] },
+        { "type": "minecraft:item", "name": "minecraft:rotten_flesh", "weight": 4, "functions": [ { "function": "minecraft:set_count", "count": { "min": 1, "max": 4 } } ] }
+      ]
+    }
+  ]
+}

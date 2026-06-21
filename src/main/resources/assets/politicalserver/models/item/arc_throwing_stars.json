@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "politicalserver:item/arc_throwing_stars"
+  }
+}

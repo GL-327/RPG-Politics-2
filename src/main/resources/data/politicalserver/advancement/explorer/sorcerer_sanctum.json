@@ -1,0 +1,22 @@
+{
+  "parent": "politicalserver:explorer/root",
+  "display": {
+    "icon": { "id": "minecraft:amethyst_cluster" },
+    "title": { "translate": "advancements.politicalserver.explorer.sorcerer_sanctum.title" },
+    "description": { "translate": "advancements.politicalserver.explorer.sorcerer_sanctum.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "kill": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_archmage_sovereign" } }
+        ]
+      }
+    }
+  },
+  "requirements": [["kill"]]
+}

@@ -1,9 +1,11 @@
 package com.political.curse;
 
+import com.political.curse.energy.CursedEnergy;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -38,6 +40,32 @@ public class CurseEntity extends Zombie {
 
     public void setGrade(int grade) {
         this.grade = Math.max(1, Math.min(5, grade));
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        // Layer a custom cursed-energy ranged attack on top of the inherited zombie goals.
+        this.goalSelector.addGoal(2, new CurseHexBoltGoal(this));
+    }
+
+    /**
+     * A Curse is unseen by anyone lacking the cursed-energy capacity to perceive a curse of its grade
+     * (cleaner than a mixin, per the brief). Sorcerers, creative/spectator players, and anyone holding
+     * enough innate cursed energy see it normally; everyone else is oblivious.
+     */
+    @Override
+    public boolean isInvisibleTo(Player player) {
+        if (super.isInvisibleTo(player)) return true;
+        return !CursedEnergy.canPerceive(player, getGrade());
+    }
+
+    /**
+     * The plain vanilla visibility check (without the cursed-energy perception gate). Subclasses such
+     * as boss spirits use this to stay always-visible while still honouring real invisibility.
+     */
+    protected final boolean baseInvisibleTo(Player player) {
+        return super.isInvisibleTo(player);
     }
 
     @Override

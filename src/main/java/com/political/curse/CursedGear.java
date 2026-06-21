@@ -2,7 +2,6 @@ package com.political.curse;
 
 import com.political.combat.StatManager;
 import com.political.politics.DataManager;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
@@ -16,7 +15,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +30,7 @@ import java.util.Map;
  * sorcerers pour cursed energy into the strike for extra distorted damage, while those
  * under a Heavenly Restriction (or with only a sliver of cursed energy) wield them with
  * monstrous physical force and need no energy at all. Built as plain items whose bite is
- * delivered through {@link AttackEntityCallback} (no mixins, no tool-material plumbing).
+ * delivered through {@link com.political.combat.AbilityEngine} (no mixins, no tool-material plumbing).
  */
 public final class CursedGear {
 
@@ -61,31 +59,33 @@ public final class CursedGear {
         for (String name : BASE.keySet()) {
             ITEMS.put(name, register(name, new Item.Properties().stacksTo(1).durability(1800)));
         }
+    }
 
-        AttackEntityCallback.EVENT.register((player, level, hand, entity, hit) -> {
-            if (level.isClientSide() || !(player instanceof ServerPlayer sp)) return InteractionResult.PASS;
-            if (!(entity instanceof LivingEntity target)) return InteractionResult.PASS;
-            ItemStack weapon = sp.getItemInHand(hand);
-            Float base = baseFor(weapon);
-            if (base == null) return InteractionResult.PASS;
+    /**
+     * Extra Skyblock hit damage for cursed tools. Consumed by {@link com.political.combat.AbilityEngine}
+     * so cursed strikes are folded into the single Skyblock attack (no double-hit callback chain).
+     *
+     * @return bonus damage, or {@code 0} if {@code weapon} is not a cursed tool
+     */
+    public static float attackBonus(ServerPlayer sp, ItemStack weapon) {
+        Float base = baseFor(weapon);
+        if (base == null) return 0f;
+        var trait = DataManager.cursedTrait(sp.getStringUUID());
+        if (trait.isToolSpecialist()) {
+            return base * 2.0f;
+        }
+        if (trait.canUseTechniques() && StatManager.getCursedEnergy(sp) >= 5) {
+            StatManager.spendCursedEnergy(sp, 5);
+            return base + (float) (StatManager.getCursedEnergy(sp) * 0.04);
+        }
+        return base * 0.6f;
+    }
 
-            ServerLevel sl = (ServerLevel) level;
-            var trait = DataManager.cursedTrait(sp.getStringUUID());
-            float bonus;
-            if (trait.isToolSpecialist()) {
-                bonus = base * 2.0f; // raw physical mastery, no cursed energy spent
-            } else if (trait.canUseTechniques() && StatManager.getCursedEnergy(sp) >= 5) {
-                StatManager.spendCursedEnergy(sp, 5);
-                bonus = base + (float) (StatManager.getCursedEnergy(sp) * 0.04);
-            } else {
-                bonus = base * 0.6f; // an ordinary person can still swing it, but it resists them
-            }
-            target.hurtServer(sl, sl.damageSources().playerAttack(sp), bonus);
-            sl.sendParticles(ParticleTypes.SOUL, target.getX(), target.getY() + 1, target.getZ(), 16, 0.3, 0.5, 0.3, 0.02);
-            sl.playSound(null, target.getX(), target.getY(), target.getZ(),
-                    SoundEvents.SOUL_ESCAPE.value(), SoundSource.PLAYERS, 0.8f, 0.7f);
-            return InteractionResult.PASS;
-        });
+    public static void playHitFx(ServerLevel level, LivingEntity target) {
+        level.sendParticles(ParticleTypes.SOUL, target.getX(), target.getY() + 1, target.getZ(),
+                16, 0.3, 0.5, 0.3, 0.02);
+        level.playSound(null, target.getX(), target.getY(), target.getZ(),
+                SoundEvents.SOUL_ESCAPE.value(), SoundSource.PLAYERS, 0.8f, 0.7f);
     }
 
     public static boolean isCursedTool(ItemStack stack) {
@@ -112,6 +112,8 @@ public final class CursedGear {
         Item item = ITEMS.get(name);
         if (item == null) return ItemStack.EMPTY;
         ItemStack stack = new ItemStack(item);
+        stack.set(DataComponents.ATTRIBUTE_MODIFIERS,
+                net.minecraft.world.item.component.ItemAttributeModifiers.EMPTY);
         stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, Boolean.TRUE);
         stack.set(DataComponents.LORE, new ItemLore(List.of(
                 Component.literal("Cursed Tool").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD),

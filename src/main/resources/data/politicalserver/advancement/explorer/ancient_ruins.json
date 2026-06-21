@@ -1,0 +1,22 @@
+{
+  "parent": "politicalserver:explorer/root",
+  "display": {
+    "icon": { "id": "minecraft:chiseled_stone_bricks" },
+    "title": { "translate": "advancements.politicalserver.explorer.ancient_ruins.title" },
+    "description": { "translate": "advancements.politicalserver.explorer.ancient_ruins.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "kill": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob_warlord_kael" } }
+        ]
+      }
+    }
+  },
+  "requirements": [["kill"]]
+}

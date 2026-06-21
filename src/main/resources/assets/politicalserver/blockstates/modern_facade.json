@@ -1,1 +1,7 @@
-{ "variants": { "": { "model": "politicalserver:block/modern_facade" } } }
+{
+  "variants": {
+    "": {
+      "model": "politicalserver:block/modern_facade"
+    }
+  }
+}

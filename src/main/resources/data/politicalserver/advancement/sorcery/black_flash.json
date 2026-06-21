@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:sorcery/learn_technique",
+  "display": {
+    "icon": { "id": "minecraft:crimson_fungus" },
+    "title": { "translate": "advancements.politicalserver.sorcery.black_flash.title" },
+    "description": { "translate": "advancements.politicalserver.sorcery.black_flash.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

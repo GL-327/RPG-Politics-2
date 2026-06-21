@@ -91,26 +91,37 @@ public final class MarketManager {
         return holdings(cat).getOrDefault(uuid + "|" + symbol.toUpperCase(), 0L);
     }
 
-    /** Returns coins spent, or -1 if insufficient funds. */
+    /** Trading spread routed to the treasury; halved while the Free Market law is in force. */
+    private static double spread() {
+        return com.political.civics.LawManager.isActive(com.political.civics.CivicLaw.FREE_MARKET) ? 0.01 : 0.02;
+    }
+
+    /** Returns total coins spent (incl. fee), or -1 if insufficient funds. */
     public static long buy(Category cat, String uuid, String symbol, long units) {
         symbol = symbol.toUpperCase();
-        long cost = (long) Math.ceil(price(cat, symbol) * units);
+        long base = (long) Math.ceil(price(cat, symbol) * units);
+        long fee = (long) Math.ceil(base * spread());
+        long cost = base + fee;
         if (!DataManager.removeCoins(uuid, (int) Math.min(Integer.MAX_VALUE, cost))) return -1;
+        if (fee > 0) DataManager.addTreasury((int) Math.min(Integer.MAX_VALUE, fee));
         holdings(cat).merge(uuid + "|" + symbol, units, Long::sum);
         nudge(cat, symbol, 1.002);
         return cost;
     }
 
-    /** Returns coins earned, or -1 if the player doesn't hold that many units. */
+    /** Returns net coins earned (after fee), or -1 if the player doesn't hold that many units. */
     public static long sell(Category cat, String uuid, String symbol, long units) {
         symbol = symbol.toUpperCase();
         String key = uuid + "|" + symbol;
         long have = holdings(cat).getOrDefault(key, 0L);
         if (have < units) return -1;
-        long gain = (long) Math.floor(price(cat, symbol) * units);
+        long base = (long) Math.floor(price(cat, symbol) * units);
+        long fee = (long) Math.ceil(base * spread());
+        long gain = Math.max(0, base - fee);
         if (have - units <= 0) holdings(cat).remove(key);
         else holdings(cat).put(key, have - units);
         DataManager.addCoins(uuid, (int) Math.min(Integer.MAX_VALUE, gain));
+        if (fee > 0) DataManager.addTreasury((int) Math.min(Integer.MAX_VALUE, fee));
         nudge(cat, symbol, 0.998);
         return gain;
     }

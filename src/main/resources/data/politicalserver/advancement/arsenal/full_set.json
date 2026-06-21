@@ -1,0 +1,31 @@
+{
+  "parent": "politicalserver:arsenal/armor",
+  "display": {
+    "icon": { "id": "politicalserver:arm_celestial_chestplate" },
+    "title": { "translate": "advancements.politicalserver.arsenal.full_set.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.full_set.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": { "experience": 500 },
+  "criteria": {
+    "helmet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": ["politicalserver:arm_celestial_helmet"] } ] }
+    },
+    "chestplate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": ["politicalserver:arm_celestial_chestplate"] } ] }
+    },
+    "leggings": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": ["politicalserver:arm_celestial_leggings"] } ] }
+    },
+    "boots": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": ["politicalserver:arm_celestial_boots"] } ] }
+    }
+  },
+  "requirements": [["helmet"], ["chestplate"], ["leggings"], ["boots"]]
+}

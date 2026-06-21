@@ -1,1 +1,6 @@
-{ "model": { "type": "minecraft:model", "model": "politicalserver:block/street_lamp" } }
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "politicalserver:block/street_lamp"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "parent": "politicalserver:arsenal/legendary",
+  "display": {
+    "icon": { "id": "politicalserver:wpn_godslayer_blade" },
+    "title": { "translate": "advancements.politicalserver.arsenal.mythic_melee.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.mythic_melee.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": { "experience": 400 },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:wpn_godslayer_blade",
+            "politicalserver:wpn_voidrend_greatsword",
+            "politicalserver:wpn_ragnarok_axe",
+            "politicalserver:wpn_eternity_scythe"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

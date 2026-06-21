@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:politics/bank_1k",
+  "display": {
+    "icon": { "id": "minecraft:gold_ingot" },
+    "title": { "translate": "advancements.politicalserver.politics.bank_10k.title" },
+    "description": { "translate": "advancements.politicalserver.politics.bank_10k.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

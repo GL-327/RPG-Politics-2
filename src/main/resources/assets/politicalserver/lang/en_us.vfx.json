@@ -1,0 +1,15 @@
+{
+  "jei.politicalserver.category.gear_ability": "Gear Abilities",
+  "jei.politicalserver.category.economy_conversion": "Bank & Economy",
+  "jei.politicalserver.category.cursed_relic": "Cursed Relic Crafting",
+
+  "subtitles.politicalserver.vfx_chain_lightning": "Chain lightning arcs",
+  "subtitles.politicalserver.vfx_black_hole_charge": "Black hole charges",
+  "subtitles.politicalserver.vfx_black_hole_collapse": "Black hole collapses",
+  "subtitles.politicalserver.vfx_channel_loop": "Energy channels",
+  "subtitles.politicalserver.vfx_rune_hum": "Runes hum",
+  "subtitles.politicalserver.vfx_domain_wall": "Domain wall resonates",
+  "subtitles.politicalserver.vfx_meteor_impact": "Meteor impacts",
+  "subtitles.politicalserver.vfx_slash": "Blade slashes",
+  "subtitles.politicalserver.vfx_implosion": "Energy implodes"
+}

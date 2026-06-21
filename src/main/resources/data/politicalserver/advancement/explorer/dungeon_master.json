@@ -1,0 +1,28 @@
+{
+  "parent": "politicalserver:explorer/dragons_vault",
+  "display": {
+    "icon": { "id": "minecraft:nether_star" },
+    "title": { "translate": "advancements.politicalserver.explorer.dungeon_master.title" },
+    "description": { "translate": "advancements.politicalserver.explorer.dungeon_master.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": { "experience": 1000 },
+  "criteria": {
+    "cursed_crypt": { "trigger": "minecraft:player_killed_entity", "conditions": { "entity": [ { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob_lich_sovereign" } } ] } },
+    "bandit_hideout": { "trigger": "minecraft:player_killed_entity", "conditions": { "entity": [ { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_bandit_king" } } ] } },
+    "ancient_ruins": { "trigger": "minecraft:player_killed_entity", "conditions": { "entity": [ { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob_warlord_kael" } } ] } },
+    "viltrumite_lab": { "trigger": "minecraft:player_killed_entity", "conditions": { "entity": [ { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_grand_marshal" } } ] } },
+    "sorcerer_sanctum": { "trigger": "minecraft:player_killed_entity", "conditions": { "entity": [ { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_archmage_sovereign" } } ] } },
+    "dragons_vault": { "trigger": "minecraft:player_killed_entity", "conditions": { "entity": [ { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_infernal_sovereign" } } ] } },
+    "flooded_temple": { "trigger": "minecraft:player_killed_entity", "conditions": { "entity": [ { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_frost_queen" } } ] } },
+    "netherite_vault": { "trigger": "minecraft:player_killed_entity", "conditions": { "entity": [ { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_pit_commander" } } ] } },
+    "overgrown_catacombs": { "trigger": "minecraft:player_killed_entity", "conditions": { "entity": [ { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_dread_lich" } } ] } },
+    "crystal_caverns": { "trigger": "minecraft:player_killed_entity", "conditions": { "entity": [ { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_arcane_titan" } } ] } }
+  },
+  "requirements": [
+    ["cursed_crypt"], ["bandit_hideout"], ["ancient_ruins"], ["viltrumite_lab"], ["sorcerer_sanctum"],
+    ["dragons_vault"], ["flooded_temple"], ["netherite_vault"], ["overgrown_catacombs"], ["crystal_caverns"]
+  ]
+}

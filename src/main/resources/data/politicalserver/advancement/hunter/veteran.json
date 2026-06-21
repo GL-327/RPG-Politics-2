@@ -1,0 +1,16 @@
+{
+  "parent": "politicalserver:hunter/root",
+  "display": {
+    "icon": { "id": "minecraft:soul_lantern" },
+    "title": { "translate": "advancements.politicalserver.hunter.veteran.title" },
+    "description": { "translate": "advancements.politicalserver.hunter.veteran.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": { "experience": 500 },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

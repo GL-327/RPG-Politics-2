@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:politics/root",
+  "display": {
+    "icon": { "id": "politicalserver:coin_pouch" },
+    "title": { "translate": "advancements.politicalserver.politics.bank_1k.title" },
+    "description": { "translate": "advancements.politicalserver.politics.bank_1k.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

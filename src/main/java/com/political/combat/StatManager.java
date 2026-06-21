@@ -1,14 +1,12 @@
 package com.political.combat;
 
 import com.political.curse.CursedTrait;
-import com.political.court.CourtDomainManager;
+import com.political.curse.SorcererGrade;
 import com.political.net.ModNetworking;
 import com.political.net.StatSyncS2C;
 import com.political.politics.DataManager;
 import com.political.power.Power;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -134,6 +132,8 @@ public final class StatManager {
         for (EquipmentSlot slot : SCANNED_SLOTS) {
             addItemStats(s, player.getItemBySlot(slot));
         }
+        s.strength += com.political.expansion.accessories.Accessories.strengthBonus(player);
+        s.strength += com.political.expansion2.accessories.Accessories2.strengthBonus(player);
         CursedTrait trait = DataManager.cursedTrait(player.getStringUUID());
         s.maxHealth += trait.bonusHealth;
         s.strength += trait.bonusStrength;
@@ -141,7 +141,12 @@ public final class StatManager {
         s.bonusAttackSpeedPct = trait.bonusAttackSpeedPct;
         s.cursedRegenMultiplier = trait.regenMultiplier;
         s.maxCursedEnergy += trait.maxCursedEnergy
-                + Power.cursedEnergyBonus(DataManager.knownPowers(player.getStringUUID()));
+                + Power.cursedEnergyBonus(DataManager.knownPowers(player.getStringUUID()))
+                + com.political.expansion2.powers.Power2.cursedEnergyBonus(DataManager.knownPowers(player.getStringUUID()));
+        int grade = DataManager.sorcererGrade(player.getStringUUID());
+        if (grade > 0) {
+            s.maxCursedEnergy = Math.max(s.maxCursedEnergy, SorcererGrade.maxCursedEnergyFor(grade));
+        }
         return s;
     }
 
@@ -158,17 +163,25 @@ public final class StatManager {
         s.ferocity += sheet.ferocity;
         s.speed += sheet.speed;
         s.attackSpeed += sheet.attackSpeed;
+        // sheet.damage is consumed by AbilityEngine's Skyblock hit formula via ItemStats.compute(weapon)
     }
 
     public static void apply(ServerPlayer player) {
         RpgStats s = compute(player);
         STATS.put(player.getUUID(), s);
 
+        // Conservative safety clamps so extreme gear/multiplier stacking can't exceed vanilla
+        // attribute bounds or trivialise damage. Defaults are far above any real catalogue value.
+        com.political.config.PoliticalConfig cfg = com.political.config.PoliticalConfig.get();
+        s.maxHealth = Math.min(s.maxHealth, cfg.maxPlayerHealth);
+        s.defense = Math.min(s.defense, cfg.maxPlayerDefense);
+
         applyModifier(player.getAttribute(Attributes.MAX_HEALTH), RPG_HEALTH_ID, s.maxHealth - VANILLA_BASE_HEALTH, AttributeModifier.Operation.ADD_VALUE);
         applyModifier(player.getAttribute(Attributes.ARMOR), RPG_DEFENSE_ID, s.defense * 0.15, AttributeModifier.Operation.ADD_VALUE);
-        applyModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), RPG_STRENGTH_ID, s.strength * 0.1, AttributeModifier.Operation.ADD_VALUE);
+        // Strength feeds the Skyblock damage formula, not vanilla attack damage.
+        applyModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), RPG_STRENGTH_ID, 0, AttributeModifier.Operation.ADD_VALUE);
         applyModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), RPG_SPEED_ID, s.bonusSpeedPct + s.speed * 0.005, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
-        applyModifier(player.getAttribute(Attributes.ATTACK_SPEED), RPG_ATTACK_SPEED_ID, s.bonusAttackSpeedPct + s.attackSpeed * 0.01, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+        applyModifier(player.getAttribute(Attributes.ATTACK_SPEED), RPG_ATTACK_SPEED_ID, 2.0 + s.bonusAttackSpeedPct, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
 
         MANA.put(player.getUUID(), Math.min(MANA.getOrDefault(player.getUUID(), s.maxMana), s.maxMana));
         // Load persisted cursed energy on first apply (e.g. after relog), then clamp to max.
@@ -192,7 +205,8 @@ public final class StatManager {
         ModNetworking.send(player, new StatSyncS2C(
                 (float) s.defense, (float) s.strength,
                 (float) s.maxMana, (float) getMana(player),
-                (float) s.maxCursedEnergy, (float) getCursedEnergy(player)));
+                (float) s.maxCursedEnergy, (float) getCursedEnergy(player),
+                (float) s.critChance, (float) s.ferocity, (float) s.speed));
     }
 
     public static void tickAll(MinecraftServer server) {
@@ -200,8 +214,8 @@ public final class StatManager {
         boolean secondTick = (tickCounter % 20 == 0);
         if (!secondTick) return;
 
-        boolean courtActive = CourtDomainManager.isActive();
-        double manaRate = DataManager.data().manaRegenRate;
+        com.political.config.PoliticalConfig cfg = com.political.config.PoliticalConfig.get();
+        double manaRate = DataManager.data().manaRegenRate * cfg.manaRegenMultiplier;
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             apply(player);
             RpgStats s = get(player);
@@ -213,40 +227,17 @@ public final class StatManager {
             double cursed = getCursedEnergy(player);
             if (s.maxCursedEnergy > 0 && cursed < s.maxCursedEnergy && s.cursedRegenMultiplier > 0) {
                 int grade = DataManager.sorcererGrade(player.getStringUUID());
-                double rate = 0.015 * s.cursedRegenMultiplier * (1.0 + grade * 0.12);
+                double rate = 0.015 * s.cursedRegenMultiplier * (1.0 + grade * 0.12)
+                        * cfg.cursedEnergyRegenMultiplier;
                 double next = Math.min(s.maxCursedEnergy, cursed + s.maxCursedEnergy * rate);
                 CURSED.put(player.getUUID(), next);
                 DataManager.setStoredCursedEnergy(player.getStringUUID(), next);
             }
 
-            if (!courtActive) {
-                sendStatActionBar(player, s);
-            }
+            // The bottom stat readout is now rendered client-side by the HUD overlay
+            // (see PoliticalClient#renderHud), driven by StatSyncS2C, instead of the
+            // server action bar. Court domains still drive their own action bar separately.
         }
-    }
-
-    private static void sendStatActionBar(ServerPlayer player, RpgStats s) {
-        int hp = (int) Math.ceil(player.getHealth());
-        int maxHp = (int) Math.round(player.getMaxHealth());
-        int mana = (int) Math.floor(getMana(player));
-        Component bar = Component.literal("\u2764 " + hp + "/" + maxHp + "   ").withStyle(ChatFormatting.RED)
-                .append(Component.literal("\u2748 " + (int) s.defense + " Def   ").withStyle(ChatFormatting.GREEN))
-                .append(Component.literal("\u2726 " + (int) s.strength + " Str   ").withStyle(ChatFormatting.YELLOW))
-                .append(Component.literal("\u2742 " + mana + "/" + (int) s.maxMana + " Mana").withStyle(ChatFormatting.AQUA));
-        if (s.maxCursedEnergy > 0) {
-            int ce = (int) Math.floor(getCursedEnergy(player));
-            bar = bar.copy().append(Component.literal("   \u2620 " + ce + "/" + (int) s.maxCursedEnergy + " CE")
-                    .withStyle(ChatFormatting.DARK_PURPLE));
-        }
-        if (s.critChance > 0) {
-            bar = bar.copy().append(Component.literal("   \u2741 " + (int) s.critChance + "% Crit")
-                    .withStyle(ChatFormatting.BLUE));
-        }
-        if (s.ferocity > 0) {
-            bar = bar.copy().append(Component.literal("   \u2694 " + (int) s.ferocity + " Fer")
-                    .withStyle(ChatFormatting.RED));
-        }
-        player.sendSystemMessage(bar, true);
     }
 
     public static void remove(UUID uuid) {

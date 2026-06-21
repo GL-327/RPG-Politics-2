@@ -1,0 +1,26 @@
+{
+  "parent": "politicalserver:explorer/root",
+  "display": {
+    "icon": { "id": "politicalserver:reforge_stone" },
+    "title": { "translate": "advancements.politicalserver.explorer.treasure_hunter.title" },
+    "description": { "translate": "advancements.politicalserver.explorer.treasure_hunter.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "reforge_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": ["politicalserver:reforge_stone"] } ] }
+    },
+    "treasury_note": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": ["politicalserver:treasury_note"] } ] }
+    },
+    "bounty_seal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": ["politicalserver:bounty_seal"] } ] }
+    }
+  },
+  "requirements": [["reforge_stone"], ["treasury_note"], ["bounty_seal"]]
+}

@@ -1,0 +1,22 @@
+{
+  "parent": "politicalserver:explorer/root",
+  "display": {
+    "icon": { "id": "minecraft:gold_ingot" },
+    "title": { "translate": "advancements.politicalserver.explorer.bandit_hideout.title" },
+    "description": { "translate": "advancements.politicalserver.explorer.bandit_hideout.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "kill": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_bandit_king" } }
+        ]
+      }
+    }
+  },
+  "requirements": [["kill"]]
+}

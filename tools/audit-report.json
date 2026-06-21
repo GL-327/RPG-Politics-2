@@ -1,0 +1,69 @@
+{
+  "counts": {
+    "item_png": 980,
+    "block_png": 183,
+    "entity_png": 251,
+    "total_png": 1414,
+    "java_item_ids": 672,
+    "java_block_ids": 162,
+    "java_entity_ids": 205
+  },
+  "missing": {
+    "items": [
+      "acc2_armor",
+      "acc2_attack_speed",
+      "acc2_dec",
+      "acc2_health",
+      "acc2_knockback",
+      "acc2_luck",
+      "acc2_speed",
+      "acc2_toughness",
+      "acc_arcane_focus",
+      "acc_armor",
+      "acc_attack_speed",
+      "acc_celestial_charm",
+      "acc_dec",
+      "acc_health",
+      "acc_knockback",
+      "acc_luck",
+      "acc_mana_ring",
+      "acc_minor_mana_potion",
+      "acc_speed",
+      "acc_toughness",
+      "activate_power",
+      "arc2_",
+      "arc_",
+      "arm2_set",
+      "arm_set",
+      "bank_action",
+      "bank_menu",
+      "curse_spirit",
+      "dev_config_set",
+      "dev_menu_open",
+      "dialogue_choose",
+      "dialogue_open",
+      "flight_input",
+      "food_seaweed_salad",
+      "gov_action",
+      "gov_menu",
+      "power_action",
+      "power_menu",
+      "rpg_attack_speed",
+      "rpg_defense",
+      "rpg_health",
+      "rpg_speed",
+      "rpg_strength",
+      "stat_sync",
+      "village_"
+    ],
+    "blocks": [],
+    "entities": [],
+    "item_models": [
+      "dungeon_compass"
+    ]
+  },
+  "orphans": {
+    "items": 353,
+    "blocks": 21
+  }
+}

@@ -160,49 +160,10 @@ public final class SettlementManager {
     // ------------------------------------------------------------------
 
     public static void onServerStarted(MinecraftServer server) {
-        PoliticsData d = DataManager.data();
-        if (!d.capitalId.isEmpty() && DataManager.settlement(d.capitalId) != null) return;
-
-        try {
-            ServerLevel level = server.overworld();
-            BlockPos spawn = level.getRespawnData().pos();
-            int cx = spawn.getX();
-            int cz = spawn.getZ();
-
-            // Make sure the spawn chunk is generated so heightmaps are valid.
-            level.getChunk(cx >> 4, cz >> 4);
-
-            Random rng = new Random(((long) cx << 32) ^ cz);
-            // Stream the (potentially enormous) capital in over many ticks so world creation
-            // never freezes; first lay a small synchronous safe pad so the player can't fall.
-            int baseY = Math.max(level.getMinY() + 6, Build.groundY(level, cx, cz));
-            for (int dx = -3; dx <= 3; dx++) {
-                for (int dz = -3; dz <= 3; dz++) {
-                    level.setBlock(new BlockPos(cx + dx, baseY - 1, cz + dz),
-                            com.political.content.ModBlocks.CASTLE_BRICKS.defaultBlockState(), 2);
-                    for (int dy = 0; dy <= 3; dy++) {
-                        level.setBlock(new BlockPos(cx + dx, baseY + dy, cz + dz),
-                                net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
-                    }
-                }
-            }
-            Settlement capital = queueBuild(level, cx, cz, SettlementType.CAPITAL, SettlementGenerator.pickName(rng));
-            d.capitalId = capital.id;
-            markCell(d, level, cx, cz);
-
-            // Relocate world spawn onto the safe pad at the heart of the capital.
-            BlockPos newSpawn = new BlockPos(cx + 2, baseY + 1, cz + 2);
-            level.setRespawnData(net.minecraft.world.level.storage.LevelData.RespawnData.of(
-                    level.dimension(), newSpawn, 180.0f, 0.0f));
-
-            com.political.RpgPoliticsMod.LOGGER.info("Founded capital '{}' at {},{}", capital.name, cx, cz);
-
-            if (System.getenv("SETTLEMENT_PREVIEW") != null) {
-                SettlementPreview.renderAll(level);
-            }
-        } catch (RuntimeException e) {
-            com.political.RpgPoliticsMod.LOGGER.error("Failed to found the capital at world spawn", e);
-        }
+        VillageOverlayManager.onServerStarted();
+        // Procedural capital at spawn is retired; vanilla + datapack villages carry settlements.
+        com.political.RpgPoliticsMod.LOGGER.info("Village government overlay active ({} registered settlements).",
+                DataManager.settlements().size());
     }
 
     // ------------------------------------------------------------------
@@ -229,6 +190,11 @@ public final class SettlementManager {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             if (!(player.level() instanceof ServerLevel level)) continue;
             if (tryScatterAround(level, d, player.getBlockX(), player.getBlockZ())) break; // one per pass
+        }
+
+        // Village overlay: register vanilla villages for governance when players explore.
+        if (tick % 40 == 0) {
+            VillageOverlayManager.tick(server.overworld(), server.getPlayerList().getPlayers());
         }
 
         // Keep online players enrolled as citizens of their nearest settlement.

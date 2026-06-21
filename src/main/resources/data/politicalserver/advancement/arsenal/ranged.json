@@ -1,0 +1,31 @@
+{
+  "parent": "politicalserver:arsenal/root",
+  "display": {
+    "icon": { "id": "politicalserver:arc_emberbow" },
+    "title": { "translate": "advancements.politicalserver.arsenal.ranged.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.ranged.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:arc_huntbow",
+            "politicalserver:arc_windbow",
+            "politicalserver:arc_emberbow",
+            "politicalserver:arc_soulbow",
+            "politicalserver:arc_frostbow",
+            "politicalserver:arc_stormbow",
+            "politicalserver:arc_emberwand",
+            "politicalserver:arc_arcanewand"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

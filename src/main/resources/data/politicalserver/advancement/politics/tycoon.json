@@ -1,0 +1,16 @@
+{
+  "parent": "politicalserver:politics/bank_100k",
+  "display": {
+    "icon": { "id": "minecraft:netherite_block" },
+    "title": { "translate": "advancements.politicalserver.politics.tycoon.title" },
+    "description": { "translate": "advancements.politicalserver.politics.tycoon.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": { "experience": 800 },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

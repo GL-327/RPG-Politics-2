@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:hunter/root",
+  "display": {
+    "icon": { "id": "minecraft:bone" },
+    "title": { "translate": "advancements.politicalserver.hunter.grade_2_curse.title" },
+    "description": { "translate": "advancements.politicalserver.hunter.grade_2_curse.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

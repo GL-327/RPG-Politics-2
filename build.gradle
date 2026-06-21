@@ -14,11 +14,36 @@ base {
 repositories {
 	mavenCentral()
 	maven { url "https://maven.nucleoid.xyz/" }
+	// JEI (Just Enough Items) — recipe viewer API + runtime jar.
+	maven {
+		name = "Jared's maven"
+		url = "https://maven.blamejared.com/"
+	}
+	// Modrinth maven — sound-physics-remastered, not-enough-animations, and any
+	// other Modrinth-hosted optional integrations.
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = "Modrinth"
+				url = "https://api.modrinth.com/maven"
+			}
+		}
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
 }
 
 loom {
 	// src/main = common + server, src/client = client-only.
 	splitEnvironmentSourceSets()
+
+	// Targeted-mixin infrastructure. Non-remapping Loom (26.2 is deobfuscated)
+	// means mixin targets use official Mojang names and the generated refmap is
+	// effectively identity, but we name it explicitly for tooling stability.
+	mixin {
+		defaultRefmapName = "politicalserver.refmap.json"
+	}
 
 	mods {
 		"politicalserver" {
@@ -34,6 +59,28 @@ dependencies {
 
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// --- Optional integration dependencies (26.2 Fabric, runtime-compatible) ---
+	// NOTE: this project uses the NON-REMAPPING Loom (26.1+ ships deobfuscated),
+	// so dependencies use plain Gradle configurations (compileOnly / runtimeOnly),
+	// exactly like fabric-api/fabric-loader above — NOT modImplementation.
+	//
+	// JEI: compile our recipe-viewer plugin against the stable API only; the full
+	// jar is pulled at dev runtime so JEI loads in-game (Fabric Loader scans the
+	// runtime classpath for fabric.mod.json). The plugin class is a no-op when JEI
+	// is absent at runtime (only loaded via JEI's @JeiPlugin scan).
+	compileOnly "mezz.jei:jei-${project.minecraft_version}-fabric-api:${project.jei_version}"
+	runtimeOnly "mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}"
+
+	// Sound Physics Remastered + Not Enough Animations: pure runtime enhancements,
+	// no compile-time API usage. Dev-runtime only; never bundled with our jar.
+	runtimeOnly "maven.modrinth:sound-physics-remastered:${project.sound_physics_version}"
+	runtimeOnly "maven.modrinth:not-enough-animations:${project.notenoughanimations_version}"
+
+	// Manual jar-drop fallback: drop any extra 26.2-Fabric mod jar into ./libs to
+	// add it to the dev runtime classpath (gitignored, empty-safe). See
+	// docs/integration/JAR_AUDIT.md.
+	runtimeOnly fileTree(dir: "${rootDir}/libs", include: ["*.jar"])
 }
 
 processResources {

@@ -1,0 +1,27 @@
+{
+  "parent": "politicalserver:hunter/world_miniboss",
+  "display": {
+    "icon": { "id": "minecraft:netherite_sword" },
+    "title": { "translate": "advancements.politicalserver.hunter.world_boss.title" },
+    "description": { "translate": "advancements.politicalserver.hunter.world_boss.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": { "experience": 700 },
+  "criteria": {
+    "kill": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          { "condition": "minecraft:any_of", "terms": [
+            { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_thunder_god" } },
+            { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob2_earthbound_titan" } },
+            { "condition": "minecraft:entity_properties", "entity": "this", "predicate": { "type": "politicalserver:mob_storm_tyrant" } }
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["kill"]]
+}

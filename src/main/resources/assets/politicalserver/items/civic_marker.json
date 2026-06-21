@@ -1,1 +1,6 @@
-{ "model": { "type": "minecraft:model", "model": "politicalserver:block/civic_marker" } }
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "politicalserver:block/civic_marker"
+  }
+}

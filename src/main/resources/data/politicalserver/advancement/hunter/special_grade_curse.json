@@ -1,0 +1,16 @@
+{
+  "parent": "politicalserver:hunter/grade_1_curse",
+  "display": {
+    "icon": { "id": "minecraft:wither_skeleton_skull" },
+    "title": { "translate": "advancements.politicalserver.hunter.special_grade_curse.title" },
+    "description": { "translate": "advancements.politicalserver.hunter.special_grade_curse.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": { "experience": 600 },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

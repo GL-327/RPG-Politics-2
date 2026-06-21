@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": { "min": 2, "max": 4 },
+      "entries": [
+        { "type": "minecraft:item", "name": "politicalserver:coin_pouch", "weight": 8 },
+        { "type": "minecraft:item", "name": "politicalserver:acc_minor_healing_potion", "weight": 10 },
+        { "type": "minecraft:item", "name": "politicalserver:food_bread_roll", "weight": 12 },
+        { "type": "minecraft:item", "name": "politicalserver:wpn_bronze_dirk", "weight": 4 },
+        { "type": "minecraft:item", "name": "politicalserver:arc_huntbow", "weight": 4 },
+        { "type": "minecraft:item", "name": "minecraft:iron_ingot", "weight": 8 },
+        { "type": "minecraft:item", "name": "minecraft:bone", "weight": 6 }
+      ]
+    }
+  ]
+}

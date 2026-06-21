@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:politics/bank_10k",
+  "display": {
+    "icon": { "id": "minecraft:gold_block" },
+    "title": { "translate": "advancements.politicalserver.politics.bank_100k.title" },
+    "description": { "translate": "advancements.politicalserver.politics.bank_100k.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

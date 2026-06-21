@@ -1,0 +1,28 @@
+{
+  "parent": "politicalserver:arsenal/uncommon",
+  "display": {
+    "icon": { "id": "politicalserver:wpn_knights_longsword" },
+    "title": { "translate": "advancements.politicalserver.arsenal.rare.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.rare.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:wpn_knights_longsword",
+            "politicalserver:wpn_shadow_kunai",
+            "politicalserver:wpn_storm_glaive",
+            "politicalserver:wpn_tempest_katana",
+            "politicalserver:wpn_grave_scythe"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

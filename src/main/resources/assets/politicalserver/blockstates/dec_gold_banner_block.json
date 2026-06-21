@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "politicalserver:block/dec_gold_banner_block"
+    }
+  }
+}

@@ -1,1 +1,6 @@
-{ "model": { "type": "minecraft:model", "model": "politicalserver:block/cobble_street" } }
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "politicalserver:block/cobble_street"
+  }
+}

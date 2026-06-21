@@ -1,0 +1,18 @@
+{
+  "display": {
+    "icon": { "id": "politicalserver:structure_compass" },
+    "title": { "translate": "advancements.politicalserver.explorer.root.title" },
+    "description": { "translate": "advancements.politicalserver.explorer.root.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png"
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": ["politicalserver:structure_compass"] } ] }
+    }
+  },
+  "requirements": [["obtain"]]
+}

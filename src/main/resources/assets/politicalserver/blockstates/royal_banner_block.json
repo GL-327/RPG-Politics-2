@@ -1,1 +1,7 @@
-{ "variants": { "": { "model": "politicalserver:block/royal_banner_block" } } }
+{
+  "variants": {
+    "": {
+      "model": "politicalserver:block/royal_banner_block"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "category.politicalserver.civics": "Civics",
+
+  "civics.politicalserver.job.miner": "Miner",
+  "civics.politicalserver.job.farmer": "Farmer",
+  "civics.politicalserver.job.hunter": "Hunter",
+  "civics.politicalserver.job.guard": "Guard",
+  "civics.politicalserver.job.merchant": "Merchant",
+  "civics.politicalserver.job.banker": "Banker",
+  "civics.politicalserver.job.builder": "Builder",
+  "civics.politicalserver.job.diplomat": "Diplomat",
+
+  "civics.politicalserver.office.mayor": "Mayor",
+  "civics.politicalserver.office.judge": "Judge",
+  "civics.politicalserver.office.treasurer": "Treasurer",
+
+  "civics.politicalserver.law.tax_holiday": "Tax Holiday",
+  "civics.politicalserver.law.free_market": "Free Market Act",
+  "civics.politicalserver.law.stimulus": "Economic Stimulus",
+  "civics.politicalserver.law.healthcare": "Public Healthcare",
+  "civics.politicalserver.law.martial_law": "Martial Law",
+  "civics.politicalserver.law.welfare": "Welfare Programme",
+  "civics.politicalserver.law.conscription": "Conscription",
+
+  "civics.politicalserver.project.roads": "Royal Roads",
+  "civics.politicalserver.project.granary": "Public Granary",
+  "civics.politicalserver.project.aqueduct": "Grand Aqueduct",
+  "civics.politicalserver.project.hospital": "City Hospital",
+  "civics.politicalserver.project.university": "Royal University",
+  "civics.politicalserver.project.walls": "City Walls",
+
+  "civics.politicalserver.ideology.liberal": "Liberal",
+  "civics.politicalserver.ideology.conservative": "Conservative",
+  "civics.politicalserver.ideology.socialist": "Socialist",
+  "civics.politicalserver.ideology.nationalist": "Nationalist",
+  "civics.politicalserver.ideology.technocrat": "Technocrat",
+  "civics.politicalserver.ideology.agrarian": "Agrarian",
+  "civics.politicalserver.ideology.centrist": "Centrist",
+
+  "civics.politicalserver.wanted": "WANTED",
+  "civics.politicalserver.fund": "Sovereign Wealth Fund",
+  "civics.politicalserver.fine": "Fine",
+  "civics.politicalserver.bail": "Bail"
+}

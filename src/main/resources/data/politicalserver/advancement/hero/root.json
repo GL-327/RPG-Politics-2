@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": { "id": "politicalserver:compound_v" },
+    "title": { "translate": "advancements.politicalserver.hero.root.title" },
+    "description": { "translate": "advancements.politicalserver.hero.root.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/nether.png"
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:compound_v",
+            "politicalserver:temp_v",
+            "politicalserver:v1"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:hero/manifest",
+  "display": {
+    "icon": { "id": "minecraft:elytra" },
+    "title": { "translate": "advancements.politicalserver.hero.flight.title" },
+    "description": { "translate": "advancements.politicalserver.hero.flight.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

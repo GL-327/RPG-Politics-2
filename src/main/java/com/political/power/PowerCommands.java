@@ -56,13 +56,26 @@ public final class PowerCommands {
         TECHNIQUE_GRADE.put(Power.CURSED_CLONE, 3);
         TECHNIQUE_GRADE.put(Power.WHEEL_ADAPTATION, 5);
         TECHNIQUE_GRADE.put(Power.CURSED_TIDE, 2);
+        TECHNIQUE_GRADE.put(Power.MAXIMUM_METEOR, 5);
+        TECHNIQUE_GRADE.put(Power.FIRE_ARROW_FUGA, 3);
+        TECHNIQUE_GRADE.put(Power.COFFIN_IRON_MOUNTAIN, 4);
+        TECHNIQUE_GRADE.put(Power.SELF_EMBODIMENT, 5);
+        TECHNIQUE_GRADE.put(Power.SOUL_TRANSFIGURATION, 3);
+        TECHNIQUE_GRADE.put(Power.CHIMERA_SHADOW_GARDEN, 5);
+        TECHNIQUE_GRADE.put(Power.NUE_STRIKE, 2);
+        TECHNIQUE_GRADE.put(Power.GRAVITY_WELL, 4);
+        TECHNIQUE_GRADE.put(Power.MALEVOLENT_SHRINE, 5);
     }
 
     private PowerCommands() {}
 
     public static void register(CommandDispatcher<CommandSourceStack> d) {
+        // Opens the Powers & Serums GUI (also available via the "Open Powers Menu" keybind).
+        d.register(Commands.literal("powers").executes(c -> { PowerManager.sendMenu(self(c)); return 1; }));
+
         d.register(Commands.literal("power")
                 .executes(PowerCommands::help)
+                .then(Commands.literal("menu").executes(c -> { PowerManager.sendMenu(self(c)); return 1; }))
                 .then(Commands.literal("list").executes(PowerCommands::list))
                 .then(Commands.literal("known").executes(PowerCommands::known))
                 .then(Commands.literal("use").executes(PowerCommands::use))

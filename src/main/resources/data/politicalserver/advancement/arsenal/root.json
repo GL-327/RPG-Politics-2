@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": { "id": "politicalserver:wpn_iron_cutlass" },
+    "title": { "translate": "advancements.politicalserver.arsenal.root.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.root.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:wpn_iron_cutlass",
+            "politicalserver:wpn_bronze_dirk",
+            "politicalserver:wpn_stone_bludgeon",
+            "politicalserver:wpn_woodsman_hatchet",
+            "politicalserver:wpn_militia_spear"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

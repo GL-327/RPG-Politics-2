@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:politics/root",
+  "display": {
+    "icon": { "id": "politicalserver:treasury_note" },
+    "title": { "translate": "advancements.politicalserver.politics.civic_duty.title" },
+    "description": { "translate": "advancements.politicalserver.politics.civic_duty.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

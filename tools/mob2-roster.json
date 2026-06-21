@@ -1,0 +1,4603 @@
+[
+  {
+    "id": "mob2_ember_scout",
+    "name": "Ember Scout",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "fire",
+    "fireproof": true,
+    "ignite": true,
+    "onHit": "SLOWNESS",
+    "drops": [
+      {
+        "item": "COAL",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_flame_acolyte",
+    "name": "Flame Acolyte",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "fire",
+    "fireproof": true,
+    "ignite": true,
+    "aura": "WEAKNESS",
+    "drops": [
+      {
+        "item": "COAL",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_magma_brute",
+    "name": "Magma Brute",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "fire",
+    "brute": true,
+    "fireproof": true,
+    "ignite": true,
+    "drops": [
+      {
+        "item": "COAL",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_cinder_stalker",
+    "name": "Cinder Stalker",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.34,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "fire",
+    "fireproof": true,
+    "ignite": true,
+    "drops": [
+      {
+        "item": "COAL",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_pyre_cultist",
+    "name": "Pyre Cultist",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "fire",
+    "fireproof": true,
+    "ignite": true,
+    "onHit": "POISON",
+    "drops": [
+      {
+        "item": "COAL",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_salamander_beast",
+    "name": "Salamander Beast",
+    "role": "NEUTRAL",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "fire",
+    "fireproof": true,
+    "drops": [
+      {
+        "item": "COAL",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_volcano_warden",
+    "name": "Volcano Warden",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "fire",
+    "brute": true,
+    "fireproof": true,
+    "ignite": true,
+    "drops": [
+      {
+        "item": "COAL",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_inferno_champion",
+    "name": "Inferno Champion",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "fire",
+    "brute": true,
+    "fireproof": true,
+    "ignite": true,
+    "drops": [
+      {
+        "item": "COAL",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_infernal_sovereign",
+    "name": "Infernal Sovereign",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "fire",
+    "brute": true,
+    "fireproof": true,
+    "ignite": true,
+    "summon": "mob2_ember_scout",
+    "summonCount": 4,
+    "drops": [
+      {
+        "item": "COAL",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_frost_shardling",
+    "name": "Frost Shardling",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "ice",
+    "onHit": "SLOWNESS",
+    "drops": [
+      {
+        "item": "PACKED_ICE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.5
+      },
+      {
+        "item": "SNOWBALL",
+        "min": 1,
+        "max": 3,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_glacial_hunter",
+    "name": "Glacial Hunter",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "ice",
+    "drops": [
+      {
+        "item": "PACKED_ICE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.5
+      },
+      {
+        "item": "SNOWBALL",
+        "min": 1,
+        "max": 3,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_ice_acolyte",
+    "name": "Ice Acolyte",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "ice",
+    "aura": "SLOWNESS",
+    "auraAmp": 0,
+    "drops": [
+      {
+        "item": "PACKED_ICE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.5
+      },
+      {
+        "item": "SNOWBALL",
+        "min": 1,
+        "max": 3,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_blizzard_herald",
+    "name": "Blizzard Herald",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "ice",
+    "onHit": "SLOWNESS",
+    "onHitAmp": 1,
+    "drops": [
+      {
+        "item": "PACKED_ICE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.5
+      },
+      {
+        "item": "SNOWBALL",
+        "min": 1,
+        "max": 3,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_rime_wraith",
+    "name": "Rime Wraith",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "ice",
+    "onHit": "BLINDNESS",
+    "drops": [
+      {
+        "item": "PACKED_ICE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.5
+      },
+      {
+        "item": "SNOWBALL",
+        "min": 1,
+        "max": 3,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_arctic_fox_beast",
+    "name": "Arctic Fox Beast",
+    "role": "NEUTRAL",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "ice",
+    "drops": [
+      {
+        "item": "PACKED_ICE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.5
+      },
+      {
+        "item": "SNOWBALL",
+        "min": 1,
+        "max": 3,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_glacier_titan",
+    "name": "Glacier Titan",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "ice",
+    "brute": true,
+    "onHit": "SLOWNESS",
+    "onHitAmp": 1,
+    "drops": [
+      {
+        "item": "PACKED_ICE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.5
+      },
+      {
+        "item": "SNOWBALL",
+        "min": 1,
+        "max": 3,
+        "chance": 0.6
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_frost_colossus",
+    "name": "Frost Colossus",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "ice",
+    "brute": true,
+    "drops": [
+      {
+        "item": "PACKED_ICE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.5
+      },
+      {
+        "item": "SNOWBALL",
+        "min": 1,
+        "max": 3,
+        "chance": 0.6
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_frost_queen",
+    "name": "Frost Queen",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "ice",
+    "brute": true,
+    "onHit": "SLOWNESS",
+    "onHitAmp": 1,
+    "summon": "mob2_frost_shardling",
+    "summonCount": 5,
+    "drops": [
+      {
+        "item": "PACKED_ICE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.5
+      },
+      {
+        "item": "SNOWBALL",
+        "min": 1,
+        "max": 3,
+        "chance": 0.6
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_spark_imp",
+    "name": "Spark Imp",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "storm",
+    "lightning": true,
+    "drops": [
+      {
+        "item": "COPPER_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_thunder_acolyte",
+    "name": "Thunder Acolyte",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "storm",
+    "lightning": true,
+    "drops": [
+      {
+        "item": "COPPER_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_storm_brute",
+    "name": "Storm Brute",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "storm",
+    "brute": true,
+    "lightning": true,
+    "drops": [
+      {
+        "item": "COPPER_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_gale_stalker",
+    "name": "Gale Stalker",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.33,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "storm",
+    "lightning": true,
+    "drops": [
+      {
+        "item": "COPPER_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_tempest_cultist",
+    "name": "Tempest Cultist",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "storm",
+    "lightning": true,
+    "aura": "WEAKNESS",
+    "drops": [
+      {
+        "item": "COPPER_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_storm_eagle_beast",
+    "name": "Storm Eagle Beast",
+    "role": "NEUTRAL",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "storm",
+    "lightning": true,
+    "drops": [
+      {
+        "item": "COPPER_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_tempest_archon",
+    "name": "Tempest Archon",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "storm",
+    "brute": true,
+    "lightning": true,
+    "drops": [
+      {
+        "item": "COPPER_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_lightning_lord",
+    "name": "Lightning Lord",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "storm",
+    "brute": true,
+    "lightning": true,
+    "drops": [
+      {
+        "item": "COPPER_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_thunder_god",
+    "name": "Thunder God",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "storm",
+    "brute": true,
+    "lightning": true,
+    "summon": "mob2_spark_imp",
+    "summonCount": 4,
+    "drops": [
+      {
+        "item": "COPPER_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_stone_scout",
+    "name": "Stone Scout",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "earth",
+    "drops": [
+      {
+        "item": "COBBLESTONE",
+        "min": 2,
+        "max": 4,
+        "chance": 0.8
+      },
+      {
+        "item": "IRON_NUGGET",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_HILL",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_mud_brute",
+    "name": "Mud Brute",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "earth",
+    "brute": true,
+    "drops": [
+      {
+        "item": "COBBLESTONE",
+        "min": 2,
+        "max": 4,
+        "chance": 0.8
+      },
+      {
+        "item": "IRON_NUGGET",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_HILL",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_boulder_stalker",
+    "name": "Boulder Stalker",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "earth",
+    "onHit": "SLOWNESS",
+    "drops": [
+      {
+        "item": "COBBLESTONE",
+        "min": 2,
+        "max": 4,
+        "chance": 0.8
+      },
+      {
+        "item": "IRON_NUGGET",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_HILL",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_earth_knight",
+    "name": "Earth Knight",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "earth",
+    "raids": true,
+    "drops": [
+      {
+        "item": "COBBLESTONE",
+        "min": 2,
+        "max": 4,
+        "chance": 0.8
+      },
+      {
+        "item": "IRON_NUGGET",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_HILL",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_root_cultist",
+    "name": "Root Cultist",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "earth",
+    "onHit": "POISON",
+    "drops": [
+      {
+        "item": "COBBLESTONE",
+        "min": 2,
+        "max": 4,
+        "chance": 0.8
+      },
+      {
+        "item": "IRON_NUGGET",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_HILL",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_cave_bear_beast",
+    "name": "Cave Bear Beast",
+    "role": "NEUTRAL",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "earth",
+    "brute": true,
+    "drops": [
+      {
+        "item": "COBBLESTONE",
+        "min": 2,
+        "max": 4,
+        "chance": 0.8
+      },
+      {
+        "item": "IRON_NUGGET",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_HILL",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_granite_colossus",
+    "name": "Granite Colossus",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "earth",
+    "brute": true,
+    "drops": [
+      {
+        "item": "COBBLESTONE",
+        "min": 2,
+        "max": 4,
+        "chance": 0.8
+      },
+      {
+        "item": "IRON_NUGGET",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_HILL",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_quake_sentinel",
+    "name": "Quake Sentinel",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "earth",
+    "brute": true,
+    "onHit": "SLOWNESS",
+    "onHitAmp": 1,
+    "drops": [
+      {
+        "item": "COBBLESTONE",
+        "min": 2,
+        "max": 4,
+        "chance": 0.8
+      },
+      {
+        "item": "IRON_NUGGET",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_HILL",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_earthbound_titan",
+    "name": "Earthbound Titan",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "earth",
+    "brute": true,
+    "summon": "mob2_stone_scout",
+    "summonCount": 5,
+    "drops": [
+      {
+        "item": "COBBLESTONE",
+        "min": 2,
+        "max": 4,
+        "chance": 0.8
+      },
+      {
+        "item": "IRON_NUGGET",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_shade_scout",
+    "name": "Shade Scout",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "shadow",
+    "onHit": "BLINDNESS",
+    "drops": [
+      {
+        "item": "GLOWSTONE_DUST",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_night_acolyte",
+    "name": "Night Acolyte",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "shadow",
+    "aura": "WEAKNESS",
+    "drops": [
+      {
+        "item": "GLOWSTONE_DUST",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_shadow_brute",
+    "name": "Shadow Brute",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "shadow",
+    "brute": true,
+    "drops": [
+      {
+        "item": "GLOWSTONE_DUST",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_void_stalker",
+    "name": "Void Stalker",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.35,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "shadow",
+    "drops": [
+      {
+        "item": "GLOWSTONE_DUST",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_phantom_wraith",
+    "name": "Phantom Wraith",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "shadow",
+    "onHit": "BLINDNESS",
+    "drops": [
+      {
+        "item": "GLOWSTONE_DUST",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_shadow_wolf_beast",
+    "name": "Shadow Wolf Beast",
+    "role": "NEUTRAL",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "shadow",
+    "drops": [
+      {
+        "item": "GLOWSTONE_DUST",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_abyss_knight",
+    "name": "Abyss Knight",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "shadow",
+    "brute": true,
+    "onHit": "WITHER",
+    "onHitDur": 60,
+    "drops": [
+      {
+        "item": "GLOWSTONE_DUST",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_void_reaper",
+    "name": "Void Reaper",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "shadow",
+    "brute": true,
+    "lifesteal": 2,
+    "drops": [
+      {
+        "item": "GLOWSTONE_DUST",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_shadow_emperor",
+    "name": "Shadow Emperor",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "shadow",
+    "brute": true,
+    "aura": "WEAKNESS",
+    "auraAmp": 1,
+    "summon": "mob2_shade_scout",
+    "summonCount": 4,
+    "drops": [
+      {
+        "item": "GLOWSTONE_DUST",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_light_scout",
+    "name": "Light Scout",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "holy",
+    "drops": [
+      {
+        "item": "GOLD_NUGGET",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "QUARTZ",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_solar_acolyte",
+    "name": "Solar Acolyte",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "holy",
+    "aura": "GLOWING",
+    "drops": [
+      {
+        "item": "GOLD_NUGGET",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "QUARTZ",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_radiant_knight",
+    "name": "Radiant Knight",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "holy",
+    "raids": true,
+    "drops": [
+      {
+        "item": "GOLD_NUGGET",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "QUARTZ",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_zealot_guard",
+    "name": "Zealot Guard",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "holy",
+    "drops": [
+      {
+        "item": "GOLD_NUGGET",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "QUARTZ",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_sun_herald",
+    "name": "Sun Herald",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "holy",
+    "onHit": "GLOWING",
+    "drops": [
+      {
+        "item": "GOLD_NUGGET",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "QUARTZ",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_dawn_stag_beast",
+    "name": "Dawn Stag Beast",
+    "role": "NEUTRAL",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "holy",
+    "drops": [
+      {
+        "item": "GOLD_NUGGET",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "QUARTZ",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_seraph_champion",
+    "name": "Seraph Champion",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "holy",
+    "brute": true,
+    "drops": [
+      {
+        "item": "GOLD_NUGGET",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "QUARTZ",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_aegis_sentinel",
+    "name": "Aegis Sentinel",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "holy",
+    "brute": true,
+    "drops": [
+      {
+        "item": "GOLD_NUGGET",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "QUARTZ",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_seraph_lord",
+    "name": "Seraph Lord",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "holy",
+    "brute": true,
+    "summon": "mob2_light_scout",
+    "summonCount": 3,
+    "drops": [
+      {
+        "item": "GOLD_NUGGET",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "QUARTZ",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_arcane_scout",
+    "name": "Arcane Scout",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "arcane",
+    "drops": [
+      {
+        "item": "AMETHYST_SHARD",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_JUNGLE",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_mana_wisp",
+    "name": "Mana Wisp",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.36,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "arcane",
+    "drops": [
+      {
+        "item": "AMETHYST_SHARD",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_JUNGLE",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_spell_brute",
+    "name": "Spell Brute",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "arcane",
+    "brute": true,
+    "drops": [
+      {
+        "item": "AMETHYST_SHARD",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_JUNGLE",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_rune_stalker",
+    "name": "Rune Stalker",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "arcane",
+    "onHit": "WEAKNESS",
+    "drops": [
+      {
+        "item": "AMETHYST_SHARD",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_JUNGLE",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_ether_cultist",
+    "name": "Ether Cultist",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "arcane",
+    "aura": "WEAKNESS",
+    "drops": [
+      {
+        "item": "AMETHYST_SHARD",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_JUNGLE",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_arcane_owl_beast",
+    "name": "Arcane Owl Beast",
+    "role": "NEUTRAL",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "arcane",
+    "drops": [
+      {
+        "item": "AMETHYST_SHARD",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_JUNGLE",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_arcane_titan",
+    "name": "Arcane Titan",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "arcane",
+    "brute": true,
+    "drops": [
+      {
+        "item": "AMETHYST_SHARD",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.4
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_JUNGLE",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_rune_warden",
+    "name": "Rune Warden",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "arcane",
+    "brute": true,
+    "onHit": "SLOWNESS",
+    "drops": [
+      {
+        "item": "AMETHYST_SHARD",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.4
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_JUNGLE",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_archmage_sovereign",
+    "name": "Archmage Sovereign",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "arcane",
+    "brute": true,
+    "aura": "WEAKNESS",
+    "auraAmp": 1,
+    "summon": "mob2_arcane_scout",
+    "summonCount": 4,
+    "drops": [
+      {
+        "item": "AMETHYST_SHARD",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.4
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_highway_robber",
+    "name": "Highway Robber",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "bandit",
+    "raids": true,
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "EMERALD",
+        "min": 1,
+        "max": 1,
+        "chance": 0.15
+      }
+    ],
+    "spawn": {
+      "biome": "IS_SAVANNA",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_cutthroat",
+    "name": "Cutthroat",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.32,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "bandit",
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "EMERALD",
+        "min": 1,
+        "max": 1,
+        "chance": 0.15
+      }
+    ],
+    "spawn": {
+      "biome": "IS_SAVANNA",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_smuggler",
+    "name": "Smuggler",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "bandit",
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "EMERALD",
+        "min": 1,
+        "max": 1,
+        "chance": 0.15
+      }
+    ],
+    "spawn": {
+      "biome": "IS_SAVANNA",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_marauder_captain",
+    "name": "Marauder Captain",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "bandit",
+    "brute": true,
+    "raids": true,
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "EMERALD",
+        "min": 1,
+        "max": 1,
+        "chance": 0.15
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_SAVANNA",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_bandit_king",
+    "name": "Bandit King",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "bandit",
+    "brute": true,
+    "raids": true,
+    "summon": "mob2_highway_robber",
+    "summonCount": 4,
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "EMERALD",
+        "min": 1,
+        "max": 1,
+        "chance": 0.15
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_squire_errant",
+    "name": "Squire Errant",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "knight",
+    "drops": [
+      {
+        "item": "IRON_INGOT",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      },
+      {
+        "item": "BONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_order_knight",
+    "name": "Order Knight",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "knight",
+    "raids": true,
+    "drops": [
+      {
+        "item": "IRON_INGOT",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      },
+      {
+        "item": "BONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_broken_paladin",
+    "name": "Broken Paladin",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "knight",
+    "onHit": "WEAKNESS",
+    "drops": [
+      {
+        "item": "IRON_INGOT",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      },
+      {
+        "item": "BONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_crusader_veteran",
+    "name": "Crusader Veteran",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "knight",
+    "brute": true,
+    "raids": true,
+    "drops": [
+      {
+        "item": "IRON_INGOT",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      },
+      {
+        "item": "BONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_grand_marshal",
+    "name": "Grand Marshal",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "knight",
+    "brute": true,
+    "raids": true,
+    "summon": "mob2_order_knight",
+    "summonCount": 3,
+    "drops": [
+      {
+        "item": "IRON_INGOT",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      },
+      {
+        "item": "BONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_blood_acolyte",
+    "name": "Blood Acolyte",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "cultist",
+    "onHit": "POISON",
+    "drops": [
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "SPIDER_EYE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_ritual_guard",
+    "name": "Ritual Guard",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "cultist",
+    "drops": [
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "SPIDER_EYE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_doom_prophet",
+    "name": "Doom Prophet",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "cultist",
+    "aura": "WEAKNESS",
+    "drops": [
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "SPIDER_EYE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_heretic_inquisitor",
+    "name": "Heretic Inquisitor",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "cultist",
+    "brute": true,
+    "aura": "WEAKNESS",
+    "auraAmp": 1,
+    "drops": [
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "SPIDER_EYE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_FOREST",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_apocalypse_herald",
+    "name": "Apocalypse Herald",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "cultist",
+    "brute": true,
+    "aura": "WITHER",
+    "auraAmp": 0,
+    "summon": "mob2_blood_acolyte",
+    "summonCount": 5,
+    "drops": [
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "SPIDER_EYE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_rot_walker",
+    "name": "Rot Walker",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "undead",
+    "onHit": "HUNGER",
+    "drops": [
+      {
+        "item": "BONE",
+        "min": 1,
+        "max": 3,
+        "chance": 0.8
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_tomb_guard",
+    "name": "Tomb Guard",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "undead",
+    "drops": [
+      {
+        "item": "BONE",
+        "min": 1,
+        "max": 3,
+        "chance": 0.8
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_banshee_shade",
+    "name": "Banshee Shade",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "undead",
+    "onHit": "BLINDNESS",
+    "drops": [
+      {
+        "item": "BONE",
+        "min": 1,
+        "max": 3,
+        "chance": 0.8
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_death_knight",
+    "name": "Death Knight",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "undead",
+    "brute": true,
+    "onHit": "WITHER",
+    "onHitDur": 80,
+    "drops": [
+      {
+        "item": "BONE",
+        "min": 1,
+        "max": 3,
+        "chance": 0.8
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_TAIGA",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_dread_lich",
+    "name": "Dread Lich",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "undead",
+    "brute": true,
+    "aura": "WEAKNESS",
+    "auraAmp": 1,
+    "summon": "mob2_tomb_guard",
+    "summonCount": 5,
+    "drops": [
+      {
+        "item": "BONE",
+        "min": 1,
+        "max": 3,
+        "chance": 0.8
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_imp_scout",
+    "name": "Imp Scout",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "demon",
+    "fireproof": true,
+    "drops": [
+      {
+        "item": "BLAZE_POWDER",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_hellhound",
+    "name": "Hellhound",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "demon",
+    "fireproof": true,
+    "ignite": true,
+    "drops": [
+      {
+        "item": "BLAZE_POWDER",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_demon_soldier",
+    "name": "Demon Soldier",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "demon",
+    "brute": true,
+    "fireproof": true,
+    "drops": [
+      {
+        "item": "BLAZE_POWDER",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_pit_commander",
+    "name": "Pit Commander",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "demon",
+    "brute": true,
+    "fireproof": true,
+    "ignite": true,
+    "drops": [
+      {
+        "item": "BLAZE_POWDER",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_demon_prince",
+    "name": "Demon Prince",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "demon",
+    "brute": true,
+    "fireproof": true,
+    "ignite": true,
+    "summon": "mob2_imp_scout",
+    "summonCount": 4,
+    "drops": [
+      {
+        "item": "BLAZE_POWDER",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_pixie_trickster",
+    "name": "Pixie Trickster",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.38,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "fey",
+    "drops": [
+      {
+        "item": "GLOW_BERRIES",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "OAK_SAPLING",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BIRCH_FOREST",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_spriggan",
+    "name": "Spriggan",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "fey",
+    "onHit": "POISON",
+    "drops": [
+      {
+        "item": "GLOW_BERRIES",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "OAK_SAPLING",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BIRCH_FOREST",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_unseelie_stalker",
+    "name": "Unseelie Stalker",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "fey",
+    "drops": [
+      {
+        "item": "GLOW_BERRIES",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "OAK_SAPLING",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BIRCH_FOREST",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_unseelie_knight",
+    "name": "Unseelie Knight",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "fey",
+    "brute": true,
+    "onHit": "BLINDNESS",
+    "drops": [
+      {
+        "item": "GLOW_BERRIES",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "OAK_SAPLING",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BIRCH_FOREST",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_fey_queen",
+    "name": "Fey Queen",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "fey",
+    "brute": true,
+    "summon": "mob2_pixie_trickster",
+    "summonCount": 4,
+    "drops": [
+      {
+        "item": "GLOW_BERRIES",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "OAK_SAPLING",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_rust_automaton",
+    "name": "Rust Automaton",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "construct",
+    "drops": [
+      {
+        "item": "IRON_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_clockwork_soldier",
+    "name": "Clockwork Soldier",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "construct",
+    "drops": [
+      {
+        "item": "IRON_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_iron_golem_sentry",
+    "name": "Iron Golem Sentry",
+    "role": "HOSTILE",
+    "hp": 28,
+    "dmg": 5,
+    "armor": 2,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 3,
+    "coinMax": 8,
+    "lineage": "construct",
+    "brute": true,
+    "drops": [
+      {
+        "item": "IRON_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 8,
+      "min": 1,
+      "max": 2
+    }
+  },
+  {
+    "id": "mob2_siege_construct",
+    "name": "Siege Construct",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "construct",
+    "brute": true,
+    "drops": [
+      {
+        "item": "IRON_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_colossus_prime",
+    "name": "Colossus Prime",
+    "role": "BOSS",
+    "hp": 280,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "construct",
+    "brute": true,
+    "summon": "mob2_rust_automaton",
+    "summonCount": 3,
+    "drops": [
+      {
+        "item": "IRON_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.4
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_raid_flame_warden",
+    "name": "Raid Flame Warden",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "fire",
+    "brute": true,
+    "fireproof": true,
+    "ignite": true,
+    "drops": [
+      {
+        "item": "COAL",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "MAGMA_CREAM",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "overworld",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_raid_frost_warden",
+    "name": "Raid Frost Warden",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "ice",
+    "brute": true,
+    "onHit": "SLOWNESS",
+    "onHitAmp": 1,
+    "drops": [
+      {
+        "item": "PACKED_ICE",
+        "min": 1,
+        "max": 1,
+        "chance": 0.5
+      },
+      {
+        "item": "SNOWBALL",
+        "min": 1,
+        "max": 3,
+        "chance": 0.6
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "overworld",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_raid_storm_warden",
+    "name": "Raid Storm Warden",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "storm",
+    "brute": true,
+    "lightning": true,
+    "drops": [
+      {
+        "item": "COPPER_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "overworld",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_raid_void_warden",
+    "name": "Raid Void Warden",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "shadow",
+    "brute": true,
+    "aura": "BLINDNESS",
+    "drops": [
+      {
+        "item": "GLOWSTONE_DUST",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "overworld",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_raid_solar_warden",
+    "name": "Raid Solar Warden",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "holy",
+    "brute": true,
+    "drops": [
+      {
+        "item": "GOLD_NUGGET",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "QUARTZ",
+        "min": 1,
+        "max": 1,
+        "chance": 0.3
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "overworld",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_raid_arcane_warden",
+    "name": "Raid Arcane Warden",
+    "role": "MINIBOSS",
+    "hp": 120,
+    "dmg": 13,
+    "armor": 10,
+    "speed": 0.24,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 40,
+    "coinMax": 80,
+    "lineage": "arcane",
+    "brute": true,
+    "aura": "WEAKNESS",
+    "drops": [
+      {
+        "item": "AMETHYST_SHARD",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      },
+      {
+        "item": "REDSTONE",
+        "min": 1,
+        "max": 2,
+        "chance": 0.4
+      },
+      {
+        "item": "DIAMOND",
+        "min": 1,
+        "max": 1,
+        "chance": 0.2
+      }
+    ],
+    "spawn": {
+      "biome": "overworld",
+      "weight": 1,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_cataclysm_herald",
+    "name": "Cataclysm Herald",
+    "role": "BOSS",
+    "hp": 320,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "storm",
+    "brute": true,
+    "lightning": true,
+    "summon": "mob2_tempest_cultist",
+    "summonCount": 6,
+    "drops": [
+      {
+        "item": "COPPER_INGOT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.6
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_eternal_necromancer",
+    "name": "Eternal Necromancer",
+    "role": "BOSS",
+    "hp": 310,
+    "dmg": 18,
+    "armor": 12,
+    "speed": 0.28,
+    "kb": 0.7,
+    "range": 40,
+    "w": 0.9,
+    "h": 2.4,
+    "scale": 1.25,
+    "coinMin": 150,
+    "coinMax": 300,
+    "lineage": "undead",
+    "brute": true,
+    "aura": "WITHER",
+    "auraAmp": 0,
+    "summon": "mob2_rot_walker",
+    "summonCount": 6,
+    "drops": [
+      {
+        "item": "BONE",
+        "min": 1,
+        "max": 3,
+        "chance": 0.8
+      },
+      {
+        "item": "ROTTEN_FLESH",
+        "min": 1,
+        "max": 2,
+        "chance": 0.7
+      },
+      {
+        "item": "DIAMOND",
+        "min": 2,
+        "max": 4,
+        "chance": 1
+      },
+      {
+        "item": "EMERALD",
+        "min": 3,
+        "max": 6,
+        "chance": 0.8
+      }
+    ]
+  },
+  {
+    "id": "mob2_marsh_buffalo",
+    "name": "Marsh Buffalo",
+    "role": "NEUTRAL",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "wild",
+    "brute": true,
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "overworld",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_highland_ram",
+    "name": "Highland Ram",
+    "role": "NEUTRAL",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "wild",
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_jungle_panther",
+    "name": "Jungle Panther",
+    "role": "NEUTRAL",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.34,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "wild",
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_JUNGLE",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_canyon_vulture",
+    "name": "Canyon Vulture",
+    "role": "SKITTISH",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "wild",
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "IS_BADLANDS",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_river_turtle_beast",
+    "name": "River Turtle Beast",
+    "role": "NEUTRAL",
+    "hp": 50,
+    "dmg": 4,
+    "armor": 8,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "wild",
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 2,
+        "chance": 0.5
+      }
+    ],
+    "spawn": {
+      "biome": "overworld",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_plains_steed",
+    "name": "Plains Steed",
+    "role": "SKITTISH",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.36,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1.1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "mount",
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      },
+      {
+        "item": "WHEAT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_PLAINS",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_desert_camel_beast",
+    "name": "Desert Camel Beast",
+    "role": "SKITTISH",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1.15,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "mount",
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      },
+      {
+        "item": "WHEAT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_SAVANNA",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_mountain_goat_beast",
+    "name": "Mountain Goat Beast",
+    "role": "SKITTISH",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.35,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "mount",
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      },
+      {
+        "item": "WHEAT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "IS_MOUNTAIN",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  },
+  {
+    "id": "mob2_swamp_draft_beast",
+    "name": "Swamp Draft Beast",
+    "role": "SKITTISH",
+    "hp": 40,
+    "dmg": 4,
+    "armor": 3,
+    "speed": 0.3,
+    "kb": 0.1,
+    "range": 32,
+    "w": 0.6,
+    "h": 1.95,
+    "scale": 1.2,
+    "coinMin": 2,
+    "coinMax": 6,
+    "lineage": "mount",
+    "drops": [
+      {
+        "item": "LEATHER",
+        "min": 1,
+        "max": 3,
+        "chance": 0.4
+      },
+      {
+        "item": "WHEAT",
+        "min": 1,
+        "max": 2,
+        "chance": 0.3
+      }
+    ],
+    "spawn": {
+      "biome": "overworld",
+      "weight": 5,
+      "min": 1,
+      "max": 1
+    }
+  }
+]

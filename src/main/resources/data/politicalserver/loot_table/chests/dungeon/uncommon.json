@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": { "min": 3, "max": 5 },
+      "entries": [
+        { "type": "minecraft:item", "name": "politicalserver:coin_pouch", "weight": 6 },
+        { "type": "minecraft:item", "name": "politicalserver:treasury_note", "weight": 3 },
+        { "type": "minecraft:item", "name": "politicalserver:cursed_essence", "weight": 5 },
+        { "type": "minecraft:item", "name": "politicalserver:acc_mana_ring", "weight": 4 },
+        { "type": "minecraft:item", "name": "politicalserver:wpn_steel_saber", "weight": 4 },
+        { "type": "minecraft:item", "name": "politicalserver:arc_emberbow", "weight": 4 },
+        { "type": "minecraft:item", "name": "politicalserver:food_grilled_steak", "weight": 6 }
+      ]
+    }
+  ]
+}

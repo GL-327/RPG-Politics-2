@@ -23,12 +23,20 @@ public final class TaxManager {
 
     public static void collect(MinecraftServer server) {
         PoliticsData d = DataManager.data();
+        // A Tax Holiday decree suspends collection entirely.
+        if (com.political.civics.LawManager.isActive(com.political.civics.CivicLaw.TAX_HOLIDAY)) {
+            server.getPlayerList().broadcastSystemMessage(
+                    Component.literal("Tax Holiday is in force — no tax collected today.")
+                            .withStyle(ChatFormatting.GREEN), false);
+            return;
+        }
         int collected = 0;
         for (String uuid : new java.util.ArrayList<>(d.playerNames.keySet())) {
             if (uuid.equals(d.chair) || uuid.equals(d.viceChair)
                     || (d.dictatorActive && uuid.equals(d.dictator))) continue;
             int coins = DataManager.getCoins(uuid);
-            int tax = (int) Math.ceil(coins * (d.taxPercent / 100.0));
+            double rate = d.taxTieredEnabled ? tieredRate(coins, d.taxPercent) : d.taxPercent;
+            int tax = (int) Math.ceil(coins * (rate / 100.0));
             if (tax <= 0) continue;
             if (DataManager.removeCoins(uuid, tax)) {
                 DataManager.addTreasury(tax);
@@ -58,5 +66,24 @@ public final class TaxManager {
 
     public static int taxOwed(String uuid) {
         return DataManager.data().taxOwed.getOrDefault(uuid, 0);
+    }
+
+    /**
+     * Progressive bracket rate (percent) layered on top of the base rate. The
+     * poorest are exempt; the wealthiest pay a surcharge. Used when
+     * {@code taxTieredEnabled} is set.
+     */
+    public static double tieredRate(int coins, int base) {
+        if (coins < 1000) return 0;                 // poverty exemption
+        if (coins < 10_000) return base;            // standard band
+        if (coins < 50_000) return base + 5;        // upper band
+        return base + 10;                           // wealth surcharge
+    }
+
+    public static String bracketLabel(int coins) {
+        if (coins < 1000) return "Exempt (<1,000)";
+        if (coins < 10_000) return "Standard (1,000-9,999)";
+        if (coins < 50_000) return "Upper (10,000-49,999)";
+        return "Wealth surcharge (50,000+)";
     }
 }

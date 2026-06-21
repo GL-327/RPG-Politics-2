@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:hero/flight",
+  "display": {
+    "icon": { "id": "minecraft:mace" },
+    "title": { "translate": "advancements.politicalserver.hero.viltrumite.title" },
+    "description": { "translate": "advancements.politicalserver.hero.viltrumite.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

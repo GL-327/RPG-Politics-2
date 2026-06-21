@@ -1,0 +1,29 @@
+{
+  "parent": "politicalserver:sorcery/root",
+  "display": {
+    "icon": { "id": "politicalserver:cursed_blade" },
+    "title": { "translate": "advancements.politicalserver.sorcery.cursed_tool.title" },
+    "description": { "translate": "advancements.politicalserver.sorcery.cursed_tool.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:cursed_dagger",
+            "politicalserver:cursed_blade",
+            "politicalserver:soul_cleaver",
+            "politicalserver:cursed_polearm",
+            "politicalserver:cursed_greatsword",
+            "politicalserver:cursed_whip"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

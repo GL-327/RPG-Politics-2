@@ -18,6 +18,7 @@ public final class EconomyCommands {
 
     public static void register(CommandDispatcher<CommandSourceStack> d) {
         d.register(Commands.literal("bank")
+                .executes(EconomyCommands::openBank)
                 .then(Commands.literal("balance").executes(EconomyCommands::bankBalance))
                 .then(Commands.literal("deposit")
                         .then(Commands.argument("amount", IntegerArgumentType.integer(1))
@@ -41,7 +42,16 @@ public final class EconomyCommands {
                 .then(Commands.literal("browse").executes(EconomyCommands::auctionBrowse))
                 .then(Commands.literal("buy")
                         .then(Commands.argument("id", IntegerArgumentType.integer(1))
-                                .executes(EconomyCommands::auctionBuy))));
+                                .executes(EconomyCommands::auctionBuy)))
+                .then(Commands.literal("cancel")
+                        .then(Commands.argument("id", IntegerArgumentType.integer(1))
+                                .executes(EconomyCommands::auctionCancel))));
+    }
+
+    private static int openBank(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
+        ServerPlayer p = c.getSource().getPlayerOrException();
+        BankManager.sendMenu(p);
+        return 1;
     }
 
     private static int bankBalance(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
@@ -93,9 +103,24 @@ public final class EconomyCommands {
     private static int auctionList(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
         ServerPlayer p = c.getSource().getPlayerOrException();
         int price = IntegerArgumentType.getInteger(c, "price");
+        int fee = AuctionManager.listingFee(price);
         int id = AuctionManager.list(p, price);
-        return id >= 0 ? ok(c, "Listed your held item as auction #" + id + " for " + price + " coins.")
-                : fail(c, "Hold the item you want to sell in your main hand.");
+        return switch (id) {
+            case -1 -> fail(c, "Hold the item you want to sell in your main hand.");
+            case -2 -> fail(c, "You can't afford the " + fee + "-coin listing fee.");
+            default -> ok(c, "Listed your held item as auction #" + id + " for " + price + " coins"
+                    + (fee > 0 ? " (fee " + fee + " to treasury)." : " (no fee — Free Market)."));
+        };
+    }
+
+    private static int auctionCancel(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
+        ServerPlayer p = c.getSource().getPlayerOrException();
+        int id = IntegerArgumentType.getInteger(c, "id");
+        return switch (AuctionManager.cancel(p, id)) {
+            case 0 -> ok(c, "Cancelled auction #" + id + "; item returned.");
+            case 3 -> fail(c, "That listing isn't yours.");
+            default -> fail(c, "Auction not found.");
+        };
     }
 
     private static int auctionBrowse(CommandContext<CommandSourceStack> c) {

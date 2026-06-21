@@ -1,0 +1,29 @@
+{
+  "parent": "politicalserver:arsenal/epic",
+  "display": {
+    "icon": { "id": "politicalserver:wpn_celestial_claymore" },
+    "title": { "translate": "advancements.politicalserver.arsenal.legendary.title" },
+    "description": { "translate": "advancements.politicalserver.arsenal.legendary.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": [
+            "politicalserver:wpn_celestial_claymore",
+            "politicalserver:wpn_moonshadow_katana",
+            "politicalserver:wpn_soulreaper_scythe",
+            "politicalserver:wpn_warlords_halberd",
+            "politicalserver:wpn_titanbreaker_maul",
+            "politicalserver:wpn_phantom_daggers"
+          ] }
+        ]
+      }
+    }
+  },
+  "requirements": [["obtain"]]
+}

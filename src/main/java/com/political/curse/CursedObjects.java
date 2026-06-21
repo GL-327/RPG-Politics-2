@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * Cursed objects: items steeped in cursed energy that a sorcerer can consume to
  * replenish their reserves. Some items are inherently cursed (a dragon egg always
- * is); others may very rarely turn up cursed in dungeon loot, and ordinary items
+ * is); others may very rarely turn up cursed in loot, and ordinary items
  * left where great slaughter occurred can slowly become cursed and draw curses in.
  */
 public final class CursedObjects {
@@ -161,6 +161,11 @@ public final class CursedObjects {
             if (isCursed(inv.getItem(i))) return true;
         }
         return false;
+    }
+
+    /** Items that can become cursed objects, mapped to cursed energy they carry. */
+    public static Map<Item, Integer> eligible() {
+        return Map.copyOf(ELIGIBLE);
     }
 
     private static long chunkKey(int cx, int cz) {

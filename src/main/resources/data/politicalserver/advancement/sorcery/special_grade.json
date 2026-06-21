@@ -1,0 +1,15 @@
+{
+  "parent": "politicalserver:sorcery/grade_1",
+  "display": {
+    "icon": { "id": "minecraft:nether_star" },
+    "title": { "translate": "advancements.politicalserver.sorcery.special_grade.title" },
+    "description": { "translate": "advancements.politicalserver.sorcery.special_grade.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

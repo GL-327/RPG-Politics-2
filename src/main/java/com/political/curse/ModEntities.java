@@ -26,5 +26,8 @@ public final class ModEntities {
                         .sized(0.7f, 2.3f)
                         .build(key));
         FabricDefaultAttributeRegistry.register(CURSE_SPIRIT, CurseEntity.createAttributes());
+
+        // Register the whole cursed-spirit roster (Grade 4 -> Special Grade bosses).
+        com.political.curse.spirits.ModSpirits.registerAll();
     }
 }

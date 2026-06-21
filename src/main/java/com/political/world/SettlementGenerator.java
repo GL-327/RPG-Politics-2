@@ -27,10 +27,10 @@ import java.util.Random;
 public final class SettlementGenerator {
 
     private static final String[] NAMES = {
-            "Oldswinford", "Stourbridge", "Dudley", "Wollaston", "Amblecote", "Kinver",
-            "Halesowen", "Cradley", "Wordsley", "Brierley", "Pedmore", "Norton",
-            "Lye", "Quarry Bank", "Hagley", "Clent", "Sedgley", "Gornal",
-            "Wombourne", "Kingswinford", "Tipton", "Netherton", "Bilston", "Wednesbury"
+            "Ashford", "Blackmere", "Crownhaven", "Duskvale", "Eldermoor", "Frostwick",
+            "Goldcrest", "Hollowbrook", "Ironhold", "Jadeport", "Kingsreach", "Lunaris",
+            "Mistwood", "Northgate", "Oakhaven", "Pinecrest", "Quillford", "Ravenshollow",
+            "Silverdale", "Thornfield", "Underhill", "Verdant", "Westmarch", "Yarrow"
     };
 
     /** Captured templates the generator will use for plots, refreshed at settlement start. */
@@ -255,6 +255,13 @@ public final class SettlementGenerator {
         Build.tree(level, cx + plaza - 2, plazaY, cz + plaza - 3);
         fountain(level, cx, cz - plaza + 2, plazaY);
         buildTownHall(level, cx, cz, plazaY, rng);
+
+        // Additive flavour props (decorative only; no civic geometry touched).
+        com.political.world.structures.SettlementProps.monument(level, cx - plaza + 3, cz + plaza - 4);
+        com.political.world.structures.SettlementProps.marketRow(level, cx + plaza - 4, cz - plaza + 3, 3, rng);
+        com.political.world.structures.SettlementProps.bench(level, cx - plaza + 4, cz - plaza + 4);
+        com.political.world.structures.SettlementProps.bench(level, cx + plaza - 5, cz + plaza - 4);
+        com.political.world.structures.SettlementProps.noticeBoard(level, cx - plaza + 4, cz - 2);
     }
 
     private static void buildModernBuilding(ServerLevel level, int x, int z, int w, int d, int floors, Random rng) {
@@ -323,6 +330,12 @@ public final class SettlementGenerator {
         well(level, cx + sq - 2, cz + sq - 2, sqY);
         Build.tree(level, cx - sq + 1, sqY, cz + sq - 1);
         Build.tree(level, cx - sq + 1, sqY, cz - sq + 1);
+
+        // Additive flavour props (decorative only; no civic geometry touched).
+        com.political.world.structures.SettlementProps.marketRow(level, cx - sq - 2, cz - 6, 4, rng);
+        com.political.world.structures.SettlementProps.monument(level, cx + sq + 3, cz);
+        com.political.world.structures.SettlementProps.noticeBoard(level, cx, cz - sq - 3);
+        com.political.world.structures.SettlementProps.bannerGate(level, cx, cz + sq + 2, 3);
     }
 
     private static void buildVillage(ServerLevel level, int cx, int cz, int half, Random rng) {
@@ -339,6 +352,11 @@ public final class SettlementGenerator {
         Build.tree(level, cx - 3, gY, cz + 3);
         lampPost(level, cx - 3, gY, cz - 3);
         lampPost(level, cx + 3, gY, cz - 3);
+
+        // Additive flavour props (decorative only; no civic geometry touched).
+        com.political.world.structures.SettlementProps.planter(level, cx - 5, cz - 5, rng);
+        com.political.world.structures.SettlementProps.marketStall(level, cx + 5, cz + 5, rng);
+        com.political.world.structures.SettlementProps.noticeBoard(level, cx + 5, cz - 5);
     }
 
     // ------------------------------------------------------------------

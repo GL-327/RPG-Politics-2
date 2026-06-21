@@ -79,6 +79,7 @@ public final class ElectionManager {
         if (!d.candidates.contains(candidateUuid)) return false;
         d.votedPlayers.put(voterId, candidateUuid);
         d.votes.merge(candidateUuid, 1, Integer::sum);
+        com.political.expansion2.quests.Expansion2QuestManager.onVote(voter);
         return true;
     }
 

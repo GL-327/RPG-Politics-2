@@ -1,1 +1,6 @@
-{ "model": { "type": "minecraft:model", "model": "politicalserver:block/castle_pillar" } }
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "politicalserver:block/castle_pillar"
+  }
+}

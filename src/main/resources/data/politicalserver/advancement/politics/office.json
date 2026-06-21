@@ -1,0 +1,16 @@
+{
+  "parent": "politicalserver:politics/councilor",
+  "display": {
+    "icon": { "id": "politicalserver:crown" },
+    "title": { "translate": "advancements.politicalserver.politics.office.title" },
+    "description": { "translate": "advancements.politicalserver.politics.office.description" },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": { "experience": 500 },
+  "criteria": {
+    "granted": { "trigger": "minecraft:impossible" }
+  },
+  "requirements": [["granted"]]
+}

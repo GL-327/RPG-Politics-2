@@ -1,1 +1,7 @@
-{ "variants": { "": { "model": "politicalserver:block/cobble_street" } } }
+{
+  "variants": {
+    "": {
+      "model": "politicalserver:block/cobble_street"
+    }
+  }
+}
