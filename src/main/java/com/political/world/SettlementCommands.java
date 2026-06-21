@@ -1,6 +1,7 @@
 package com.political.world;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -12,9 +13,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Rotation;
 
 import java.util.function.Predicate;
 
@@ -49,7 +53,70 @@ public final class SettlementCommands {
                         .then(Commands.literal("capital").executes(c -> build(c, SettlementType.CAPITAL)))
                         .then(Commands.literal("city").executes(c -> build(c, SettlementType.CITY)))
                         .then(Commands.literal("town").executes(c -> build(c, SettlementType.TOWN)))
-                        .then(Commands.literal("village").executes(c -> build(c, SettlementType.VILLAGE)))));
+                        .then(Commands.literal("village").executes(c -> build(c, SettlementType.VILLAGE))))
+                .then(Commands.literal("capture").requires(OP)
+                        .then(Commands.argument("pos1", BlockPosArgument.blockPos())
+                                .then(Commands.argument("pos2", BlockPosArgument.blockPos())
+                                        .then(Commands.argument("name", StringArgumentType.word())
+                                                .executes(SettlementCommands::capture)))))
+                .then(Commands.literal("paste").requires(OP)
+                        .then(Commands.argument("name", StringArgumentType.word())
+                                .executes(c -> paste(c, Rotation.NONE))
+                                .then(Commands.argument("rotation", IntegerArgumentType.integer(0, 3))
+                                        .executes(c -> paste(c, rotationOf(IntegerArgumentType.getInteger(c, "rotation")))))))
+                .then(Commands.literal("templates").requires(OP).executes(SettlementCommands::templates)));
+    }
+
+    private static Rotation rotationOf(int quarterTurns) {
+        return switch (quarterTurns & 3) {
+            case 1 -> Rotation.CLOCKWISE_90;
+            case 2 -> Rotation.CLOCKWISE_180;
+            case 3 -> Rotation.COUNTERCLOCKWISE_90;
+            default -> Rotation.NONE;
+        };
+    }
+
+    private static int capture(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
+        ServerLevel level = c.getSource().getLevel();
+        BlockPos a = BlockPosArgument.getLoadedBlockPos(c, "pos1");
+        BlockPos b = BlockPosArgument.getLoadedBlockPos(c, "pos2");
+        String name = StringArgumentType.getString(c, "name");
+        try {
+            var size = StructureIO.capture(level, a, b, name);
+            c.getSource().sendSuccess(() -> Component.literal("Captured '" + name + "' (" + size.getX() + "x"
+                    + size.getY() + "x" + size.getZ() + ") to rpg_structures/" + name + ".nbt.")
+                    .withStyle(ChatFormatting.GREEN), true);
+            return 1;
+        } catch (java.io.IOException e) {
+            c.getSource().sendFailure(Component.literal("Capture failed: " + e.getMessage()));
+            return 0;
+        }
+    }
+
+    private static int paste(CommandContext<CommandSourceStack> c, Rotation rotation) throws CommandSyntaxException {
+        ServerPlayer p = c.getSource().getPlayerOrException();
+        if (!(p.level() instanceof ServerLevel level)) return 0;
+        String name = StringArgumentType.getString(c, "name");
+        var size = StructureIO.place(level, name, p.blockPosition(), rotation);
+        if (size == null) {
+            c.getSource().sendFailure(Component.literal("No stored template named '" + name + "'."));
+            return 0;
+        }
+        c.getSource().sendSuccess(() -> Component.literal("Pasted '" + name + "' at your position.")
+                .withStyle(ChatFormatting.GREEN), true);
+        return 1;
+    }
+
+    private static int templates(CommandContext<CommandSourceStack> c) {
+        var names = StructureIO.list();
+        if (names.isEmpty()) {
+            c.getSource().sendSuccess(() -> Component.literal("No captured templates yet. Use /settlement capture <pos1> <pos2> <name>.")
+                    .withStyle(ChatFormatting.GRAY), false);
+            return 0;
+        }
+        c.getSource().sendSuccess(() -> Component.literal("Captured templates (" + names.size() + "): "
+                + String.join(", ", names)).withStyle(ChatFormatting.GOLD), false);
+        return 1;
     }
 
     private static boolean isAnyLeader(CommandSourceStack s) {
