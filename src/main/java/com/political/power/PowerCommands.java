@@ -55,6 +55,7 @@ public final class PowerCommands {
         TECHNIQUE_GRADE.put(Power.PROJECTION_SORCERY, 3);
         TECHNIQUE_GRADE.put(Power.CURSED_CLONE, 3);
         TECHNIQUE_GRADE.put(Power.WHEEL_ADAPTATION, 5);
+        TECHNIQUE_GRADE.put(Power.CURSED_TIDE, 2);
     }
 
     private PowerCommands() {}
@@ -202,12 +203,21 @@ public final class PowerCommands {
             return fail(c, "Your body holds no cursed energy (" + trait.display + "). You cannot channel techniques, but you wield cursed tools with ease.");
         if (DataManager.sorcererGrade(uuid) > 0) return fail(c, "You have already awakened your cursed energy.");
         DataManager.setSorcererGrade(uuid, 1);
-        // Learn a random starter technique.
-        Power[] starters = {Power.DIVERGENT_FIST, Power.DISMANTLE, Power.CURSED_SPEECH};
-        Power starter = starters[(int) (Math.random() * starters.length)];
+        // Refresh stats for the new grade, then learn a starter the player can actually afford.
+        com.political.combat.StatManager.apply(p);
+        double maxCe = com.political.combat.StatManager.getMaxCursedEnergy(p);
+        java.util.List<Power> affordable = new java.util.ArrayList<>();
+        for (Power s : new Power[]{Power.DIVERGENT_FIST, Power.DISMANTLE, Power.CURSED_SPEECH}) {
+            if (s.energyCost <= maxCe) affordable.add(s);
+        }
+        if (affordable.isEmpty()) affordable.add(Power.DIVERGENT_FIST); // cheapest fallback
+        Power starter = affordable.get((int) (Math.random() * affordable.size()));
         DataManager.grantPower(uuid, starter.id());
+        // Auto-select the freshly learned technique and fill cursed energy so it's usable at once.
+        DataManager.setSelectedPower(uuid, starter.id());
+        com.political.combat.StatManager.refillCursedEnergy(p);
         return ok(c, "Your cursed energy awakens! You are now a " + DataManager.gradeLabel(1)
-                + " and learn " + starter.displayName + ".");
+                + ", learn " + starter.displayName + " (selected), and your reserves are full.");
     }
 
     private static int learn(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {

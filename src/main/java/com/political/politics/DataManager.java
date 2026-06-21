@@ -199,6 +199,16 @@ public final class DataManager {
         data.sorcererGrade.put(uuid, Math.max(0, Math.min(5, grade)));
     }
 
+    // --- Cursed energy (current value, persisted across relog) ---
+
+    public static double storedCursedEnergy(String uuid) {
+        return data.cursedEnergyStored.getOrDefault(uuid, 0.0);
+    }
+
+    public static void setStoredCursedEnergy(String uuid, double value) {
+        data.cursedEnergyStored.put(uuid, Math.max(0.0, value));
+    }
+
     /** Grade label: 0 none, 1 Grade 4 ... 5 Special Grade (JJK-style, inverted scale). */
     public static String gradeLabel(int grade) {
         return switch (grade) {

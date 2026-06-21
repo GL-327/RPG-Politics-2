@@ -103,8 +103,7 @@ public final class StatManager {
     public static boolean spendCursedEnergy(ServerPlayer player, double cost) {
         double current = getCursedEnergy(player);
         if (current < cost) return false;
-        CURSED.put(player.getUUID(), current - cost);
-        sync(player);
+        setCursed(player, current - cost);
         return true;
     }
 
@@ -113,9 +112,19 @@ public final class StatManager {
         double max = get(player).maxCursedEnergy;
         double before = getCursedEnergy(player);
         double after = Math.min(max, before + amount);
-        CURSED.put(player.getUUID(), after);
-        sync(player);
+        setCursed(player, after);
         return after - before;
+    }
+
+    /** Refills a player's cursed energy to their maximum (used when awakening). */
+    public static void refillCursedEnergy(ServerPlayer player) {
+        setCursed(player, get(player).maxCursedEnergy);
+    }
+
+    private static void setCursed(ServerPlayer player, double value) {
+        CURSED.put(player.getUUID(), value);
+        DataManager.setStoredCursedEnergy(player.getStringUUID(), value);
+        sync(player);
     }
 
     // ---------------- Compute ----------------
@@ -162,7 +171,11 @@ public final class StatManager {
         applyModifier(player.getAttribute(Attributes.ATTACK_SPEED), RPG_ATTACK_SPEED_ID, s.bonusAttackSpeedPct + s.attackSpeed * 0.01, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
 
         MANA.put(player.getUUID(), Math.min(MANA.getOrDefault(player.getUUID(), s.maxMana), s.maxMana));
-        CURSED.put(player.getUUID(), Math.min(CURSED.getOrDefault(player.getUUID(), 0.0), s.maxCursedEnergy));
+        // Load persisted cursed energy on first apply (e.g. after relog), then clamp to max.
+        double curStored = CURSED.containsKey(player.getUUID())
+                ? CURSED.get(player.getUUID())
+                : DataManager.storedCursedEnergy(player.getStringUUID());
+        CURSED.put(player.getUUID(), Math.min(curStored, s.maxCursedEnergy));
         sync(player);
     }
 
@@ -201,7 +214,9 @@ public final class StatManager {
             if (s.maxCursedEnergy > 0 && cursed < s.maxCursedEnergy && s.cursedRegenMultiplier > 0) {
                 int grade = DataManager.sorcererGrade(player.getStringUUID());
                 double rate = 0.015 * s.cursedRegenMultiplier * (1.0 + grade * 0.12);
-                CURSED.put(player.getUUID(), Math.min(s.maxCursedEnergy, cursed + s.maxCursedEnergy * rate));
+                double next = Math.min(s.maxCursedEnergy, cursed + s.maxCursedEnergy * rate);
+                CURSED.put(player.getUUID(), next);
+                DataManager.setStoredCursedEnergy(player.getStringUUID(), next);
             }
 
             if (!courtActive) {
@@ -235,6 +250,8 @@ public final class StatManager {
     }
 
     public static void remove(UUID uuid) {
+        Double cursed = CURSED.get(uuid);
+        if (cursed != null) DataManager.setStoredCursedEnergy(uuid.toString(), cursed);
         STATS.remove(uuid);
         MANA.remove(uuid);
         CURSED.remove(uuid);

@@ -121,14 +121,21 @@ public final class PowerManager {
         }
 
         ServerLevel level = player.level();
-        cast(player, level, power);
+        boolean landed = cast(player, level, power);
+        if (!landed) {
+            // Strictly-targeted power with nothing in sight: refund energy and tell the player.
+            if (power.origin == Power.Origin.CURSED_TECHNIQUE) StatManager.addCursedEnergy(player, cost);
+            else StatManager.addMana(player, cost);
+            return err("No target in sight for " + power.displayName + ".");
+        }
         setCooldown(player, power);
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.8f, 1.2f);
         return Component.literal("Used " + power.displayName + ".").withStyle(power.origin.color);
     }
 
-    private static void cast(ServerPlayer p, ServerLevel level, Power power) {
+    /** Returns {@code false} if a strictly-targeted power found no target (so energy is refunded). */
+    private static boolean cast(ServerPlayer p, ServerLevel level, Power power) {
         switch (power) {
             case LASER_EYES -> beam(p, level, 24, 8.0f, true, false);
             case CHEST_BLAST -> beam(p, level, 18, 14.0f, false, true);
@@ -173,7 +180,8 @@ public final class PowerManager {
             case INVISIBILITY -> p.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 300, 0, false, false));
             case TELEKINESIS -> {
                 LivingEntity t = lookTarget(p, 20);
-                if (t != null) launchEntity(t, p, -2.0, 0.6); // negative = away from player
+                if (t == null) return false;
+                launchEntity(t, p, -2.0, 0.6); // negative = away from player
             }
             case TELEPORT -> blink(p, 14);
             case LIFEDRAIN -> {
@@ -198,26 +206,23 @@ public final class PowerManager {
             }
             case PETRIFYING_GAZE -> {
                 LivingEntity t = lookTarget(p, 20);
-                if (t != null) {
-                    t.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 160, 6));
-                    t.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 160, 4));
-                    t.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 160, 4));
-                }
+                if (t == null) return false;
+                t.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 160, 6));
+                t.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 160, 4));
+                t.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 160, 4));
             }
             case MIND_CONTROL -> {
                 LivingEntity t = lookTarget(p, 16);
-                if (t instanceof Mob mob) {
-                    Monster victim = nearestMonster(p, mob, 24);
-                    if (victim != null) mob.setTarget(victim);
-                    mob.addEffect(new MobEffectInstance(MobEffects.GLOWING, 200, 0));
-                }
+                if (!(t instanceof Mob mob)) return false;
+                Monster victim = nearestMonster(p, mob, 24);
+                if (victim != null) mob.setTarget(victim);
+                mob.addEffect(new MobEffectInstance(MobEffects.GLOWING, 200, 0));
             }
             case HEAD_POP -> {
                 LivingEntity t = lookTarget(p, 18);
-                if (t != null) {
-                    t.hurtServer(level, level.damageSources().playerAttack(p), 35.0f);
-                    level.sendParticles(ParticleTypes.CRIMSON_SPORE, t.getX(), t.getEyeY(), t.getZ(), 60, 0.3, 0.3, 0.3, 0.2);
-                }
+                if (t == null) return false;
+                t.hurtServer(level, level.damageSources().playerAttack(p), 35.0f);
+                level.sendParticles(ParticleTypes.CRIMSON_SPORE, t.getX(), t.getEyeY(), t.getZ(), 60, 0.3, 0.3, 0.3, 0.2);
             }
             case LIMITLESS_BLUE -> {
                 for (LivingEntity e : around(p, 14)) launchEntity(e, p, 2.0, 0.2); // pull toward
@@ -238,14 +243,14 @@ public final class PowerManager {
             }
             case CLEAVE -> {
                 LivingEntity t = lookTarget(p, 8);
-                if (t != null) t.hurtServer(level, level.damageSources().playerAttack(p), 20.0f);
+                if (t == null) return false;
+                t.hurtServer(level, level.damageSources().playerAttack(p), 20.0f);
             }
             case DIVERGENT_FIST -> {
                 LivingEntity t = lookTarget(p, 6);
-                if (t != null) {
-                    t.hurtServer(level, level.damageSources().playerAttack(p), 8.0f);
-                    launchEntity(t, p, -1.6, 0.5);
-                }
+                if (t == null) return false;
+                t.hurtServer(level, level.damageSources().playerAttack(p), 8.0f);
+                launchEntity(t, p, -1.6, 0.5);
             }
             case BLACK_FLASH -> BLACK_FLASH_UNTIL.put(p.getUUID(), System.currentTimeMillis() + 5000L);
             case TEN_SHADOWS -> summonShadows(p, level, 3);
@@ -450,12 +455,11 @@ public final class PowerManager {
             }
             case IDLE_TRANSFIGURATION -> {
                 LivingEntity t = lookTarget(p, 16);
-                if (t != null) {
-                    t.hurtServer(level, level.damageSources().magic(), 14.0f);
-                    t.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 2));
-                    t.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 3));
-                    t.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 200, 3));
-                }
+                if (t == null) return false;
+                t.hurtServer(level, level.damageSources().magic(), 14.0f);
+                t.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 2));
+                t.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 3));
+                t.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 200, 3));
             }
             case DISASTER_FLAMES -> {
                 for (LivingEntity e : cone(p, 12, 0.45)) {
@@ -472,12 +476,11 @@ public final class PowerManager {
             }
             case SWAP_PLACES -> {
                 LivingEntity t = lookTarget(p, 30);
-                if (t != null) {
-                    double px = p.getX(), py = p.getY(), pz = p.getZ();
-                    p.teleportTo(t.getX(), t.getY(), t.getZ());
-                    t.teleportTo(px, py, pz);
-                    level.sendParticles(ParticleTypes.PORTAL, px, py + 1, pz, 40, 0.5, 1, 0.5, 0.3);
-                }
+                if (t == null) return false;
+                double px = p.getX(), py = p.getY(), pz = p.getZ();
+                p.teleportTo(t.getX(), t.getY(), t.getZ());
+                t.teleportTo(px, py, pz);
+                level.sendParticles(ParticleTypes.PORTAL, px, py + 1, pz, 40, 0.5, 1, 0.5, 0.3);
             }
             case CURSED_BOMB -> {
                 Vec3 at = aimPoint(p, 14);
@@ -505,7 +508,28 @@ public final class PowerManager {
                 p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 600, 4, false, true));
                 p.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 600, 0, false, true));
             }
+            case NOVA_BURST -> {
+                for (LivingEntity e : around(p, 9)) {
+                    if (e == p) continue;
+                    e.setRemainingFireTicks(100);
+                    launchEntity(e, p, -2.6, 0.6);
+                    e.hurtServer(level, level.damageSources().playerAttack(p), 9.0f);
+                }
+                level.sendParticles(ParticleTypes.EXPLOSION, p.getX(), p.getY() + 1, p.getZ(), 10, 3, 1, 3, 0.0);
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.3f, 1.1f);
+            }
+            case CURSED_TIDE -> {
+                for (LivingEntity e : around(p, 10)) {
+                    if (e == p) continue;
+                    launchEntity(e, p, -2.2, 0.4);
+                    e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 120, 2));
+                    e.hurtServer(level, level.damageSources().magic(), 9.0f);
+                }
+                level.sendParticles(ParticleTypes.SCULK_SOUL, p.getX(), p.getY() + 1, p.getZ(), 60, 4, 1, 4, 0.04);
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 1.2f, 0.8f);
+            }
         }
+        return true;
     }
 
     private static List<LivingEntity> nearPoint(ServerLevel level, Vec3 c, double r, LivingEntity exclude) {

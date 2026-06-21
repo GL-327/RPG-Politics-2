@@ -82,6 +82,8 @@ public enum Power {
             "Project a superheated lance that detonates on impact."),
     KINETIC_ABSORPTION("Kinetic Absorption", Origin.COMPOUND_V, 25, 200,
             "Soak up impacts, hardening with absorption and resistance.", 30),
+    NOVA_BURST("Nova Burst", Origin.COMPOUND_V, 32, 120,
+            "Detonate stored energy outward, scorching and hurling back everything nearby."),
 
     // ---------------- Cursed techniques ----------------
     LIMITLESS_BLUE("Cursed Technique: Blue", Origin.CURSED_TECHNIQUE, 30, 80,
@@ -143,7 +145,9 @@ public enum Power {
     FALLING_BLOSSOM("Falling Blossom Emotion", Origin.CURSED_TECHNIQUE, 30, 120,
             "Wreathe yourself in cutting cursed energy that shreds all who close in."),
     WHEEL_ADAPTATION("Adaptive Wheel", Origin.CURSED_TECHNIQUE, 60, 300,
-            "Channel an adapting shikigami's resilience: become a relentless juggernaut.");
+            "Channel an adapting shikigami's resilience: become a relentless juggernaut."),
+    CURSED_TIDE("Cursed Tide", Origin.CURSED_TECHNIQUE, 38, 130,
+            "A surging wave of cursed energy that batters and slows all around you.");
 
     /** Where a power comes from, which controls how it is acquired and displayed. */
     public enum Origin {

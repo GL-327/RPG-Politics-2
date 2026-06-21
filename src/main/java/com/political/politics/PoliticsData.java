@@ -111,6 +111,8 @@ public class PoliticsData {
     // --- Cursed energy (separate resource from Mana) ---
     // Innate aptitude per player (CursedTrait name). Rolled once on first join.
     public Map<String, String> cursedTrait = new HashMap<>();
+    // Current cursed energy per player, persisted so it survives relog (max comes from traits/gear).
+    public Map<String, Double> cursedEnergyStored = new HashMap<>();
 
     // --- Tunable config (editable via the Developer Menu) ---
     public double curseNaturalSpawnChance = 0.04;   // chance a hostile manifests as a curse
