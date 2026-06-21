@@ -14,12 +14,6 @@ base {
 repositories {
 	mavenCentral()
 	maven { url "https://maven.nucleoid.xyz/" }
-	// GeckoLib (custom Curse mob models + animations) is mirrored on the Modrinth maven.
-	maven {
-		name = "Modrinth"
-		url = "https://api.modrinth.com/maven"
-		content { includeGroup "maven.modrinth" }
-	}
 }
 
 loom {
@@ -40,10 +34,6 @@ dependencies {
 
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-
-	// GeckoLib 5.5.2 for Fabric 26.2 (Modrinth version id GdrAq4td). 26.2 ships deobfuscated,
-	// so published mod jars are already in Mojang names: pulled in as a normal dependency.
-	implementation "maven.modrinth:geckolib:${project.geckolib_version}"
 }
 
 processResources {

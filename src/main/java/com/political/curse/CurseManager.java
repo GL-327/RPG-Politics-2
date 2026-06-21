@@ -2,8 +2,8 @@ package com.political.curse;
 
 import com.political.combat.StatManager;
 import com.political.politics.DataManager;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,52 +11,58 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Monster;
 
 import java.util.Random;
 
 /**
- * The Curses faction (Jujutsu Kaisen). Hostile mobs are occasionally manifested as
- * graded Curses \u2014 cursed spirits with scaled stats, a glow, and a dark name. Slaying
- * (exorcising) a Curse grants Cursed Energy and coins and advances the player's
- * sorcerer grade. Built on the Fabric entity-load + death events (no mixins).
+ * The Curses faction (Jujutsu Kaisen). Curses are <b>custom {@link CurseEntity} mobs</b> — graded
+ * cursed spirits with their own model/texture, scaled stats and a dark name — not re-skinned
+ * vanilla monsters. They manifest naturally in the dark, are lured by cursed objects players
+ * carry, and grant Cursed Energy + coins + grade progression when exorcised. Built on Fabric
+ * server events (no mixins).
  */
 public final class CurseManager {
 
     private static final Random RNG = new Random();
-    private static final String CURSE_WORD = "Curse";
 
     private static int attractCounter = 0;
+    private static int ambientCounter = 0;
 
     private CurseManager() {}
 
-    /** Cursed objects carried by players draw curses; checked roughly every 5 seconds. */
+    /** Periodic curse behaviour: cursed-object lures plus ambient night manifestations. */
     public static void tick(net.minecraft.server.MinecraftServer server) {
         if (!DataManager.data().curseSpawningEnabled) return;
-        if (++attractCounter % 100 != 0) return;
-        double chance = DataManager.data().cursedObjectAttractChance;
-        for (ServerPlayer p : server.getPlayerList().getPlayers()) {
-            if (CursedObjects.carriesCursedObject(p) && RNG.nextDouble() < chance) {
-                spawn(p, rollNaturalGrade());
-                p.sendSystemMessage(Component.literal("The cursed object you carry stirs something nearby...")
-                        .withStyle(ChatFormatting.DARK_PURPLE));
+
+        // Cursed objects carried by players draw curses (checked ~every 5 seconds).
+        if (++attractCounter % 100 == 0) {
+            double chance = DataManager.data().cursedObjectAttractChance;
+            for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+                if (CursedObjects.carriesCursedObject(p) && RNG.nextDouble() < chance) {
+                    spawn(p, rollNaturalGrade());
+                    p.sendSystemMessage(Component.literal("The cursed object you carry stirs something nearby...")
+                            .withStyle(ChatFormatting.DARK_PURPLE));
+                }
+            }
+        }
+
+        // Ambient manifestation: rare, in darkness, near a player (custom mob, no reskin).
+        if (++ambientCounter % 200 == 0) {
+            double chance = DataManager.data().curseNaturalSpawnChance;
+            for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+                if (!(p.level() instanceof ServerLevel level)) continue;
+                if (RNG.nextDouble() >= chance) continue;
+                BlockPos at = darkSpotNear(level, p);
+                if (at != null) spawnAt(level, at, rollNaturalGrade());
             }
         }
     }
 
     public static void register() {
-        ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (!(entity instanceof Monster mob)) return;
-            if (mob.hasCustomName()) return; // already special (scaled/boss/curse)
-            if (!DataManager.data().curseSpawningEnabled) return;
-            if (RNG.nextFloat() >= DataManager.data().curseNaturalSpawnChance) return;
-            manifest(mob, rollNaturalGrade());
-        });
+        // Curses are now first-class custom entities; nothing to hook on vanilla spawns.
     }
 
     /** Curse difficulty 1..5 -> JJK-style label (inverted: 5 is the strongest). */
@@ -80,69 +86,82 @@ public final class CurseManager {
         return 5;
     }
 
-    /** Turns a hostile mob into a Curse of the given grade (1..5), in place. */
-    public static void manifest(Monster mob, int grade) {
+    /** Configures a freshly created Curse to the given grade (1..5): stats, size, name, aura. */
+    public static void manifest(CurseEntity curse, int grade) {
         grade = Math.max(1, Math.min(5, grade));
-        double hpMult = 1.5 + grade * 1.1;
-        double dmgMult = 1.0 + grade * 0.5;
+        curse.setGrade(grade);
 
-        AttributeInstance health = mob.getAttribute(Attributes.MAX_HEALTH);
+        double hpMult = 1.0 + grade * 0.8;
+        double dmgMult = 1.0 + grade * 0.45;
+        float scale = 0.85f + grade * 0.18f;
+
+        AttributeInstance health = curse.getAttribute(Attributes.MAX_HEALTH);
         if (health != null) {
             health.setBaseValue(health.getBaseValue() * hpMult);
-            mob.setHealth(mob.getMaxHealth());
+            curse.setHealth(curse.getMaxHealth());
         }
-        AttributeInstance dmg = mob.getAttribute(Attributes.ATTACK_DAMAGE);
+        AttributeInstance dmg = curse.getAttribute(Attributes.ATTACK_DAMAGE);
         if (dmg != null) dmg.setBaseValue(dmg.getBaseValue() * dmgMult);
-        AttributeInstance kbResist = mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
-        if (kbResist != null) kbResist.setBaseValue(Math.min(1.0, kbResist.getBaseValue() + grade * 0.15));
+        AttributeInstance sc = curse.getAttribute(Attributes.SCALE);
+        if (sc != null) sc.setBaseValue(scale);
+        AttributeInstance kb = curse.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+        if (kb != null) kb.setBaseValue(Math.min(1.0, kb.getBaseValue() + grade * 0.12));
 
         ChatFormatting color = grade >= 5 ? ChatFormatting.DARK_RED
                 : grade >= 4 ? ChatFormatting.RED
                 : grade >= 3 ? ChatFormatting.LIGHT_PURPLE : ChatFormatting.DARK_PURPLE;
-        mob.setCustomName(Component.literal("\u2620 " + gradeLabel(grade)).withStyle(color));
-        mob.setCustomNameVisible(true);
-        mob.addEffect(new MobEffectInstance(MobEffects.GLOWING, Integer.MAX_VALUE, 0, false, false));
-        if (grade >= 4) mob.addEffect(new MobEffectInstance(MobEffects.SPEED, Integer.MAX_VALUE, 1, false, false));
-        if (grade >= 5) mob.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, Integer.MAX_VALUE, 1, false, false));
-        mob.addTag("rpg_curse_" + grade);
+        curse.setCustomName(Component.literal("\u2620 " + gradeLabel(grade)).withStyle(color));
+        curse.setCustomNameVisible(grade >= 3);
+        curse.addEffect(new MobEffectInstance(MobEffects.GLOWING, Integer.MAX_VALUE, 0, false, false));
+        if (grade >= 4) curse.addEffect(new MobEffectInstance(MobEffects.SPEED, Integer.MAX_VALUE, 0, false, false));
+        if (grade >= 5) curse.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, Integer.MAX_VALUE, 1, false, false));
+        curse.addTag("rpg_curse_" + grade);
     }
 
-    /** Spawns a fresh Curse of the given grade at the player and returns it (or null). */
-    public static Monster spawn(ServerPlayer player, int grade) {
+    /** Spawns a fresh Curse of the given grade near the player and returns it (or null). */
+    public static CurseEntity spawn(ServerPlayer player, int grade) {
         ServerLevel level = player.level();
-        EntityType<? extends Monster> type = baseFor(grade);
-        Monster mob = type.create(level, EntitySpawnReason.MOB_SUMMONED);
-        if (mob == null) return null;
-        mob.setPos(player.getX() + (RNG.nextDouble() - 0.5) * 4, player.getY(), player.getZ() + (RNG.nextDouble() - 0.5) * 4);
-        manifest(mob, grade);
-        level.addFreshEntity(mob);
-        return mob;
+        BlockPos at = new BlockPos(
+                (int) (player.getX() + (RNG.nextDouble() - 0.5) * 6),
+                player.getBlockY(),
+                (int) (player.getZ() + (RNG.nextDouble() - 0.5) * 6));
+        return spawnAt(level, at, grade);
     }
 
-    @SuppressWarnings("unchecked")
-    private static EntityType<? extends Monster> baseFor(int grade) {
-        // Higher grades manifest as true custom Curses; lower grades borrow vanilla shells.
-        return (EntityType<? extends Monster>) switch (grade) {
-            case 1 -> EntityTypes.ZOMBIE;
-            case 2 -> EntityTypes.HUSK;
-            default -> ModEntities.CURSE_SPIRIT;
-        };
+    /** Spawns a fresh Curse of the given grade at a world position. */
+    public static CurseEntity spawnAt(ServerLevel level, BlockPos pos, int grade) {
+        CurseEntity curse = ModEntities.CURSE_SPIRIT.create(level, EntitySpawnReason.MOB_SUMMONED);
+        if (curse == null) return null;
+        curse.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+        manifest(curse, grade);
+        level.addFreshEntity(curse);
+        return curse;
+    }
+
+    /** Finds a dark, open block near the player suitable for a curse to manifest, or null. */
+    private static BlockPos darkSpotNear(ServerLevel level, ServerPlayer p) {
+        for (int attempt = 0; attempt < 8; attempt++) {
+            int dx = RNG.nextInt(25) - 12;
+            int dz = RNG.nextInt(25) - 12;
+            if (Math.abs(dx) < 6 && Math.abs(dz) < 6) continue; // not on top of the player
+            int x = p.getBlockX() + dx;
+            int z = p.getBlockZ() + dz;
+            int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, x, z);
+            BlockPos pos = new BlockPos(x, y, z);
+            if (!level.isLoaded(pos)) continue;
+            // Manifest only in the dark (accounts for both block light and time-of-day skylight).
+            if (level.getMaxLocalRawBrightness(pos) > 7) continue;
+            return pos;
+        }
+        return null;
     }
 
     public static boolean isCurse(Entity entity) {
-        if (!(entity instanceof LivingEntity) || !entity.hasCustomName()) return false;
-        Component name = entity.getCustomName();
-        return name != null && name.getString().contains(CURSE_WORD);
+        return entity instanceof CurseEntity;
     }
 
     private static int gradeOf(Entity entity) {
-        Component name = entity.getCustomName();
-        String s = name == null ? "" : name.getString();
-        if (s.contains("Special Grade")) return 5;
-        if (s.contains("Grade 1")) return 4;
-        if (s.contains("Grade 2")) return 3;
-        if (s.contains("Grade 3")) return 2;
-        return 1;
+        return entity instanceof CurseEntity c ? c.getGrade() : 1;
     }
 
     /** Reward a player for exorcising a Curse. */
