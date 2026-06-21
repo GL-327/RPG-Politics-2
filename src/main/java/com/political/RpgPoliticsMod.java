@@ -3,7 +3,6 @@ package com.political;
 import com.political.bounty.BountyCommands;
 import com.political.bounty.BountyManager;
 import com.political.combat.AbilityEngine;
-import com.political.combat.HealthScalingManager;
 import com.political.combat.StatManager;
 import com.political.curse.CurseCommands;
 import com.political.curse.CurseManager;
@@ -56,7 +55,6 @@ public class RpgPoliticsMod implements ModInitializer {
         ModNetworking.registerC2STypes();
         CourtDomainManager.registerEvents();
         AbilityEngine.register();
-        HealthScalingManager.register();
         PowerManager.register();
         com.political.curse.ModEntities.register();
         CurseManager.register();

@@ -20,11 +20,9 @@ public final class DevConfig {
     public static float get(DevConfigKey k) {
         PoliticsData d = DataManager.data();
         return switch (k) {
-            case HEALTH_SCALING -> d.healthScalingEnabled ? 1 : 0;
             case CURSE_SPAWNING -> d.curseSpawningEnabled ? 1 : 0;
             case ELECTIONS -> d.electionSystemEnabled ? 1 : 0;
             case TAX -> d.taxEnabled ? 1 : 0;
-            case MOB_HP_MULT -> (float) d.mobHealthScalingMultiplier;
             case CURSE_SPAWN_CHANCE -> (float) d.curseNaturalSpawnChance;
             case CURSED_LOOT_CHANCE -> (float) d.cursedObjectLootChance;
             case DEATH_THRESHOLD -> d.deathCurseThreshold;
@@ -43,11 +41,9 @@ public final class DevConfig {
         float v = k.clamp(raw);
         PoliticsData d = DataManager.data();
         switch (k) {
-            case HEALTH_SCALING -> d.healthScalingEnabled = v >= 0.5f;
             case CURSE_SPAWNING -> d.curseSpawningEnabled = v >= 0.5f;
             case ELECTIONS -> d.electionSystemEnabled = v >= 0.5f;
             case TAX -> d.taxEnabled = v >= 0.5f;
-            case MOB_HP_MULT -> d.mobHealthScalingMultiplier = v;
             case CURSE_SPAWN_CHANCE -> d.curseNaturalSpawnChance = v;
             case CURSED_LOOT_CHANCE -> d.cursedObjectLootChance = v;
             case DEATH_THRESHOLD -> d.deathCurseThreshold = Math.round(v);

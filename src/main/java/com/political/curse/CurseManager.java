@@ -104,7 +104,6 @@ public final class CurseManager {
         mob.addEffect(new MobEffectInstance(MobEffects.GLOWING, Integer.MAX_VALUE, 0, false, false));
         if (grade >= 4) mob.addEffect(new MobEffectInstance(MobEffects.SPEED, Integer.MAX_VALUE, 1, false, false));
         if (grade >= 5) mob.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, Integer.MAX_VALUE, 1, false, false));
-        mob.addTag("rpg_scaled"); // keep generic health-scaling away
         mob.addTag("rpg_curse_" + grade);
     }
 

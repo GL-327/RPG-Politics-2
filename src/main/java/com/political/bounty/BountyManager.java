@@ -122,7 +122,6 @@ public final class BountyManager {
         boss.setCustomName(Component.literal(type.displayName + " Boss (T" + tier + ")")
                 .withStyle(ChatFormatting.DARK_RED));
         boss.setCustomNameVisible(true);
-        com.political.combat.HealthScalingManager.exempt(boss);
 
         boss.setPos(player.getX() + 3, player.getY(), player.getZ() + 3);
         level.addFreshEntity(boss);

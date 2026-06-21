@@ -95,10 +95,6 @@ public class PoliticsData {
     public Map<String, Double> stockPrices = new HashMap<>();
     public long lastMarketTick = 0L;
 
-    // --- World / misc tuning ---
-    public double mobHealthScalingMultiplier = 1.0;
-    public boolean healthScalingEnabled = true;
-
     // --- Powers (Compound V + JJK cursed techniques) ---
     // Known power ids per player.
     public Map<String, List<String>> knownPowers = new HashMap<>();

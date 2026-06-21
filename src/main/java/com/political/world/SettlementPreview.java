@@ -52,23 +52,28 @@ public final class SettlementPreview {
 
     public static void renderAll(ServerLevel level) {
         try {
-            // A few seeds per tier so we can see typical (and large) instances.
-            int[][] coords = {{0, 0}, {512, 512}, {-768, 320}, {1024, -640}};
-            for (SettlementType type : SettlementType.values()) {
-                int n = (type == SettlementType.CITY || type == SettlementType.VILLAGE) ? coords.length : 1;
-                for (int i = 0; i < n; i++) {
-                    BuildBuffer buf = new BuildBuffer();
-                    SettlementGenerator.planInto(buf, level, coords[i][0], coords[i][1], type, "Preview");
-                    String fn = type.name().toLowerCase() + (n > 1 ? "_" + i : "");
-                    com.political.RpgPoliticsMod.LOGGER.info("Preview {} captured {} block ops", fn, buf.size());
-                    render(buf, fn);
-                }
+            String mode = System.getenv("SETTLEMENT_PREVIEW");
+            if (mode != null && !mode.isBlank() && !mode.equals("1") && !mode.equals("true")) {
+                // e.g. SETTLEMENT_PREVIEW=city — render exactly one tier.
+                SettlementType type = SettlementType.valueOf(mode.trim().toUpperCase());
+                renderOne(level, type, 512, 512, "settlement_" + type.name().toLowerCase());
+                return;
             }
-            com.political.RpgPoliticsMod.LOGGER.info("Settlement previews rendered to {}",
-                    new File("previews").getAbsolutePath());
+            // Default: one accurate showcase image (large modern city).
+            renderOne(level, SettlementType.CITY, 512, 512, "settlement_showcase");
         } catch (Exception e) {
             com.political.RpgPoliticsMod.LOGGER.error("Preview render failed", e);
         }
+    }
+
+    /** Plans and renders a single settlement to previews/{name}.png */
+    public static void renderOne(ServerLevel level, SettlementType type, int cx, int cz, String name) throws Exception {
+        BuildBuffer buf = new BuildBuffer();
+        SettlementGenerator.planInto(buf, level, cx, cz, type, "Preview");
+        com.political.RpgPoliticsMod.LOGGER.info("Preview {} captured {} block ops", name, buf.size());
+        render(buf, name);
+        com.political.RpgPoliticsMod.LOGGER.info("Settlement preview rendered to {}",
+                new File("previews", name + ".png").getAbsolutePath());
     }
 
     // ------------------------------------------------------------------

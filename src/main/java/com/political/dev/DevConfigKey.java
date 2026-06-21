@@ -6,11 +6,9 @@ package com.political.dev;
  * floats in ordinal order; booleans use 0/1.
  */
 public enum DevConfigKey {
-    HEALTH_SCALING("Mob Health Scaling", true, 1, 0, 1),
     CURSE_SPAWNING("Curse Spawning", true, 1, 0, 1),
     ELECTIONS("Election System", true, 1, 0, 1),
     TAX("Taxation", true, 1, 0, 1),
-    MOB_HP_MULT("Mob HP x", false, 0.1f, 0.5f, 5f),
     CURSE_SPAWN_CHANCE("Curse Spawn Chance", false, 0.01f, 0f, 0.5f),
     CURSED_LOOT_CHANCE("Cursed Loot Chance", false, 0.005f, 0f, 0.2f),
     DEATH_THRESHOLD("Death-Curse Threshold", false, 1f, 1f, 200f),
