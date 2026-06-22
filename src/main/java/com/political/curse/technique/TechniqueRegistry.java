@@ -17,7 +17,7 @@ public final class TechniqueRegistry {
 
     private TechniqueRegistry() {}
 
-    static void register(CursedTechnique technique) {
+    public static void register(CursedTechnique technique) {
         BY_ID.put(technique.id(), technique);
     }
 

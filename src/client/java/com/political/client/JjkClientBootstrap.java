@@ -4,9 +4,11 @@ import com.political.curse.domain.CursedDomain;
 import com.political.curse.domain.DomainRegistry;
 import com.political.curse.technique.CursedTechnique;
 import com.political.curse.technique.TechniqueRegistry;
+import com.political.client.animation.TechniqueCastPose;
 import com.political.net.DomainActionC2S;
 import com.political.net.DomainSyncS2C;
 import com.political.net.TechniqueActionC2S;
+import com.political.net.TechniqueCastS2C;
 import com.political.net.TechniqueMenuS2C;
 import com.political.politics.DataManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -109,6 +111,9 @@ public final class JjkClientBootstrap {
                                 : DomainClientState.ACTIVE.get(payload.casterEntityId());
                     }
                 }));
+
+        ClientPlayNetworking.registerGlobalReceiver(TechniqueCastS2C.TYPE, (payload, context) ->
+                context.client().execute(() -> TechniqueCastPose.trigger(payload.playerUuid())));
     }
 
     private static void registerKeys() {
@@ -125,6 +130,7 @@ public final class JjkClientBootstrap {
         }
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            TechniqueCastPose.clientTick();
             if (client.player == null) return;
             while (openTechniquesKey.consumeClick()) {
                 ClientPlayNetworking.send(new TechniqueActionC2S("open", "", 0));

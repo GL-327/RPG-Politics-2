@@ -1,14 +1,30 @@
 # Integration Status — RPG Politics 2 Mega-Integration
 
-**Date:** 2025-06-21  
+**Date:** 2025-06-22  
 **Target:** Minecraft 26.2 · Fabric · Java 25  
-**Build:** `.\gradlew.bat clean build` → **BUILD SUCCESSFUL** (JEI deprecation warnings only)
+**Build:** `.\gradlew.bat clean build`  
+**Runtime:** **Standalone** — Fabric Loader + Fabric API + `politicalserver` only (see `docs/STANDALONE.md`)
 
 ---
 
 ## Summary
 
-All three parallel workstreams (A JJK, B Content, C VFX/Library) are **wired and live**. Shared entrypoints, lang, and sounds were merged by the integration pass. No package conflicts required resolution — each stream used disjoint packages as planned.
+All three parallel workstreams (A JJK, B Content, C VFX/Library) are **wired and live**. Reference-mod mechanics are **ported natively** into `com.political.*` and `data/politicalserver/` — no required companion mods (JEI, NEA, Sound Physics, JujutsuCraft, Terralith, etc.).
+
+---
+
+## Standalone mod policy
+
+| Removed from Gradle runtime | Replacement |
+| --- | --- |
+| `runtimeOnly` JEI full jar | `compileOnly` JEI API; `@JeiPlugin` loads only when player installs JEI |
+| `runtimeOnly` Not Enough Animations | Native `HumanoidModelCastPoseMixin` + `TechniqueCastS2C` cast-pose sync |
+| `runtimeOnly` Sound Physics Remastered | Native sound categories in `VfxSounds` / `VfxHelper` |
+| `runtimeOnly fileTree(libs/*.jar)` | Removed — prevents wrong-version jars entering dev classpath |
+
+`fabric.mod.json` declares JEI / NEA / Sound Physics under **`suggests`** only.
+
+**Player crash fix:** legacy **1.16.5** NEA / TRansition / TRender jars in `mods/` must be deleted. Our mod does not bundle them.
 
 ---
 
@@ -22,30 +38,46 @@ All three parallel workstreams (A JJK, B Content, C VFX/Library) are **wired and
 | `com.political.content.ContentBootstrap.init()` | B | Ability accessories, ambient creatures, biome feature injection |
 | `com.political.curse.JjkBootstrap.init()` | A | Techniques, domains, CE providers, JJK networking, server tick |
 
-`JjkBootstrap.init()` already calls `JjkNetworking.registerA()` — **do not** also register those payloads in `ModNetworking`.
-
 ### `PoliticalClient.onInitializeClient()` (client)
 
 | Call | Workstream | Purpose |
 | --- | --- | --- |
 | `com.political.vfx.client.VfxClientBootstrap.initClient()` | C | Particle providers for custom types |
 | `com.political.content.client.ContentClientBootstrap.initClient()` | B | Creature models + renderers |
-| `com.political.client.JjkClientBootstrap.initClient()` | A | Technique screen, domain HUD, keybinds, CE sync |
-
-Order: VFX client bootstrap runs after common `VfxBootstrap.init()` (Fabric runs common init first).
+| `com.political.client.JjkClientBootstrap.initClient()` | A | Technique screen, domain HUD, keybinds, CE sync, cast-pose animation |
 
 ---
 
-## Resource merges
+## Native ports (reference → our packages)
 
-| Source fragment | Merged into | Keys added |
+### A — JJK (`com.political.curse.jjk`)
+
+| File | Ported from | Notes |
 | --- | --- | --- |
-| `lang/en_us.jjk.json` | `lang/en_us.json` | Keybind labels, technique/domain names |
-| `lang/en_us.content.json` | `lang/en_us.json` | Accessories, creatures, biomes |
-| `lang/en_us.vfx.json` | `lang/en_us.json` | JEI categories, VFX subtitles |
-| `sounds.vfx.json` | `sounds.json` | 9 VFX sound event definitions |
+| `JjkProcedures.java` | cursedfate / JujutsuCraft radial pulses | radialBurst, lifeSiphonRing, vortexPull, barrierPulse |
+| `JjkPortedTechniques.java` | cursedfate procedure patterns | +5 techniques (sunder_ring, soul_vortex, crimson_harvest, sanctum_pulse, void_lance_storm) |
+| `HumanoidModelCastPoseMixin.java` | NotEnoughAnimations cast arms | Native client mixin, no NEA dep |
+| `TechniqueCastS2C.java` | — | Multplayer cast-pose broadcast |
 
-**Total lang keys after merge:** 1692 (sorted alphabetically). Fragment files remain in-tree for reference/regen but are not loaded by Minecraft.
+### B — Flight (`com.political.flight`)
+
+| Behavior | Ported from viltrumitecore |
+| --- | --- |
+| Throttle / boost threshold 0.6 | ✅ (pre-existing) |
+| High-speed ram knockback | ✅ (pre-existing) |
+| Boost collision bypass (`noPhysics`) | ✅ **new** — mirrors EntityCollisionMixin |
+
+### B — Accessories (`com.political.expansion2.accessories`)
+
+| Addition | Ported from Artifacts |
+| --- | --- |
+| `SWIFTSTRIDE` ability + Swiftstride Anklet | Running Shoes / speed-on-sprint pattern |
+
+### B — Worldgen (`data/politicalserver/worldgen/`)
+
+| Addition | Ported from Terralith |
+| --- | --- |
+| `shattered_coast` biome + overworld parameter slot | alpha_islands coastal mood (vanilla features only, original name) |
 
 ---
 
@@ -53,44 +85,19 @@ Order: VFX client bootstrap runs after common `VfxBootstrap.init()` (Fabric runs
 
 ### A — JJK Complete Overhaul ✅ LIVE
 
-- **Packages:** `com.political.curse.{energy,technique,domain}`, `com.political.net.Jjk*`, `com.political.client.{JjkClientBootstrap,TechniqueScreen,DomainHud,CursedClientState}`
-- **Mixins:** None (curse visibility via `Entity#isInvisibleTo`)
+- **Packages:** `com.political.curse.{energy,technique,domain,jjk}`, networking, client bootstrap
+- **Mixins:** `HumanoidModelCastPoseMixin` (client cast pose)
 - **Controls:** G = techniques, V = domain, Z/X/C/B = bound slots
 
 ### B — Content Porting ✅ LIVE
 
-- **Packages:** `com.political.content.*`, `com.political.world.biome.ContentBiomes`, `com.political.world.structures.*`, `com.political.expansion2.accessories.AbilityAccessories2*`
-- **Registered:** 9 ability accessories, 3 ambient creatures, 2 biome decorative features
-- **Mixins:** None
+- **Packages:** `com.political.content.*`, worldgen biomes (6), ability accessories (10)
+- **Mixins:** None (server-side)
 
 ### C — Library + VFX ✅ LIVE
 
-- **Packages:** `com.political.vfx.*`, `com.political.sound.VfxSounds`, `com.political.client.compat.jei.*`
-- **Registered:** 6 particle types, 9 sound events, 3 JEI categories (auto-discovered via `@JeiPlugin`)
-- **Mixins:** None (render overlay deferred to `WorldRenderEvents` if needed)
-
----
-
-## Conflict resolution
-
-No duplicate registrations or overlapping packages were found. All three streams used additive, self-contained bootstraps with handoff manifests under `docs/integration/handoff/`.
-
----
-
-## Still TODO (non-blocking)
-
-| Item | Owner | Notes |
-| --- | --- | --- |
-| Grade-scaled max CE in `StatManager#compute` | A polish | Add `SorcererGrade.maxCursedEnergyFor(...)` term — optional |
-| Persist client technique slot bindings | A | Currently reset on client restart |
-| NEA casting-arm client mixin | A | Optional animation hook |
-| Technique/domain pixel-art icons | A | Replace abbreviation tiles in `TechniqueScreen` |
-| Standalone biomes in worldgen | B | 5 biome JSONs exist; need multi-noise parameter-list datapack |
-| Structure auto-scatter | B | `ContentStructures.planInto(...)` ready; wire to `StructureManager` or debug command |
-| Creative-tab entries for ability accessories | B | Iterate `AbilityAccessories2.items()` in `ModTabs` |
-| Tighten JEI placeholder item ids | C | `PoliticalJeiRecipes` uses vanilla fallbacks for economy/relic rows |
-| Domain overlay pass | C | Prefer `WorldRenderEvents.AFTER_TRANSLUCENT` over mixin |
-| Political/economy idea-recovery from old builds | B §9 | Proposals only — verify against existing `combat`/`progression` before porting |
+- **Packages:** `com.political.vfx.*`, `com.political.client.compat.jei.*` (optional compileOnly)
+- **JEI:** 3 categories when JEI installed; zero hard dependency
 
 ---
 
@@ -98,17 +105,15 @@ No duplicate registrations or overlapping packages were found. All three streams
 
 ```
 .\gradlew.bat clean build
-BUILD SUCCESSFUL in ~17s
 ```
 
-Warnings: JEI API deprecations in `GearAbilityCategory`, `EconomyConversionCategory`, `CursedRelicCategory` (pre-existing from workstream C; non-fatal).
+Expected: **BUILD SUCCESSFUL**. JEI deprecation warnings in compat classes are non-fatal (compileOnly).
 
 ---
 
 ## Reference docs
 
-- `docs/integration/JAR_AUDIT.md` — extracted JAR inventory
+- `docs/STANDALONE.md` — player + developer standalone policy
+- `docs/integration/JAR_AUDIT.md` — extracted JAR inventory (reference only)
 - `docs/integration/PLAN.md` — integration plan
-- `docs/integration/handoff/A_jjk.md` — JJK handoff
-- `docs/integration/handoff/B_content.md` — content handoff
-- `docs/integration/handoff/C_vfx.md` — VFX/JEI handoff
+- `docs/integration/handoff/` — per-stream handoffs

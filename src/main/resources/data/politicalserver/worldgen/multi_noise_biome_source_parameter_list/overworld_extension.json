@@ -60,6 +60,18 @@
         "depth": 0.0,
         "offset": 0.0
       }
+    },
+    {
+      "biome": "politicalserver:shattered_coast",
+      "parameters": {
+        "temperature": 0.62,
+        "humidity": 0.55,
+        "continentalness": -0.35,
+        "erosion": -0.45,
+        "weirdness": 0.35,
+        "depth": 0.0,
+        "offset": 0.0
+      }
     }
   ]
 }

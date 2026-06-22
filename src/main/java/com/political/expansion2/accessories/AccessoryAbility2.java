@@ -28,5 +28,7 @@ public enum AccessoryAbility2 {
     /** Slowly replenishes hunger while standing on living grass. */
     GRAZING,
     /** Negates fall damage and feathers descents. */
-    FEATHERFALL
+    FEATHERFALL,
+    /** Artifacts-style speed boost while sprinting on solid ground. */
+    SWIFTSTRIDE
 }

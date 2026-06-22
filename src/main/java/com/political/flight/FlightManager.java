@@ -170,10 +170,16 @@ public final class FlightManager {
                 Float thr = recentThrottle(id, now);
                 if (thr != null && thr > 0.05f) {
                     player.fallDistance = 0;
+                    // Viltrumite boost: phase through collision like viltrumitecore's EntityCollisionMixin.
+                    player.noPhysics = thr >= BOOST_THRESHOLD;
                     if (thr >= BOOST_THRESHOLD && player.level() instanceof ServerLevel level) {
                         ram(player, level, thr);
                     }
+                } else {
+                    player.noPhysics = false;
                 }
+            } else {
+                player.noPhysics = false;
             }
         }
     }

@@ -11,7 +11,7 @@
  * <ul>
  *   <li>Render hooks for cursed-energy auras / domain overlays / world-space VFX
  *       that have no Fabric callback.</li>
- *   <li>Animation-rig hooks (complementing Not Enough Animations) for techniques.</li>
+ *   <li>Animation-rig hooks for technique casting (native {@code HumanoidModelCastPoseMixin}).</li>
  *   <li>Input handling for technique binding/casting where a clean keybind event
  *       is insufficient.</li>
  * </ul>

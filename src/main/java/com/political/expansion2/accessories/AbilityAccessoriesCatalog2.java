@@ -50,5 +50,9 @@ final class AbilityAccessoriesCatalog2 {
                 AccessoryDef2.Type.RUNE, Rarity.EPIC,
                 "A rune that argues, gently, with gravity.",
                 AccessoryAbility2.FEATHERFALL, 0, "Negates fall damage"));
+        out.add(new AbilityAccessoryDef2("acc2_ab_swiftstride", "Swiftstride Anklet",
+                AccessoryDef2.Type.BAND, Rarity.RARE,
+                "Wind-touched links that hurry each stride when you sprint.",
+                AccessoryAbility2.SWIFTSTRIDE, 0.25, "+25% movement speed while sprinting"));
     }
 }

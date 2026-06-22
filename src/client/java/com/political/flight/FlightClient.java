@@ -74,6 +74,7 @@ public final class FlightClient {
             throttle = Math.max(0f, throttle - 0.1f);
             wasFlying = false;
             wasBoosting = false;
+            if (p != null) p.noPhysics = false;
             return;
         }
 
@@ -91,6 +92,7 @@ public final class FlightClient {
         } else {
             throttle = Math.max(0f, throttle - 0.1f);
             wasBoosting = false;
+            p.noPhysics = false;
         }
 
         // Stream state to the server (drives fall immunity + ram knockback).
@@ -141,6 +143,8 @@ public final class FlightClient {
         Vec3 next = cur.add(target.subtract(cur).scale(0.22));
         p.setDeltaMovement(next);
         p.fallDistance = 0;
+        // Client-side boost collision bypass (mirrors viltrumitecore flight at high throttle).
+        p.noPhysics = throttle >= FlightManager.BOOST_THRESHOLD;
 
         spawnFx(mc, p);
     }

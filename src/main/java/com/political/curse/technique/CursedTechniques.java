@@ -29,6 +29,7 @@ public final class CursedTechniques {
     public static void bootstrap() {
         if (bootstrapped) return;
         bootstrapped = true;
+        com.political.curse.jjk.JjkPortedTechniques.bootstrap();
 
         // 1 — Severing Edge: a close cursed-energy slash fan.
         define("severing_edge", "Severing Edge",

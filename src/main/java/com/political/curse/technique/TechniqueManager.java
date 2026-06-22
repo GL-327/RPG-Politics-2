@@ -4,7 +4,9 @@ import com.political.curse.SorcererGrade;
 import com.political.curse.domain.CursedDomain;
 import com.political.curse.domain.DomainRegistry;
 import com.political.curse.energy.CursedEnergyManager;
+import com.political.net.TechniqueCastS2C;
 import com.political.net.TechniqueMenuS2C;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import com.political.sound.VfxSounds;
 import com.political.vfx.VfxHelper;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -67,6 +69,7 @@ public final class TechniqueManager {
         mine.put(techniqueId, now + t.cooldownTicks());
         VfxHelper.elementBurst(player.level(), t.element(), player.position().add(0, 1, 0), 0.7);
         playCastSound(player, t);
+        broadcastCastPose(player);
 
         return Component.literal("\u2620 " + t.displayName()).withStyle(ChatFormatting.LIGHT_PURPLE);
     }
@@ -93,6 +96,13 @@ public final class TechniqueManager {
 
     private static Component fail(String message) {
         return Component.literal(message).withStyle(ChatFormatting.GRAY);
+    }
+
+    private static void broadcastCastPose(ServerPlayer player) {
+        TechniqueCastS2C payload = new TechniqueCastS2C(player.getUUID());
+        for (ServerPlayer viewer : PlayerLookup.all(player.level().getServer())) {
+            ServerPlayNetworking.send(viewer, payload);
+        }
     }
 
     private static void playCastSound(ServerPlayer player, CursedTechnique t) {

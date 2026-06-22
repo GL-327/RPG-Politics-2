@@ -30,6 +30,7 @@ public final class JjkNetworking {
         PayloadTypeRegistry.clientboundPlay().register(CursedEnergySyncS2C.TYPE, CursedEnergySyncS2C.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(TechniqueMenuS2C.TYPE, TechniqueMenuS2C.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(DomainSyncS2C.TYPE, DomainSyncS2C.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(TechniqueCastS2C.TYPE, TechniqueCastS2C.CODEC);
 
         // Serverbound types + receivers.
         PayloadTypeRegistry.serverboundPlay().register(TechniqueActionC2S.TYPE, TechniqueActionC2S.CODEC);

@@ -56,6 +56,7 @@ public final class AbilityAccessories2 {
 
     private static final Identifier ID_KNOCKBACK = id("acc2_ab_knockback");
     private static final Identifier ID_STEP = id("acc2_ab_step");
+    private static final Identifier ID_SWIFT = id("acc2_ab_swift");
 
     private static final String DEC_FLAG = "acc2_ab_dec";
 
@@ -123,6 +124,9 @@ public final class AbilityAccessories2 {
                 AttributeModifier.Operation.ADD_VALUE);
         applyAttribute(player, Attributes.STEP_HEIGHT, ID_STEP, stepHeight,
                 AttributeModifier.Operation.ADD_VALUE);
+        applyAttribute(player, Attributes.MOVEMENT_SPEED, ID_SWIFT,
+                active.contains(AccessoryAbility2.SWIFTSTRIDE) && player.isSprinting() ? 0.25 : 0.0,
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
         if (active.contains(AccessoryAbility2.FIRE_WARD)) {
             if (player.isOnFire()) player.clearFire();
