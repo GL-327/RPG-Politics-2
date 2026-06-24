@@ -11,6 +11,13 @@ public final class ClientRpgState {
     public static volatile float critChance = 0f;
     public static volatile float ferocity = 0f;
     public static volatile float speed = 0f;
+    public static volatile int sorcererGrade;
+    /** Live JJK aura flags from {@link com.political.net.StatSyncS2C}. */
+    public static volatile int jjkFlags;
 
     private ClientRpgState() {}
+
+    public static boolean jjk(int flag) {
+        return (jjkFlags & flag) != 0;
+    }
 }

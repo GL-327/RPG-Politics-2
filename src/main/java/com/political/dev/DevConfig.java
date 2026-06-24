@@ -34,6 +34,10 @@ public final class DevConfig {
             case SETTLEMENT_GEN -> d.settlementGenEnabled ? 1 : 0;
             case SETTLEMENT_GRID -> d.settlementGridChunks;
             case SETTLEMENT_CHANCE -> (float) d.settlementSpawnChance;
+            case VILLAGE_CLUSTER -> d.villageClusterEnabled ? 1 : 0;
+            case VILLAGE_CLUSTER_MIN -> d.villageClusterMin;
+            case VILLAGE_CLUSTER_MAX -> d.villageClusterMax;
+            case VILLAGE_CLUSTER_RADIUS -> d.villageClusterRadius;
         };
     }
 
@@ -55,6 +59,10 @@ public final class DevConfig {
             case SETTLEMENT_GEN -> d.settlementGenEnabled = v >= 0.5f;
             case SETTLEMENT_GRID -> d.settlementGridChunks = Math.round(v);
             case SETTLEMENT_CHANCE -> d.settlementSpawnChance = v;
+            case VILLAGE_CLUSTER -> d.villageClusterEnabled = v >= 0.5f;
+            case VILLAGE_CLUSTER_MIN -> d.villageClusterMin = Math.round(v);
+            case VILLAGE_CLUSTER_MAX -> d.villageClusterMax = Math.round(v);
+            case VILLAGE_CLUSTER_RADIUS -> d.villageClusterRadius = Math.round(v);
         }
     }
 }

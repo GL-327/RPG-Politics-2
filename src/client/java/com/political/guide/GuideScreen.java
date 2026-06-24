@@ -144,7 +144,7 @@ public class GuideScreen extends RpgScreen {
     @Override
     public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float pt) {
         super.extractBackground(g, mouseX, mouseY, pt);
-        g.fill(0, 0, width, height, COL_DIM);
+        glassBackdrop(g);
         panel(g, left, top, PANEL_W, PANEL_H);
         headerBar(g, left, top, PANEL_W, 24);
         inset(g, left + 6, top + 28, SIDEBAR_W - 2, PANEL_H - 34);

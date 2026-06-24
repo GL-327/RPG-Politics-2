@@ -1,0 +1,562 @@
+[
+  {
+    "name": "[JJP] Rainbow Dragon",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 10000
+  },
+  {
+    "name": "[JJP] Garuda",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 3000
+  },
+  {
+    "name": "[JJP] Sukuna True Form",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 69000
+  },
+  {
+    "name": "[JJP] Kurourushi",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 16000
+  },
+  {
+    "name": "[JJP] Mahoraga",
+    "RecoveryEnergyMultiplier": 5.0,
+    "RealMaxEnergy": 35000
+  },
+  {
+    "name": "[JJP] Uraume",
+    "RecoveryEnergyMultiplier": 2.5,
+    "RealMaxEnergy": 22700
+  },
+  {
+    "name": "[JJP] Rika",
+    "RecoveryEnergyMultiplier": 2.5,
+    "RealMaxEnergy": 60000
+  },
+  {
+    "name": "[JJP] Cursed Jellyfish",
+    "RecoveryEnergyMultiplier": 1.1,
+    "RealMaxEnergy": 6000
+  },
+  {
+    "name": "[JJP] Yuta Okkotsu",
+    "RecoveryEnergyMultiplier": 2.5,
+    "RealMaxEnergy": 60000
+  },
+  {
+    "name": "[JJP] Noritoshi Kamo (Ancestor)",
+    "RecoveryEnergyMultiplier": 2.5,
+    "RealMaxEnergy": 18000
+  },
+  {
+    "name": "[JJP] Satoru Gojo",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 35000
+  },
+  {
+    "name": "[JJP] Toji Fushiguro",
+    "RecoveryEnergyMultiplier": 0.0,
+    "RealMaxEnergy": 0
+  },
+  {
+    "name": "[JJP] Uro Takako",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 30000
+  },
+  {
+    "name": "[JJP] Suguru Geto",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 20000
+  },
+  {
+    "name": "[JJP] Kenjaku",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 25000
+  },
+  {
+    "name": "[JJP] Hajime Kashimo",
+    "RecoveryEnergyMultiplier": 2.5,
+    "RealMaxEnergy": 19500
+  },
+  {
+    "name": "[JJP] Yuki Tsukumo",
+    "RecoveryEnergyMultiplier": 2.5,
+    "RealMaxEnergy": 20000
+  },
+  {
+    "name": "[JJP] Kinji Hakari",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 17000
+  },
+  {
+    "name": "[JJP] Utahime Iori",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 7000
+  },
+  {
+    "name": "[JJP] Shoko Ieiri",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 4500
+  },
+  {
+    "name": "[JJP] Miguel",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 11000
+  },
+  {
+    "name": "[JJP] Larue",
+    "RecoveryEnergyMultiplier": 1.1,
+    "RealMaxEnergy": 8900
+  },
+  {
+    "name": "[JJP] Hiromi Higuruma",
+    "RecoveryEnergyMultiplier": 2.5,
+    "RealMaxEnergy": 9500
+  },
+  {
+    "name": "[JJP] Hana Kurusu",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 20000
+  },
+  {
+    "name": "[JJP] Kento Nanami",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 11500
+  },
+  {
+    "name": "[JJP] Mei Mei",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 10000
+  },
+  {
+    "name": "[JJP] Ui Ui",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 14000
+  },
+  {
+    "name": "[JJP] Atsuya Kusakabe",
+    "RecoveryEnergyMultiplier": 1.3,
+    "RealMaxEnergy": 15000
+  },
+  {
+    "name": "[JJP] Masamichi Yaga",
+    "RecoveryEnergyMultiplier": 1.1,
+    "RealMaxEnergy": 11000
+  },
+  {
+    "name": "Panda Standard Form",
+    "RecoveryEnergyMultiplier": 1.5,
+    "RealMaxEnergy": 4500
+  },
+  {
+    "name": "Panda Gorilla Form",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 8000
+  },
+  {
+    "name": "Panda 3 Form",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 9500
+  },
+  {
+    "name": "Panda Mini Form",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 500
+  },
+  {
+    "name": "[JJP] Yoshinobu Gakuganji",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 11000
+  },
+  {
+    "name": "[JJP] Ranta Zenin",
+    "RecoveryEnergyMultiplier": 2,
+    "RealMaxEnergy": 9500
+  },
+  {
+    "name": "[JJP] Naobito Zenin",
+    "RecoveryEnergyMultiplier": 2,
+    "RealMaxEnergy": 12500
+  },
+  {
+    "name": "[JJP] Naoya Zenin",
+    "RecoveryEnergyMultiplier": 1.5,
+    "RealMaxEnergy": 10000
+  },
+  {
+    "name": "[JJP] Naoya Curse",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 14200
+  },
+  {
+    "name": "[JJP] True Naoya Curse",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 25700
+  },
+  {
+    "name": "[JJP] Daruma Doll",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 3600
+  },
+  {
+    "name": "[JJP] Giant Catfish",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 2900
+  },
+  {
+    "name": "[JJP] Ganesha",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 12300
+  },
+  {
+    "name": "[JJP] Maki Zenin",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 10
+  },
+  {
+    "name": "[JJP] Mai Zenin",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 500
+  },
+  {
+    "name": "[JJP] Aoi Todo",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 6500
+  },
+  {
+    "name": "[JJP] Arata Nitta",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 3500
+  },
+  {
+    "name": "[JJP] Kokichi Muta",
+    "RecoveryEnergyMultiplier": 0.015,
+    "RealMaxEnergy": 1000000
+  },
+  {
+    "name": "[JJP] Ultimate Mechamaru - Mode: Absolute",
+    "RecoveryEnergyMultiplier": -1,
+    "RealMaxEnergy": 100000
+  },
+  {
+    "name": "[JJP] Ultimate Mechamaru",
+    "RecoveryEnergyMultiplier": -1,
+    "RealMaxEnergy": 8000
+  },
+  {
+    "name": "[JJP] Momo Nishimiya",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 3000
+  },
+  {
+    "name": "[JJP] Kasumi Miwa",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 2000
+  },
+  {
+    "name": "[JJP] Nobara Kugisaki",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 4000
+  },
+  {
+    "name": "[JJP] Megumi Fushiguro",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 9000
+  },
+  {
+    "name": "[JJP] Toge Inumaki",
+    "RecoveryEnergyMultiplier": 1.5,
+    "RealMaxEnergy": 6000
+  },
+  {
+    "name": "[JJP] Takuma Ino",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 9000
+  },
+  {
+    "name": "[JJP] Yuji Itadori",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 6000
+  },
+  {
+    "name": "[JJP] Noritoshi Kamo",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 6500
+  },
+  {
+    "name": "[JJP] Choso",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 11000
+  },
+  {
+    "name": "[JJP] Eso",
+    "RecoveryEnergyMultiplier": 1.2,
+    "RealMaxEnergy": 5200
+  },
+  {
+    "name": "[JJP] Kechizu",
+    "RecoveryEnergyMultiplier": 1.2,
+    "RealMaxEnergy": 4300
+  },
+  {
+    "name": "[JJP] Iori Hazenoki",
+    "RecoveryEnergyMultiplier": 2.5,
+    "RealMaxEnergy": 10000
+  },
+  {
+    "name": "[JJP] Ryu Ishigori",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 19000
+  },
+  {
+    "name": "[JJP] Reggie Star",
+    "RecoveryEnergyMultiplier": 1.2,
+    "RealMaxEnergy": 9000
+  },
+  {
+    "name": "[JJP] Jiro Awasaka",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 5000
+  },
+  {
+    "name": "[JJP] Ogami",
+    "RecoveryEnergyMultiplier": 1.2,
+    "RealMaxEnergy": 6500
+  },
+  {
+    "name": "[JJP] Ogami's Grandson",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 6000
+  },
+  {
+    "name": "[JJP] Haruta Shigemo",
+    "RecoveryEnergyMultiplier": 1.1,
+    "RealMaxEnergy": 3500
+  },
+  {
+    "name": "[JJP] Kiyotaka Ijichi",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 800
+  },
+  {
+    "name": "[JJP] Kaori Itadori",
+    "RecoveryEnergyMultiplier": 1.1,
+    "RealMaxEnergy": 4000
+  },
+  {
+    "name": "[JJP] Junpei Yoshino",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 3000
+  },
+  {
+    "name": "[JJP] Yu Haibara",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 4000
+  },
+  {
+    "name": "[JJP] Inventory Curse",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 150
+  },
+  {
+    "name": "[JJP] Kuchisake-Onna",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 8500
+  },
+  {
+    "name": "[JJP] Finger Bearer",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 8000
+  },
+  {
+    "name": "[JJP] Jogo",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 22000
+  },
+  {
+    "name": "[JJP] Dagon",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 18000
+  },
+  {
+    "name": "[JJP] Mini Dagon",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 8000
+  },
+  {
+    "name": "[JJP] Hanami",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 15000
+  },
+  {
+    "name": "[JJP] Kirara Hoshi",
+    "RecoveryEnergyMultiplier": 1.2,
+    "RealMaxEnergy": 5700
+  },
+  {
+    "name": "[JJP] Mahito",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 9500
+  },
+  {
+    "name": "[JJP] Polymorphic Soul Isomer",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 3600
+  },
+  {
+    "name": "[JJP] Chizuru Hari",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 2500
+  },
+  {
+    "name": "[JJP] Haba",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 2800
+  },
+  {
+    "name": "[JJP] Bulldog",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 1200
+  },
+  {
+    "name": "[JJP] Hanyu",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 3200
+  },
+  {
+    "name": "[JJP] Rin Amai",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 2500
+  },
+  { 
+    "name": "[JJP] Remi",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 1500
+  },
+  { 
+    "name": "[JJP] Niji Ebina",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 2100
+  },
+  { 
+    "name": "[JJP] Tengen",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 50000
+  },
+  { 
+    "name": "[JJP] SmallPox",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 16000
+  },
+  { 
+    "name": "[JJP] Fumihiko Takaba",
+    "RecoveryEnergyMultiplier": 1.6,
+    "RealMaxEnergy": 17000
+  },
+  { 
+    "name": "[JJP] Bagman",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 4500
+  },
+  {
+    "name": "[JJP] Rokujushi Miyo",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 4000
+  },
+  {
+    "name": "[JJP] Hagane Daido",
+    "RecoveryEnergyMultiplier": 1.1,
+    "RealMaxEnergy": 3700
+  },
+  {
+    "name": "[JJP] Nanako Hasaba",
+    "RecoveryEnergyMultiplier": 1.3,
+    "RealMaxEnergy": 5500
+  },
+  {
+    "name": "[JJP] Mimiko Hasaba",
+    "RecoveryEnergyMultiplier": 1.3,
+    "RealMaxEnergy": 5500
+  },
+  {
+    "name": "[JJP] Juzo Kumiya",
+    "RecoveryEnergyMultiplier": 1.1,
+    "RealMaxEnergy": 5200
+  },
+  {
+    "name": "[JJP] Agito",
+    "RecoveryEnergyMultiplier": 5.0,
+    "RealMaxEnergy": 12000
+  },
+  {
+    "name": "[JJP] Yorozu",
+    "RecoveryEnergyMultiplier": 2.5,
+    "RealMaxEnergy": 22000
+  },
+  {
+    "name": "[JJP] Akuro-o Otake",
+    "RecoveryEnergyMultiplier": 1.5,
+    "RealMaxEnergy": 12000
+  },
+  {
+    "name": "[JJP] Roppongi",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 4000
+  },
+  {
+    "name": "[JJP] Charles Bernard",
+    "RecoveryEnergyMultiplier": 1.2,
+    "RealMaxEnergy": 6500
+  },
+  {
+    "name": "[JJP] Ko-Guy",
+    "RecoveryEnergyMultiplier": 2.5,
+    "RealMaxEnergy": 8000
+  },
+  {
+    "name": "Divine Dog",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 2800
+  },
+  {
+    "name": "Nue",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 3200
+  },
+  {
+    "name": "Rabbit",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 52
+  },
+  {
+    "name": "DivineDogTotality",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 5000
+  },
+  {
+    "name": "PiercingOx",
+    "RecoveryEnergyMultiplier": 1.0,
+    "RealMaxEnergy": 3500
+  },
+  {
+    "name": "DeerShadow",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 2400
+  },
+  {
+    "name": "Toad",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 700
+  },
+  {
+    "name": "Elephant",
+    "RecoveryEnergyMultiplier": 2.0,
+    "RealMaxEnergy": 2600
+  },
+  {
+    "name": "[AbilityPicker] Jujutsu System",
+    "RecoveryEnergyMultiplier": 3.0,
+    "RealMaxEnergy": 3000
+  }
+]

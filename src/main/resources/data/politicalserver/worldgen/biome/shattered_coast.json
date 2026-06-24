@@ -41,11 +41,14 @@
             "minecraft:ore_dirt",
             "minecraft:ore_gravel",
             "minecraft:ore_coal_upper",
+            "minecraft:ore_coal_lower",
             "minecraft:ore_iron_upper",
-            "minecraft:ore_gold",
+            "minecraft:ore_iron_middle",
             "minecraft:ore_redstone",
             "minecraft:ore_lapis",
-            "minecraft:ore_copper"
+            "minecraft:ore_copper",
+            "minecraft:ore_gold",
+            "minecraft:ore_diamond"
         ],
         [],
         [
@@ -53,14 +56,14 @@
             "minecraft:spring_lava"
         ],
         [
-            "politicalserver:gloomcap_cluster",
-            "minecraft:patch_grass_badlands",
-            "minecraft:patch_dead_bush_2",
-            "minecraft:patch_sugar_cane"
+            "minecraft:trees_plains",
+            "minecraft:flower_plains",
+            "minecraft:patch_sunflower",
+            "minecraft:patch_pumpkin",
+            "minecraft:patch_grass_plain",
+            "minecraft:patch_tall_grass"
         ],
-        [
-            "minecraft:freeze_top_layer"
-        ]
+        []
     ],
     "has_precipitation": true,
     "spawn_costs": {},

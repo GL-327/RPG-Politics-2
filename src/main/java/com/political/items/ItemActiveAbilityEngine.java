@@ -46,6 +46,9 @@ public final class ItemActiveAbilityEngine {
         UseItemCallback.EVENT.register((player, world, hand) -> {
             if (world.isClientSide() || hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
             if (!(player instanceof ServerPlayer sp)) return InteractionResult.PASS;
+            // A "Cursed" prefix grants a cursed technique, cast through the JJK-aware prefix engine.
+            InteractionResult cursed = PrefixAbilities.tryCastCursed(sp, (ServerLevel) world, sp.getMainHandItem());
+            if (cursed != null) return cursed;
             ItemActiveAbility ability = resolveAbility(sp);
             if (ability == null) return InteractionResult.PASS;
             if (onCooldown(sp, ability)) {
@@ -69,6 +72,9 @@ public final class ItemActiveAbilityEngine {
     }
 
     private static ItemActiveAbility resolveAbility(ServerPlayer sp) {
+        // A "Unique" prefix on the held item grants a normal active ability.
+        ItemActiveAbility prefixAbility = PrefixAbilities.uniqueAbilityOf(sp.getMainHandItem());
+        if (prefixAbility != null) return prefixAbility;
         String id = RpgItems.idOf(sp.getMainHandItem());
         if (id != null) {
             ItemActiveAbility a = ItemActiveAbility.forItem(id);

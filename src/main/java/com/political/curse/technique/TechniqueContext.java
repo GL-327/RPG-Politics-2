@@ -88,8 +88,13 @@ public final class TechniqueContext {
         return eye.add(view.scale(dist));
     }
 
-    /** Deals player-attributed magic damage so kills credit the caster (exorcism rewards/progression). */
+    /**
+     * Deals player-attributed damage so kills credit the caster (exorcism rewards/progression). The raw
+     * damage is scaled by the caster's cursed-energy output multiplier (binding vows, active output/flow,
+     * Black Flash zone) so every technique honours the {@link com.political.curse.rules.JjkRules} engine.
+     */
     public void hurt(LivingEntity victim, float damage) {
-        victim.hurtServer(level, level.damageSources().playerAttack(caster), damage);
+        float scaled = (float) (damage * com.political.curse.rules.JjkRules.outputMultiplier(caster));
+        victim.hurtServer(level, level.damageSources().playerAttack(caster), scaled);
     }
 }

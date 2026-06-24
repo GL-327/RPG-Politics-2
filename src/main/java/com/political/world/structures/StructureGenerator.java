@@ -19,6 +19,12 @@ public final class StructureGenerator {
 
     private StructureGenerator() {}
 
+    private static void maybeBoss(StructurePlan plan, int x, int y, int z, StructureType type, Random rng) {
+        if (type.mobBoss == null) return;
+        if (rng.nextDouble() >= com.political.config.PoliticalConfig.get().structureBossSpawnChance) return;
+        SurfaceGenUtil.mob(plan, x, y, z, type.mobBoss);
+    }
+
     public static StructurePlan planInto(com.political.world.BuildBuffer buffer, ServerLevel level,
                                          int cx, int cz, StructureType type, Random rng) {
         int floorY = Math.max(level.getSeaLevel() - 1, Build.medianGround(level, cx - 8, cz - 8, cx + 8, cz + 8));
@@ -97,7 +103,7 @@ public final class StructureGenerator {
         Build.set(level, cx, baseY + 2, cz, Blocks.AIR);
         Build.floor(level, cx - 1, cz - 1, cx + 1, cz + 1, baseY - 1, floor);
         // The archmage broods at the summit (boss-grade, rare flavour)
-        if (type.mobBoss != null) SurfaceGenUtil.mob(plan, cx, baseY + 21, cz, type.mobBoss);
+        if (type.mobBoss != null) maybeBoss(plan, cx, baseY + 21, cz, type, rng);
         SurfaceGenUtil.chest(plan, level, cx + 1, baseY + 1, cz - 2, type.lootTable);
     }
 
@@ -184,7 +190,7 @@ public final class StructureGenerator {
         SurfaceGenUtil.mob(plan, cx, baseY + 1, cz, type.mobElite);
         SurfaceGenUtil.mob(plan, cx + 2, baseY + 1, cz - 2, type.mobCommon);
         SurfaceGenUtil.mob(plan, cx - 2, baseY + 1, cz + 2, type.mobCommon);
-        if (type.mobBoss != null) SurfaceGenUtil.mob(plan, cx, baseY + 1, cz - 1, type.mobBoss);
+        maybeBoss(plan, cx, baseY + 1, cz - 1, type, rng);
     }
 
     // ------------------------------------------------------------------

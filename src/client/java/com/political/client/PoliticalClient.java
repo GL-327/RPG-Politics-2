@@ -46,6 +46,9 @@ public class PoliticalClient implements ClientModInitializer {
             ClientRpgState.critChance = payload.critChance();
             ClientRpgState.ferocity = payload.ferocity();
             ClientRpgState.speed = payload.speed();
+            ClientRpgState.sorcererGrade = payload.sorcererGrade();
+            ClientRpgState.jjkFlags = payload.jjkFlags();
+            CursedClientState.grade = payload.sorcererGrade();
         });
 
         ClientPlayNetworking.registerGlobalReceiver(DialogueOpenS2C.TYPE, (payload, context) -> {
@@ -83,6 +86,17 @@ public class PoliticalClient implements ClientModInitializer {
             });
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(com.political.net.SbsOpenS2C.TYPE, (payload, context) -> {
+            context.client().execute(() -> {
+                if (SbsScreen.OPEN != null) SbsScreen.OPEN.apply(payload);
+                else context.client().setScreenAndShow(new SbsScreen(payload));
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(com.political.net.EchoCodexOpenS2C.TYPE, (payload, context) ->
+                context.client().execute(() ->
+                        context.client().setScreenAndShow(new com.political.client.echo.EchoLoreScreen(payload.chapter()))));
+
         HudElementRegistry.removeElement(VanillaHudElements.HEALTH_BAR);
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT,
                 Identifier.fromNamespaceAndPath("politicalserver", "rpg_hud"),
@@ -90,6 +104,9 @@ public class PoliticalClient implements ClientModInitializer {
 
         ModelLayerRegistry.registerModelLayer(CurseModels.CURSE_LAYER, CurseModels::createBodyLayer);
         EntityRendererRegistry.register(com.political.curse.ModEntities.CURSE_SPIRIT, CurseRenderer::new);
+        com.political.client.tex.ProceduralTextures.register(
+                Identifier.fromNamespaceAndPath("politicalserver", "textures/entity/curse_spirit.png"),
+                com.political.client.model.Archetype.SPECIAL_GRADE, "curse_spirit");
         com.political.curse.spirits.SpiritClient.registerClient();
         com.political.expansion2.curses.Spirit2Client.registerClient();
         com.political.expansion.mobs.ExpansionMobsClient.registerClient();
@@ -107,13 +124,13 @@ public class PoliticalClient implements ClientModInitializer {
                 "key.politicalserver.activate_power",
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_R,
-                KeyMapping.Category.MISC));
+                PoliticalKeyCategories.RPG));
 
         openPowersKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.politicalserver.open_powers",
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_K,
-                KeyMapping.Category.MISC));
+                PoliticalKeyCategories.RPG));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (activatePowerKey.consumeClick()) {
@@ -125,6 +142,17 @@ public class PoliticalClient implements ClientModInitializer {
                 if (client.player != null) {
                     ClientPlayNetworking.send(new PowerActionC2S("open", ""));
                 }
+            }
+            // Subtle client-side resonance while in the Black Flash zone (purely visual).
+            if (client.player != null && client.level != null
+                    && ClientRpgState.jjk(StatSyncS2C.FLAG_BLACK_FLASH_ZONE)
+                    && client.level.getGameTime() % 6 == 0) {
+                var rng = client.player.getRandom();
+                client.level.addParticle(net.minecraft.core.particles.ParticleTypes.ELECTRIC_SPARK,
+                        client.player.getX() + (rng.nextDouble() - 0.5) * 0.6,
+                        client.player.getY() + 1.0 + rng.nextDouble() * 0.4,
+                        client.player.getZ() + (rng.nextDouble() - 0.5) * 0.6,
+                        0, 0.02, 0);
             }
         });
     }
@@ -145,42 +173,77 @@ public class PoliticalClient implements ClientModInitializer {
         float hp = mc.player.getHealth();
         float maxHp = Math.max(1f, mc.player.getMaxHealth());
         boolean hasCe = ClientRpgState.maxCursedEnergy > 0f;
+        boolean bfZone = ClientRpgState.jjk(StatSyncS2C.FLAG_BLACK_FLASH_ZONE);
+        boolean bfPrimed = ClientRpgState.jjk(StatSyncS2C.FLAG_BLACK_FLASH_PRIMED);
+        float pulse = 0.5f + 0.5f * (float) Math.sin(mc.level.getGameTime() * 0.18);
 
-        // Stack the bars upward, well above the vanilla armour/hunger rows.
         int manaY = sh - 50;
         int healthY = manaY - (BAR_H + 3);
         int ceY = hasCe ? healthY - (BAR_H + 3) : healthY;
-        int chipsY = (hasCe ? ceY : healthY) - 12;
+        int auraY = (hasCe ? ceY : healthY) - 10;
+        int chipsY = auraY - 12;
 
         if (hasCe) {
             float ceFrac = ClientRpgState.cursedEnergy / Math.max(1f, ClientRpgState.maxCursedEnergy);
-            drawBar(g, font, barX, ceY, ceFrac, 0xFF15071F, 0xFFCB7BFF, 0xFF7A26C9,
-                    "\u2620", 0xFFD9A6FF, (int) ClientRpgState.cursedEnergy + "/" + (int) ClientRpgState.maxCursedEnergy);
+            int ceTop = bfZone ? HudGlass.lerpColor(0xFFCB7BFF, 0xFFFFFFFF, pulse * 0.35f) : 0xFFCB7BFF;
+            int ceBot = bfZone ? HudGlass.lerpColor(0xFF7A26C9, 0xFFE040FB, pulse * 0.25f) : 0xFF7A26C9;
+            HudGlass.bar(g, font, barX, ceY, BAR_W, BAR_H, ceFrac, 0xFF15071F, ceTop, ceBot,
+                    "\u2620", bfZone ? 0xFFFFFFFF : 0xFFD9A6FF,
+                    (int) ClientRpgState.cursedEnergy + "/" + (int) ClientRpgState.maxCursedEnergy);
+            if (ClientRpgState.sorcererGrade > 0) {
+                String grade = com.political.politics.DataManager.gradeLabel(ClientRpgState.sorcererGrade);
+                g.text(font, grade, barX + BAR_W + 4, ceY - 1, 0xFFC065FF, true);
+            }
         }
-        drawBar(g, font, barX, healthY, hp / maxHp, 0xFF2A0A0A, 0xFFFF6B6B, 0xFFB22222,
+        HudGlass.bar(g, font, barX, healthY, BAR_W, BAR_H, hp / maxHp, 0xFF2A0A0A, 0xFFFF6B6B, 0xFFB22222,
                 "\u2764", 0xFFFF8A8A, (int) Math.ceil(hp) + "/" + (int) maxHp);
-        drawBar(g, font, barX, manaY, ClientRpgState.mana / Math.max(1f, ClientRpgState.maxMana),
+        HudGlass.bar(g, font, barX, manaY, BAR_W, BAR_H,
+                ClientRpgState.mana / Math.max(1f, ClientRpgState.maxMana),
                 0xFF06212F, 0xFF5AD2FF, 0xFF1C7FD0,
                 "\u2742", 0xFF9CE6FF, (int) ClientRpgState.mana + "/" + (int) ClientRpgState.maxMana);
 
+        drawJjkAuras(g, font, center, auraY, bfZone, bfPrimed, pulse);
         drawStatChips(g, font, center, chipsY);
+    }
+
+    /** Live JJK state pills — Black Flash zone, primed window, RCT, flow, domain wards, vows. */
+    private static void drawJjkAuras(GuiGraphicsExtractor g, net.minecraft.client.gui.Font font,
+                                     int center, int y, boolean bfZone, boolean bfPrimed, float pulse) {
+        java.util.List<String> tags = new java.util.ArrayList<>();
+        java.util.List<Integer> colors = new java.util.ArrayList<>();
+        if (bfZone) { tags.add("\u26a1 ZONE"); colors.add(0xFFE040FB); }
+        else if (bfPrimed) { tags.add("\u26a1 PRIMED"); colors.add(0xFFCB7BFF); }
+        if (ClientRpgState.jjk(StatSyncS2C.FLAG_RCT)) { tags.add("RCT"); colors.add(0xFF7CE0A0); }
+        if (ClientRpgState.jjk(StatSyncS2C.FLAG_FLOW)) { tags.add("FLOW"); colors.add(0xFFC065FF); }
+        if (ClientRpgState.jjk(StatSyncS2C.FLAG_SIMPLE_DOMAIN)) { tags.add("SD"); colors.add(0xFF6FB7FF); }
+        if (ClientRpgState.jjk(StatSyncS2C.FLAG_FALLING_BLOSSOM)) { tags.add("FB"); colors.add(0xFFFFA857); }
+        if (ClientRpgState.jjk(StatSyncS2C.FLAG_BINDING_VOW)) { tags.add("VOW"); colors.add(0xFFFFD24A); }
+        if (tags.isEmpty()) return;
+
+        int pad = 4;
+        int total = pad;
+        for (String t : tags) total += font.width(t) + pad;
+        int x = center - total / 2;
+        int glow = bfZone ? (int) (0x30 + pulse * 0x20) : 0x28;
+        HudGlass.panel(g, x - 2, y - 1, total + 2, 10);
+        HudGlass.accentTop(g, x - 2, y - 1, total + 2, bfZone ? 0xFFE040FB : 0xFFC065FF);
+        int cx = x + pad;
+        for (int i = 0; i < tags.size(); i++) {
+            g.text(font, tags.get(i), cx, y, colors.get(i), true);
+            cx += font.width(tags.get(i)) + pad;
+        }
     }
 
     /** A sleek labelled bar with gradient fill, glossy top, an icon to the left and a centered value. */
     private static void drawBar(GuiGraphicsExtractor g, net.minecraft.client.gui.Font font,
                                 int x, int y, float frac, int track, int fillTop, int fillBot,
                                 String icon, int iconColor, String value) {
-        frac = Math.max(0f, Math.min(1f, frac));
-        g.fill(x - 1, y - 1, x + BAR_W + 1, y + BAR_H + 1, 0xD0000000);
-        g.fill(x, y, x + BAR_W, y + BAR_H, track);
-        int filled = (int) (BAR_W * frac);
-        if (filled > 0) {
-            g.fillGradient(x, y, x + filled, y + BAR_H, fillTop, fillBot);
-            g.fill(x, y, x + filled, y + 1, 0x44FFFFFF);
-        }
-        g.text(font, icon, x - 10, y - 1, iconColor, true);
-        int vw = font.width(value);
-        g.text(font, value, x + (BAR_W - vw) / 2, y - 1, 0xFFFFFFFF, true);
+        HudGlass.bar(g, font, x, y, BAR_W, BAR_H, frac, track, fillTop, fillBot, icon, iconColor, value);
+    }
+
+    /** @deprecated use {@link HudGlass#lerpColor} */
+    private static int lerpColor(int from, int to, float t) {
+        return HudGlass.lerpColor(from, to, t);
     }
 
     /** A tidy, centered row of stat chips with a subtle backing pill. */
@@ -198,8 +261,8 @@ public class PoliticalClient implements ClientModInitializer {
         for (String c : chips) total += font.width(c) + pad;
         total += pad;
         int x = center - total / 2;
-        g.fill(x - 2, y - 2, x + total, y + 10, 0xB0050A12);
-        g.fill(x - 2, y - 2, x + total, y - 1, 0xFF5AA9FF);
+        HudGlass.panel(g, x - 2, y - 2, total + 2, 12);
+        HudGlass.accentTopDefault(g, x - 2, y - 2, total + 2);
         int cx = x + pad;
         for (int i = 0; i < chips.size(); i++) {
             g.text(font, chips.get(i), cx, y, colors.get(i)[0], true);

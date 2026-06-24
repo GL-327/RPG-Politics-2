@@ -64,10 +64,11 @@ public final class DomainManager {
         if (ACTIVE.containsKey(player.getUUID())) {
             return fail("Your domain is already open.");
         }
-        if (!CursedEnergyManager.has(player, domain.ceCost())) {
+        double cost = domain.ceCost() * com.political.curse.rules.JjkRules.ceCostMultiplier(player);
+        if (!CursedEnergyManager.has(player, cost)) {
             return fail("Not enough cursed energy to expand " + domain.displayName() + ".");
         }
-        CursedEnergyManager.spend(player, domain.ceCost());
+        CursedEnergyManager.spend(player, cost);
 
         ServerLevel level = player.level();
         Vec3 center = player.position();
@@ -78,6 +79,9 @@ public final class DomainManager {
         Active active = new Active(player, domain, center);
         ACTIVE.put(player.getUUID(), active);
         broadcast(active, domain.durationTicks());
+        // Domain clash: an overlapping rival domain of equal-or-lower grade is destabilised, its barrier
+        // burning away faster as the two sure-hit spaces grind against each other.
+        resolveClash(active);
         return Component.literal("Domain Expansion \u2014 " + domain.displayName())
                 .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD);
     }
@@ -110,6 +114,15 @@ public final class DomainManager {
                 for (LivingEntity victim : level.getEntitiesOfClass(LivingEntity.class, box,
                         e -> e != caster && e.isAlive() && e.distanceToSqr(a.center) <= a.domain.radius() * a.domain.radius())) {
                     if (victim instanceof ServerPlayer sp && (sp.isCreative() || sp.isSpectator())) continue;
+                    // Simple Domain / Falling Blossom Emotion neutralise the guaranteed-hit effect: a warded
+                    // sorcerer takes no sure-hit, only a flicker of feedback as the domain claws at the ward.
+                    if (com.political.curse.rules.JjkRules.wardsAgainstDomain(victim)) {
+                        if (victim instanceof ServerPlayer warded && a.age % 20 == 0) {
+                            warded.sendSystemMessage(Component.literal("Your domain ward holds against " + a.domain.displayName() + ".")
+                                    .withStyle(ChatFormatting.AQUA), true);
+                        }
+                        continue;
+                    }
                     try {
                         a.domain.effect().apply(level, caster, victim, a.age);
                     } catch (Exception ignored) {
@@ -125,6 +138,32 @@ public final class DomainManager {
                         .withStyle(ChatFormatting.DARK_GRAY), true);
             } else if (a.age % 10 == 0) {
                 broadcast(a, a.ticksLeft);
+            }
+        }
+    }
+
+    /**
+     * When a new domain opens overlapping an existing one, the two sure-hit spaces clash. The newcomer of
+     * a strictly higher grade refines and shatters the weaker domain instantly; otherwise both bleed
+     * duration, the loser losing more (a stalemate that favours the stronger technique).
+     */
+    private static void resolveClash(Active opened) {
+        for (Active other : ACTIVE.values()) {
+            if (other == opened || other.caster.getUUID().equals(opened.caster.getUUID())) continue;
+            double reach = opened.domain.radius() + other.domain.radius();
+            if (opened.center.distanceToSqr(other.center) > reach * reach) continue;
+
+            int openGrade = opened.domain.requiredGrade();
+            int otherGrade = other.domain.requiredGrade();
+            if (openGrade > otherGrade) {
+                other.ticksLeft = 0; // refined and shattered outright
+                opened.caster.sendSystemMessage(Component.literal("Your domain overwhelms a rival's and shatters it!")
+                        .withStyle(ChatFormatting.DARK_PURPLE), true);
+            } else {
+                other.ticksLeft = Math.max(1, other.ticksLeft - 40);
+                opened.ticksLeft = Math.max(1, opened.ticksLeft - (otherGrade > openGrade ? 80 : 60));
+                opened.caster.sendSystemMessage(Component.literal("Domains clash \u2014 both barriers strain and erode.")
+                        .withStyle(ChatFormatting.GRAY), true);
             }
         }
     }

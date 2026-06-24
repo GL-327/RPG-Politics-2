@@ -33,21 +33,30 @@ public final class SkyblockTooltipBuilder {
         ItemStats.Kind kind = ItemStats.kindOf(stack.getItem());
 
         int gs = gearScore(s);
-        int total = totalGearScore(s, rarity);
-        lines.add(Component.literal("Gear Score: ").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(String.valueOf(gs)).withStyle(ChatFormatting.LIGHT_PURPLE))
-                .append(Component.literal(" (" + total + ")").withStyle(ChatFormatting.DARK_GRAY)));
+        lines.add(StatDisplay.gearScoreLine(gs));
 
-        skyStat(lines, "Damage", s.damage, totalScale(s.damage, rarity), "", ChatFormatting.RED);
-        skyStat(lines, "Strength", s.strength, totalScale(s.strength, rarity), "", ChatFormatting.RED);
-        if (s.defense > 0) skyStat(lines, "Defense", s.defense, totalScale(s.defense, rarity), "", ChatFormatting.GREEN);
-        if (s.health > 0) skyStat(lines, "Health", s.health, totalScale(s.health, rarity), "", ChatFormatting.RED);
-        if (s.critChance > 0) skyStat(lines, "Crit Chance", s.critChance, s.critChance, "%", ChatFormatting.RED);
-        if (s.critDamage > 0) skyStat(lines, "Crit Damage", s.critDamage, totalScale(s.critDamage, rarity), "%", ChatFormatting.RED);
-        if (s.ferocity > 0) skyStat(lines, "Ferocity", s.ferocity, totalScale(s.ferocity, rarity), "", ChatFormatting.RED);
-        if (s.speed > 0) skyStat(lines, "Speed", s.speed, totalScale(s.speed, rarity), "", ChatFormatting.WHITE);
-        if (s.intelligence > 0) skyStat(lines, "Mana", s.intelligence, totalScale(s.intelligence, rarity), "", ChatFormatting.AQUA);
-        if (s.cursed > 0) skyStat(lines, "Cursed Energy", s.cursed, totalScale(s.cursed, rarity), "", ChatFormatting.DARK_PURPLE);
+        StatDisplay.line(lines, "Damage", s.damage, "", ChatFormatting.RED);
+        StatDisplay.line(lines, "Strength", s.strength, "", ChatFormatting.RED);
+        StatDisplay.line(lines, "Defense", s.defense, "", ChatFormatting.GREEN);
+        StatDisplay.line(lines, "Health", s.health, "", ChatFormatting.RED);
+        StatDisplay.line(lines, "Crit Chance", s.critChance, "%", ChatFormatting.RED);
+        StatDisplay.line(lines, "Crit Damage", s.critDamage, "%", ChatFormatting.RED);
+        StatDisplay.line(lines, "Ferocity", s.ferocity, "", ChatFormatting.RED);
+        StatDisplay.line(lines, "Speed", s.speed, "", ChatFormatting.WHITE);
+        StatDisplay.line(lines, "Mana", s.intelligence, "", ChatFormatting.AQUA);
+        StatDisplay.line(lines, "Cursed Energy", s.cursed, "", ChatFormatting.DARK_PURPLE);
+
+        // A "Cursed" prefix shows its bound cursed technique (right-click), styled in cursed purple.
+        com.political.power.Power cursed = PrefixAbilities.cursedPowerOf(stack);
+        if (cursed != null) {
+            lines.add(Component.empty());
+            lines.add(Component.literal("Cursed Technique: ").withStyle(ChatFormatting.DARK_PURPLE)
+                    .append(Component.literal(cursed.displayName).withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD))
+                    .append(Component.literal("  RIGHT CLICK").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD)));
+            lines.add(Component.literal(cursed.description).withStyle(ChatFormatting.GRAY));
+            lines.add(Component.literal("Cursed Energy: ").withStyle(ChatFormatting.DARK_GRAY)
+                    .append(Component.literal(String.valueOf(cursed.energyCost)).withStyle(ChatFormatting.DARK_PURPLE)));
+        }
 
         ItemActiveAbility active = resolveActive(stack);
         if (active != null) {
@@ -87,6 +96,9 @@ public final class SkyblockTooltipBuilder {
     }
 
     private static ItemActiveAbility resolveActive(ItemStack stack) {
+        // A "Unique" prefix's bound ability takes precedence, then the item's own active ability.
+        ItemActiveAbility prefix = PrefixAbilities.uniqueAbilityOf(stack);
+        if (prefix != null) return prefix;
         String id = RpgItems.idOf(stack);
         if (id != null) return ItemActiveAbility.forItem(id);
         return null;
@@ -94,21 +106,6 @@ public final class SkyblockTooltipBuilder {
 
     private static double totalScale(double base, Rarity rarity) {
         return base * rarity.mult * 1.8;
-    }
-
-    private static void skyStat(List<Component> lines, String label, double base, double total,
-                                String suffix, ChatFormatting color) {
-        if (base == 0) return;
-        MutableComponent line = Component.literal(label + ": ").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("+" + fmt(base) + suffix).withStyle(color));
-        if (total > base + 0.01) {
-            line.append(Component.literal(" (+" + fmt(total) + suffix + ")").withStyle(ChatFormatting.DARK_GRAY));
-        }
-        lines.add(line);
-    }
-
-    private static String fmt(double v) {
-        return v == (int) v ? String.valueOf((int) v) : String.format(Locale.ROOT, "%.2f", v);
     }
 
     private static String rarityFooter(Rarity rarity, ItemStats.Kind kind) {

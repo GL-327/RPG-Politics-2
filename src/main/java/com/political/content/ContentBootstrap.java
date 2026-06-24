@@ -38,6 +38,7 @@ public final class ContentBootstrap {
         com.political.expansion2.accessories.AbilityAccessories2.register();
         com.political.content.creatures.ContentCreatures.register();
         com.political.world.biome.ContentBiomes.register();
+        com.political.world.biome.BundledBiomePacks.logLoaded();
 
         RpgPoliticsMod.LOGGER.info("Content workstream initialized: {} ability accessories, {} creatures, biome features.",
                 com.political.expansion2.accessories.AbilityAccessories2.items().size(),

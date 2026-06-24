@@ -57,6 +57,14 @@ public final class ArchetypeModels {
         ModelLayerRegistry.registerModelLayer(LAYERS.get(Archetype.CLOAKED_SPIRIT), CloakedModel::createLayer);
         ModelLayerRegistry.registerModelLayer(LAYERS.get(Archetype.BOSS_COLOSSUS), ColossusModel::createLayer);
         ModelLayerRegistry.registerModelLayer(LAYERS.get(Archetype.TINY_SWARM), SwarmModel::createLayer);
+        ModelLayerRegistry.registerModelLayer(LAYERS.get(Archetype.AMORPHOUS_CURSE), AmorphousModel::createLayer);
+        ModelLayerRegistry.registerModelLayer(LAYERS.get(Archetype.SPECIAL_GRADE), SpecialGradeModel::createLayer);
+        ModelLayerRegistry.registerModelLayer(LAYERS.get(Archetype.HERO_CAPED), HeroModel::createLayer);
+        ModelLayerRegistry.registerModelLayer(LAYERS.get(Archetype.ARMORED_KNIGHT), KnightModel::createLayer);
+        ModelLayerRegistry.registerModelLayer(LAYERS.get(Archetype.UNDEAD_HUSK), UndeadModel::createLayer);
+        ModelLayerRegistry.registerModelLayer(LAYERS.get(Archetype.DEMON_FIEND), DemonModel::createLayer);
+        ModelLayerRegistry.registerModelLayer(LAYERS.get(Archetype.CONSTRUCT_GOLEM), ConstructModel::createLayer);
+        ModelLayerRegistry.registerModelLayer(LAYERS.get(Archetype.ELEMENTAL_BEING), ElementalModel::createLayer);
     }
 
     /** Bakes the archetype's layer in the given render context and wraps it in the matching model. */
@@ -78,6 +86,14 @@ public final class ArchetypeModels {
             case CLOAKED_SPIRIT -> new CloakedModel<>(root);
             case BOSS_COLOSSUS -> new ColossusModel<>(root);
             case TINY_SWARM -> new SwarmModel<>(root);
+            case AMORPHOUS_CURSE -> new AmorphousModel<>(root);
+            case SPECIAL_GRADE -> new SpecialGradeModel<>(root);
+            case HERO_CAPED -> new HeroModel<>(root);
+            case ARMORED_KNIGHT -> new KnightModel<>(root);
+            case UNDEAD_HUSK -> new UndeadModel<>(root);
+            case DEMON_FIEND -> new DemonModel<>(root);
+            case CONSTRUCT_GOLEM -> new ConstructModel<>(root);
+            case ELEMENTAL_BEING -> new ElementalModel<>(root);
         };
     }
 }

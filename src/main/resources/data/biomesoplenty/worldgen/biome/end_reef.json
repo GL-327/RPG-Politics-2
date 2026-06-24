@@ -1,0 +1,71 @@
+{
+    "attributes": {
+        "minecraft:visual/ambient_particles": [
+            {
+                "particle": {},
+                "probability": 0.001
+            }
+        ],
+        "minecraft:visual/water_fog_color": "#434949"
+    },
+    "carvers": [],
+    "downfall": 0.5,
+    "effects": {
+        "foliage_color": "#e5fffc",
+        "grass_color": "#e5fffc",
+        "water_color": "#e5fffc"
+    },
+    "features": [
+        [],
+        [
+            "minecraft:lake_lava_underground"
+        ],
+        [],
+        [
+            "minecraft:monster_room",
+            "minecraft:monster_room_deep"
+        ],
+        [],
+        [],
+        [
+            "minecraft:ore_dirt",
+            "minecraft:ore_gravel",
+            "minecraft:ore_coal_upper",
+            "minecraft:ore_coal_lower",
+            "minecraft:ore_iron_upper",
+            "minecraft:ore_iron_middle",
+            "minecraft:ore_redstone",
+            "minecraft:ore_lapis",
+            "minecraft:ore_copper",
+            "minecraft:ore_gold",
+            "minecraft:ore_diamond"
+        ],
+        [],
+        [
+            "minecraft:spring_water",
+            "minecraft:spring_lava"
+        ],
+        [
+            "minecraft:trees_plains",
+            "minecraft:flower_plains",
+            "minecraft:patch_sunflower",
+            "minecraft:patch_pumpkin",
+            "minecraft:patch_grass_plain",
+            "minecraft:patch_tall_grass"
+        ],
+        []
+    ],
+    "has_precipitation": false,
+    "spawn_costs": {},
+    "spawners": {
+        "ambient": [],
+        "axolotls": [],
+        "creature": [],
+        "misc": [],
+        "monster": [],
+        "underground_water_creature": [],
+        "water_ambient": [],
+        "water_creature": []
+    },
+    "temperature": 0.5
+}

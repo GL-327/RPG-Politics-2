@@ -117,6 +117,8 @@ public class PoliticsData {
     public Map<String, String> cursedTrait = new HashMap<>();
     // Current cursed energy per player, persisted so it survives relog (max comes from traits/gear).
     public Map<String, Double> cursedEnergyStored = new HashMap<>();
+    // Binding Vows currently sworn per player (BindingVow ids). Additive; old saves default to none.
+    public Map<String, List<String>> activeBindingVows = new HashMap<>();
 
     // --- Tunable config (editable via the Developer Menu) ---
     public double curseNaturalSpawnChance = 0.04;   // chance a hostile manifests as a curse
@@ -144,6 +146,12 @@ public class PoliticsData {
     public int settlementGridChunks = 48;           // size of each candidate grid cell, in chunks
     public double settlementSpawnChance = 0.55;      // chance a suitable grid cell receives a settlement
     public long settlementTermMillis = 7L * 24 * 60 * 60 * 1000; // local term length
+
+    // --- Clustered villages: each generated "settlement" is a tight knot of 4-6 villages ---
+    public boolean villageClusterEnabled = true;    // when scattering, build a cluster of villages instead of one
+    public int villageClusterMin = 4;               // smallest cluster (inclusive)
+    public int villageClusterMax = 5;               // largest cluster (inclusive); range 4-6 is sensible
+    public int villageClusterRadius = 34;           // blocks from the cluster heart to each member village
 
     // ========================================================================
     // Expansion 3: Civics (jobs, offices, laws, justice, factions, treasury fund)

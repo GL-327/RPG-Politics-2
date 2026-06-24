@@ -19,7 +19,11 @@ public enum DevConfigKey {
     TAX_PERCENT("Tax Percent", false, 1f, 0f, 50f),
     SETTLEMENT_GEN("Settlement Scatter", true, 1, 0, 1),
     SETTLEMENT_GRID("Settlement Grid (chunks)", false, 4f, 16f, 256f),
-    SETTLEMENT_CHANCE("Settlement Spawn Chance", false, 0.05f, 0f, 1f);
+    SETTLEMENT_CHANCE("Settlement Spawn Chance", false, 0.05f, 0f, 1f),
+    VILLAGE_CLUSTER("Village Clustering", true, 1, 0, 1),
+    VILLAGE_CLUSTER_MIN("Cluster Min Villages", false, 1f, 1f, 8f),
+    VILLAGE_CLUSTER_MAX("Cluster Max Villages", false, 1f, 1f, 8f),
+    VILLAGE_CLUSTER_RADIUS("Cluster Radius", false, 2f, 16f, 96f);
 
     public final String label;
     public final boolean isBool;

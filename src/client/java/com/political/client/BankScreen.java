@@ -72,7 +72,7 @@ public class BankScreen extends RpgScreen {
     @Override
     public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float pt) {
         super.extractBackground(g, mouseX, mouseY, pt);
-        g.fill(0, 0, width, height, COL_DIM);
+        glassBackdrop(g);
         panel(g, left, top, PANEL_W, PANEL_H);
         headerBar(g, left, top, PANEL_W, 22);
         inset(g, left + 12, top + 28, PANEL_W - 24, 66);

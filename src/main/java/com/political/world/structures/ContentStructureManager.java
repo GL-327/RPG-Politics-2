@@ -57,6 +57,7 @@ public final class ContentStructureManager {
     private ContentStructureManager() {}
 
     public static void tick(MinecraftServer server) {
+        if (!com.political.config.PoliticalConfig.get().contentProceduralStructuresEnabled) return;
         drainPending();
         if (!PENDING.isEmpty()) return;
 

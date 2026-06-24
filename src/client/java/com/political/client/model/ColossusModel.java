@@ -54,14 +54,29 @@ public class ColossusModel<S extends HumanoidRenderState> extends HumanoidModel<
     @Override
     public void setupAnim(S state) {
         super.setupAnim(state);
-        // Wide, heavy power stance with arms held away from the bulk.
-        this.rightArm.zRot += 0.28f;
-        this.leftArm.zRot -= 0.28f;
-        // Slow, ponderous sway.
-        float sway = Mth.sin(state.ageInTicks * 0.04f) * 0.05f;
+        float atk = Anim.attack(state);
+        int phase = Anim.phase(state);
+        boolean enraged = phase >= 2;
+
+        // Wide, heavy power stance with arms held away from the bulk; wider and hunched when enraged.
+        this.rightArm.zRot += 0.28f + (enraged ? 0.12f : 0.0f);
+        this.leftArm.zRot -= 0.28f + (enraged ? 0.12f : 0.0f);
+        if (enraged) this.body.xRot += 0.12f;
+
+        // Slow, ponderous sway — faster and heavier in the enraged phase.
+        float speed = enraged ? 0.09f : 0.04f;
+        float amp = enraged ? 0.09f : 0.05f;
+        float sway = Mth.sin(state.ageInTicks * speed) * amp;
         this.body.zRot = sway;
         this.head.zRot = -sway * 0.5f;
         this.leftPauldron.zRot = 0.4f + sway;
         this.rightPauldron.zRot = -0.4f + sway;
+
+        // Heavy two-fisted overhead smash on attack.
+        if (atk > 0f) {
+            float smash = Mth.sin(atk * (float) Math.PI);
+            this.rightArm.xRot = -2.0f * smash;
+            this.leftArm.xRot = -2.0f * smash;
+        }
     }
 }

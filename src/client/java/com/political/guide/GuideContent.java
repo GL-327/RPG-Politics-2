@@ -47,6 +47,7 @@ public final class GuideContent {
         out.add(cursedEnergyAndGrades());
         out.add(powersAndTechniques());
         out.add(compoundVAndFlight());
+        out.add(bindingVowsAndSkyblock());
         out.add(weaponsAndRarities());
         out.add(armorAndSetBonuses());
         out.add(accessories());
@@ -201,6 +202,41 @@ public final class GuideContent {
                 + "jump to ascend and steer with your look direction; your throttle ramps up the longer you fly. "
                 + "Flight Mastery (passive) makes that ramp faster.");
         return ch("Compound V & Flight", b);
+    }
+
+    // ------------------------------------------------------------------
+    // 4b. Binding Vows & Skyblock Stats
+    // ------------------------------------------------------------------
+
+    private static Chapter bindingVowsAndSkyblock() {
+        B b = new B();
+        b.title("Binding Vows & Skyblock Stats");
+        b.body("Every item and every sorcerer now runs on a unified Skyblock stat sheet. "
+                + "Defense reduces incoming damage through the same EHP curve as Hypixel Skyblock; "
+                + "Strength scales melee both additively and multiplicatively; ferocity adds full-damage extra strikes.");
+        b.gap();
+        b.head("Binding Vows (kraku)");
+        b.bullet("Revealed Technique \u2014 lay your technique bare for massive output at higher CE cost.");
+        b.bullet("Overtime \u2014 cheaper, harder hits paid for with a steady vitality toll.");
+        b.bullet("Throughput Vow \u2014 forsake defence for raw force.");
+        b.bullet("Sacrificial Pact \u2014 Special Grade only. Overwhelming power, grievous HP cost.");
+        b.body("Toggle vows with /cursed vows and /cursed vow <id>. They stack \u2014 swear carefully.");
+        b.gap();
+        b.head("Live JJK auras");
+        b.bullet("ZONE / PRIMED \u2014 Black Flash distortion window (melee crit surge).");
+        b.bullet("RCT \u2014 Reverse Cursed Technique healing toggle (/cursed rct).");
+        b.bullet("FLOW \u2014 cursed-energy reinforcement (/cursed flow).");
+        b.bullet("SD / FB \u2014 Simple Domain and Falling Blossom ward against sure-hit domains.");
+        b.gap();
+        b.head("Item prefixes");
+        b.bullet("Cursed \u2014 grants a cursed-technique ability (right-click channels CE).");
+        b.bullet("Unique \u2014 grants a normal active ability.");
+        b.bullet("Plain items carry stats only \u2014 not every item has an ability.");
+        b.gap();
+        b.head("Staff editor");
+        b.bullet("/sbs or /skyblockstats \u2014 open the Skyblock stat editor for the held item.");
+        b.note("Gamemasters only. Edit rarity, every stat, prefix, and bound ability in one sleek panel.");
+        return ch("Binding Vows & Stats", b);
     }
 
     // ------------------------------------------------------------------
@@ -430,7 +466,8 @@ public final class GuideContent {
         b.bullet("/powers \u2014 open the Powers & Serums menu (also the K key).");
         b.bullet("/power list | known | select <id> | use | info <id>");
         b.bullet("/v compound | temp | v1 | anti \u2014 drink a serum.");
-        b.bullet("/cursed awaken | info | learn <id> | forge");
+        b.bullet("/cursed awaken | info | learn <id> | forge | rct | flow | vows | vow <id>");
+        b.bullet("/sbs or /skyblockstats \u2014 Skyblock stat editor (staff).");
         b.bullet("/power2 list | learn <id> \u2014 Expansion II abilities.");
         b.gap();
         b.head("Dungeons & Mobs");

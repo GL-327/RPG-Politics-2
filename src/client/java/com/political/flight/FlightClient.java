@@ -43,8 +43,8 @@ public final class FlightClient {
         flightToggleKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.politicalserver.flight_toggle",
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_G,
-                KeyMapping.Category.MISC));
+                GLFW.GLFW_KEY_F,
+                com.political.client.PoliticalKeyCategories.RPG));
 
         ClientTickEvents.END_CLIENT_TICK.register(FlightClient::clientTick);
     }

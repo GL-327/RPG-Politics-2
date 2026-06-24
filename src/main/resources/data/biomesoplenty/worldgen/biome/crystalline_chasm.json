@@ -1,0 +1,93 @@
+{
+    "attributes": {
+        "minecraft:audio/ambient_sounds": {
+            "loop": "minecraft:ambient.crimson_forest.loop",
+            "mood": {
+                "block_search_extent": 8,
+                "offset": 2,
+                "sound": "minecraft:ambient.basalt_deltas.mood",
+                "tick_delay": 6000
+            }
+        },
+        "minecraft:audio/background_music": {
+            "default": {
+                "max_delay": 24000,
+                "min_delay": 12000
+            }
+        },
+        "minecraft:visual/ambient_particles": [
+            {
+                "particle": {
+                    "type": "minecraft:electric_spark"
+                },
+                "probability": 0.0008925
+            }
+        ],
+        "minecraft:visual/fog_color": "#59002c"
+    },
+    "carvers": "minecraft:nether_cave",
+    "downfall": 0,
+    "effects": {
+        "water_color": "#3f76e4"
+    },
+    "features": [
+        [],
+        [
+            "minecraft:lake_lava_underground"
+        ],
+        [],
+        [
+            "minecraft:monster_room",
+            "minecraft:monster_room_deep"
+        ],
+        [],
+        [],
+        [
+            "minecraft:ore_dirt",
+            "minecraft:ore_gravel",
+            "minecraft:ore_coal_upper",
+            "minecraft:ore_coal_lower",
+            "minecraft:ore_iron_upper",
+            "minecraft:ore_iron_middle",
+            "minecraft:ore_redstone",
+            "minecraft:ore_lapis",
+            "minecraft:ore_copper",
+            "minecraft:ore_gold",
+            "minecraft:ore_diamond"
+        ],
+        [],
+        [
+            "minecraft:spring_water",
+            "minecraft:spring_lava"
+        ],
+        [
+            "minecraft:trees_plains",
+            "minecraft:flower_plains",
+            "minecraft:patch_sunflower",
+            "minecraft:patch_pumpkin",
+            "minecraft:patch_grass_plain",
+            "minecraft:patch_tall_grass"
+        ],
+        []
+    ],
+    "has_precipitation": false,
+    "spawn_costs": {},
+    "spawners": {
+        "ambient": [],
+        "axolotls": [],
+        "creature": [
+            {
+                "type": "minecraft:strider",
+                "maxCount": 2,
+                "minCount": 1,
+                "weight": 60
+            }
+        ],
+        "misc": [],
+        "monster": [],
+        "underground_water_creature": [],
+        "water_ambient": [],
+        "water_creature": []
+    },
+    "temperature": 2
+}

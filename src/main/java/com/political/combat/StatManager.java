@@ -147,6 +147,14 @@ public final class StatManager {
         if (grade > 0) {
             s.maxCursedEnergy = Math.max(s.maxCursedEnergy, SorcererGrade.maxCursedEnergyFor(grade));
         }
+        String presetId = com.political.curse.limb.LimbStateManager.presetId(player);
+        s.maxCursedEnergy += com.political.curse.jjk.JjkPresetRegistry.bonusMaxCe(presetId);
+        s.cursedRegenMultiplier *= com.political.curse.jjk.JjkPresetRegistry.regenMultiplier(presetId);
+        // Sworn binding vows levy a permanent toll on the body while in effect (never below 1 heart worth).
+        double vowHealthDelta = com.political.curse.rules.JjkRules.flatHealthDelta(player.getStringUUID());
+        if (vowHealthDelta != 0) {
+            s.maxHealth = Math.max(VANILLA_BASE_HEALTH, s.maxHealth + vowHealthDelta);
+        }
         return s;
     }
 
@@ -177,7 +185,9 @@ public final class StatManager {
         s.defense = Math.min(s.defense, cfg.maxPlayerDefense);
 
         applyModifier(player.getAttribute(Attributes.MAX_HEALTH), RPG_HEALTH_ID, s.maxHealth - VANILLA_BASE_HEALTH, AttributeModifier.Operation.ADD_VALUE);
-        applyModifier(player.getAttribute(Attributes.ARMOR), RPG_DEFENSE_ID, s.defense * 0.15, AttributeModifier.Operation.ADD_VALUE);
+        // Skyblock defense reduces damage by defense/(defense+K). Vanilla armour gives ~4% per point
+        // (capped at 80% / 20 points), so armour = 25 * reduction reproduces that EHP curve exactly.
+        applyModifier(player.getAttribute(Attributes.ARMOR), RPG_DEFENSE_ID, armorFromDefense(s.defense, cfg.defenseEhpConstant), AttributeModifier.Operation.ADD_VALUE);
         // Strength feeds the Skyblock damage formula, not vanilla attack damage.
         applyModifier(player.getAttribute(Attributes.ATTACK_DAMAGE), RPG_STRENGTH_ID, 0, AttributeModifier.Operation.ADD_VALUE);
         applyModifier(player.getAttribute(Attributes.MOVEMENT_SPEED), RPG_SPEED_ID, s.bonusSpeedPct + s.speed * 0.005, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
@@ -192,6 +202,17 @@ public final class StatManager {
         sync(player);
     }
 
+    /**
+     * Converts Skyblock Defense into vanilla armour points so incoming damage is reduced by
+     * {@code defense/(defense+K)} (the Skyblock EHP curve) without any mixin on the hurt path.
+     * Vanilla armour reduces by 4% per point up to 80% at 20 points, so {@code armour = 25 * r}.
+     */
+    public static double armorFromDefense(double defense, double k) {
+        if (defense <= 0) return 0.0;
+        double reduction = defense / (defense + k); // 0..1
+        return Math.min(20.0, 25.0 * reduction);
+    }
+
     private static void applyModifier(AttributeInstance instance, Identifier id, double amount, AttributeModifier.Operation op) {
         if (instance == null) return;
         instance.removeModifier(id);
@@ -202,11 +223,14 @@ public final class StatManager {
 
     public static void sync(ServerPlayer player) {
         RpgStats s = get(player);
+        String uuid = player.getStringUUID();
         ModNetworking.send(player, new StatSyncS2C(
                 (float) s.defense, (float) s.strength,
                 (float) s.maxMana, (float) getMana(player),
                 (float) s.maxCursedEnergy, (float) getCursedEnergy(player),
-                (float) s.critChance, (float) s.ferocity, (float) s.speed));
+                (float) s.critChance, (float) s.ferocity, (float) s.speed,
+                DataManager.sorcererGrade(uuid),
+                com.political.curse.rules.JjkRules.packHudFlags(player)));
     }
 
     public static void tickAll(MinecraftServer server) {

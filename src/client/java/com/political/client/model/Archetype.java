@@ -32,7 +32,25 @@ public enum Archetype {
     /** Oversized, crowned, heavily-built boss silhouette — slow, imposing, glow-eligible. */
     BOSS_COLOSSUS("colossus"),
     /** Tiny big-headed antennaed swarm body with fast, jittery motion — motes, fleas, gnats. */
-    TINY_SWARM("swarm");
+    TINY_SWARM("swarm"),
+
+    // ───────────────────────── Source-faithful creature families (added) ─────────────────────────
+    /** Boneless, many-mouthed/eyed blob curse on a writhing mass — JJK special-grade amorphous. */
+    AMORPHOUS_CURSE("amorphous"),
+    /** Tall horned humanoid curse with a head-crest, extra eyes and clawed hands — JJK special grade. */
+    SPECIAL_GRADE("special"),
+    /** Heroic, caped super-human with a chest emblem and flight-ready lean — Compound V / Viltrumite. */
+    HERO_CAPED("hero"),
+    /** Plated, crested, tasseted knight with a weapon-ready stance — guards, paladins, men-at-arms. */
+    ARMORED_KNIGHT("knight"),
+    /** Emaciated skeletal husk with ribcage, dropped jaw and a broken shamble — undead. */
+    UNDEAD_HUSK("undead"),
+    /** Horned, bat-winged, tailed fiend with taloned swipes — demons, devils, hellspawn. */
+    DEMON_FIEND("demon"),
+    /** Blocky, core-lit golem with slab arms and a stomping slam — constructs, automatons, statues. */
+    CONSTRUCT_GOLEM("construct"),
+    /** Floating core ringed by orbiting shards with wisp-arms — flame / frost / storm elementals. */
+    ELEMENTAL_BEING("elemental");
 
     private final String id;
 

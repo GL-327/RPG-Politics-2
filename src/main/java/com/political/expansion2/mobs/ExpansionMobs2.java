@@ -120,6 +120,10 @@ public final class ExpansionMobs2 {
             SpawnPlacements.register(spec.type, SpawnPlacementTypes.ON_GROUND,
                     Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ExpansionMob2::checkSpawnRules);
             if (spec.spawnWeight > 0) {
+                if (spec.role.isBossLike() && !com.political.config.PoliticalConfig.get().minibossNaturalSpawnsEnabled) {
+                    continue;
+                }
+                if (spec.role == com.political.expansion2.mobs.MobRole2.BOSS) continue;
                 int weight = Math.max(1, (spec.spawnWeight * 2 + 2) / 3);
                 weight = com.political.config.PoliticalConfig.get().scaleSpawnWeight(weight);
                 BiomeModifications.addSpawn(spec.biomeSelector, MobCategory.MONSTER, spec.type,

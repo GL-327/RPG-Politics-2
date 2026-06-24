@@ -86,6 +86,7 @@ public class RpgPoliticsMod implements ModInitializer {
         com.political.curse.CursedObjects.register();
         com.political.curse.CursedGear.register();
         com.political.items.RelicItems.register();
+        com.political.echo.EchoItems.register();
         com.political.gov.GovItems.register();
         com.political.dev.DevMenuItem.register();
         com.political.content.ModTabs.register();
@@ -106,6 +107,7 @@ public class RpgPoliticsMod implements ModInitializer {
             CurrencyCommands.register(dispatcher);
             BountyCommands.register(dispatcher);
             RpgItemCommands.register(dispatcher);
+            com.political.items.ItemEditorCommands.register(dispatcher);
             PlayerCommands.register(dispatcher);
             MarketCommands.register(dispatcher);
             GovExtrasCommands.register(dispatcher);
@@ -164,17 +166,25 @@ public class RpgPoliticsMod implements ModInitializer {
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayer player = handler.player;
+            String uuid = player.getStringUUID();
+            boolean firstJoin = !DataManager.data().playerNames.containsKey(uuid);
             DataManager.registerPlayer(player);
-            DataManager.ensureTrait(player.getStringUUID());
+            DataManager.ensureTrait(uuid);
             PrisonManager.checkPlayerJoin(player);
             PerkManager.applyActivePerks(player);
             StatManager.apply(player);
             com.political.world.SettlementManager.ensureCitizenship(player);
+            if (firstJoin) {
+                player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                        "Welcome to RPG Politics 2. G = techniques, F = flight, K = powers, R = activate, /guide = field manual.")
+                        .withStyle(net.minecraft.ChatFormatting.GOLD));
+            }
         });
 
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayer player = handler.player;
             StatManager.remove(player.getUUID());
+            com.political.curse.rules.JjkRules.clear(player.getUUID());
             AbilityEngine.onPlayerRemoved(player.getUUID());
             PowerManager.onPlayerRemoved(player.getUUID());
             com.political.expansion2.powers.PowerManager2.onPlayerRemoved(player.getUUID());

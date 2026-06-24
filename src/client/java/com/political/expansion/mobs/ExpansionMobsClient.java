@@ -26,6 +26,7 @@ public final class ExpansionMobsClient {
             Archetype archetype = ArchetypeMapper.forCreature(spec.name, spec.brute, isBoss, isMiniBoss);
             Identifier texture = Identifier.fromNamespaceAndPath(
                     ExpansionMobs.MOD_ID, "textures/entity/" + spec.id + ".png");
+            com.political.client.tex.ProceduralTextures.register(texture, archetype, spec.id);
             boolean glow = isBoss || isMiniBoss;
             EntityRendererRegistry.register(spec.type,
                     context -> new ExpansionMobRenderer(context, archetype, texture, glow));

@@ -31,6 +31,14 @@ public class ExpansionMob2Renderer
     }
 
     @Override
+    public void extractRenderState(ExpansionMob2 entity, ExpansionMob2RenderState state, float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+        state.politicalAttack = entity.getAttackAnim(partialTick);
+        state.politicalPhase = entity.getPhase();
+        state.politicalAggressive = entity.isAggressive();
+    }
+
+    @Override
     public Identifier getTextureLocation(ExpansionMob2RenderState state) {
         return texture;
     }

@@ -38,7 +38,6 @@ import java.util.UUID;
 public final class PowerManager {
 
     private static final Map<String, Long> COOLDOWNS = new HashMap<>(); // "uuid|POWER" -> ready-at ms
-    private static final Map<UUID, Long> BLACK_FLASH_UNTIL = new HashMap<>();
     private static int tickCounter = 0;
 
     private PowerManager() {}
@@ -71,13 +70,9 @@ public final class PowerManager {
      * otherwise prevent a second {@code AttackEntityCallback} listener from ever running.
      */
     public static void tryConsumeBlackFlash(ServerPlayer sp, LivingEntity target, ServerLevel sl) {
-        Long until = BLACK_FLASH_UNTIL.get(sp.getUUID());
-        if (until == null || System.currentTimeMillis() >= until) return;
-        BLACK_FLASH_UNTIL.remove(sp.getUUID());
-        target.hurtServer(sl, sl.damageSources().playerAttack(sp), 12.0f);
-        sl.sendParticles(ParticleTypes.CRIT, target.getX(), target.getY() + 1, target.getZ(), 40, 0.4, 0.6, 0.4, 0.4);
-        sl.playSound(null, target.getX(), target.getY(), target.getZ(),
-                SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1.2f, 0.7f);
+        // Delegates to the central JJK rules engine: a primed Black Flash always lands, otherwise a
+        // channelling sorcerer has an innate chance to flash on any melee strike.
+        com.political.curse.rules.JjkRules.tryBlackFlash(sp, target, sl);
     }
 
     // ---------------- Cooldowns ----------------
@@ -111,6 +106,8 @@ public final class PowerManager {
 
         int cost = (int) Math.round(power.energyCost * DataManager.data().powerCostMultiplier);
         if (power.origin == Power.Origin.CURSED_TECHNIQUE) {
+            // Binding vows can make cursed techniques cheaper or dearer; never free.
+            cost = (int) Math.max(1, Math.round(cost * com.political.curse.rules.JjkRules.ceCostMultiplier(player)));
             if (StatManager.getMaxCursedEnergy(player) <= 0)
                 return err("You have no cursed energy to channel.");
             if (!StatManager.spendCursedEnergy(player, cost))
@@ -190,10 +187,18 @@ public final class PowerManager {
                     p.heal(2.5f);
                 }
             }
-            case HEALING, REVERSE_CURSED -> {
+            case HEALING -> {
                 p.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 2, false, true));
                 p.removeEffect(MobEffects.POISON);
                 p.removeEffect(MobEffects.WITHER);
+            }
+            case REVERSE_CURSED -> {
+                // Toggle the sustained Reverse Cursed Technique (heal-over-time fuelled by cursed energy),
+                // plus an immediate burst to purge afflictions on activation.
+                p.removeEffect(MobEffects.POISON);
+                p.removeEffect(MobEffects.WITHER);
+                Component status = com.political.curse.rules.JjkRules.toggleReverseCursed(p);
+                p.sendSystemMessage(status, true);
             }
             case STORMFRONT -> {
                 LivingEntity t = lookTarget(p, 30);
@@ -252,7 +257,11 @@ public final class PowerManager {
                 t.hurtServer(level, level.damageSources().playerAttack(p), 8.0f);
                 launchEntity(t, p, -1.6, 0.5);
             }
-            case BLACK_FLASH -> BLACK_FLASH_UNTIL.put(p.getUUID(), System.currentTimeMillis() + 5000L);
+            case BLACK_FLASH -> {
+                com.political.curse.rules.JjkRules.primeBlackFlash(p);
+                p.sendSystemMessage(Component.literal("Your fist coils with distorted cursed energy \u2014 strike now!")
+                        .withStyle(ChatFormatting.DARK_PURPLE), true);
+            }
             case TEN_SHADOWS -> summonShadows(p, level, 3);
             case CURSED_SPEECH -> {
                 for (LivingEntity e : cone(p, 12, 0.4)) {
@@ -286,6 +295,8 @@ public final class PowerManager {
                 level.sendParticles(ParticleTypes.GLOW, p.getX(), p.getEyeY(), p.getZ(), 40, 0.4, 0.4, 0.4, 0.05);
             }
             case SIMPLE_DOMAIN -> {
+                // A defensive Simple Domain that also wards against a hostile Domain Expansion's sure-hit.
+                com.political.curse.rules.JjkRules.raiseSimpleDomain(p, 8_000L);
                 p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 200, 2, false, true));
                 p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 200, 1, false, true));
                 for (LivingEntity e : around(p, 5)) {
@@ -492,6 +503,8 @@ public final class PowerManager {
                 level.playSound(null, at.x, at.y, at.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.4f, 0.9f);
             }
             case FALLING_BLOSSOM -> {
+                // Falling Blossom Emotion: cutting cursed energy that also lets you slip a domain's sure-hit.
+                com.political.curse.rules.JjkRules.raiseFallingBlossom(p, 6_000L);
                 p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 200, 3, false, true));
                 p.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 200, 2, false, true));
                 for (LivingEntity e : around(p, 5)) {
@@ -865,7 +878,7 @@ public final class PowerManager {
     }
 
     public static void onPlayerRemoved(UUID uuid) {
-        BLACK_FLASH_UNTIL.remove(uuid);
+        com.political.curse.rules.JjkRules.clear(uuid);
         com.political.flight.FlightManager.onPlayerRemoved(uuid);
     }
 

@@ -157,4 +157,14 @@ public enum ItemActiveAbility {
     public static ItemActiveAbility forItem(String rpgItemId) {
         return BY_ITEM.get(rpgItemId);
     }
+
+    /** Resolves an ability from its {@link #name()} (case-insensitive), or {@code null}. */
+    public static ItemActiveAbility byId(String id) {
+        if (id == null || id.isBlank()) return null;
+        try {
+            return valueOf(id.trim().toUpperCase(java.util.Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 }

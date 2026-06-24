@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Persists the four client-side technique slot bindings across restarts
+ * Persists client-side JJK bindings, limb toggles, and preset selection across restarts
  * ({@code config/politicalserver_jjk_bindings.json}).
  */
 public final class TechniqueBindings {
@@ -30,12 +30,18 @@ public final class TechniqueBindings {
             String raw = Files.readString(FILE, StandardCharsets.UTF_8);
             JsonObject root = JsonParser.parseString(raw).getAsJsonObject();
             JsonArray slots = root.getAsJsonArray("slots");
-            if (slots == null) return;
-            for (int i = 0; i < Math.min(4, slots.size()); i++) {
-                CursedClientState.bound[i] = slots.get(i).getAsString();
+            if (slots != null) {
+                for (int i = 0; i < Math.min(4, slots.size()); i++) {
+                    CursedClientState.bound[i] = slots.get(i).getAsString();
+                }
+            }
+            if (root.has("limbMask")) {
+                CursedClientState.limbMask = root.get("limbMask").getAsInt();
+            }
+            if (root.has("presetId")) {
+                CursedClientState.presetId = root.get("presetId").getAsString();
             }
         } catch (Exception ignored) {
-            // Corrupt config — start fresh.
         }
     }
 
@@ -46,6 +52,8 @@ public final class TechniqueBindings {
             slots.add(CursedClientState.bound[i] == null ? "" : CursedClientState.bound[i]);
         }
         root.add("slots", slots);
+        root.addProperty("limbMask", CursedClientState.limbMask);
+        root.addProperty("presetId", CursedClientState.presetId == null ? "" : CursedClientState.presetId);
         try {
             Files.createDirectories(FILE.getParent());
             Files.writeString(FILE, GSON.toJson(root), StandardCharsets.UTF_8);

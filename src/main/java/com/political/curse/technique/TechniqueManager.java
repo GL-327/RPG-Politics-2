@@ -40,6 +40,11 @@ public final class TechniqueManager {
         CursedTechnique t = TechniqueRegistry.byId(techniqueId);
         if (t == null) return fail("Unknown technique.");
 
+        if (!com.political.curse.limb.LimbStateManager.canCast(player, techniqueId)) {
+            var limb = com.political.curse.limb.LimbTechniqueMap.limbFor(techniqueId);
+            return fail("The " + limb.label + " pathway is sealed — re-enable it in Cursed Techniques.");
+        }
+
         int grade = SorcererGrade.of(player);
         if (!SorcererGrade.meets(grade, t.requiredGrade())) {
             return fail("You are not yet skilled enough to weave " + t.displayName() + ".");
@@ -53,7 +58,8 @@ public final class TechniqueManager {
             return fail(t.displayName() + " is recharging (" + secs + "s).");
         }
 
-        if (!CursedEnergyManager.has(player, t.ceCost())) {
+        double cost = t.ceCost() * com.political.curse.rules.JjkRules.ceCostMultiplier(player);
+        if (!CursedEnergyManager.has(player, cost)) {
             return fail("Not enough cursed energy for " + t.displayName() + ".");
         }
 
@@ -65,7 +71,7 @@ public final class TechniqueManager {
         }
         if (!fired) return fail("No valid target for " + t.displayName() + ".");
 
-        CursedEnergyManager.spend(player, t.ceCost());
+        CursedEnergyManager.spend(player, cost);
         mine.put(techniqueId, now + t.cooldownTicks());
         VfxHelper.elementBurst(player.level(), t.element(), player.position().add(0, 1, 0), 0.7);
         playCastSound(player, t);
@@ -76,6 +82,7 @@ public final class TechniqueManager {
 
     /** Builds and sends a fresh {@link TechniqueMenuS2C} to the player. */
     public static void openMenu(ServerPlayer player) {
+        com.political.curse.limb.LimbStateManager.sync(player);
         int grade = SorcererGrade.of(player);
         String known = TechniqueRegistry.knownFor(grade).stream()
                 .map(CursedTechnique::id).collect(Collectors.joining(","));

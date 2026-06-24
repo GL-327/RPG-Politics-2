@@ -1,7 +1,10 @@
 package com.political.curse.spirits;
 
+import com.political.client.model.Archetype;
 import com.political.client.model.ArchetypeModels;
+import com.political.client.tex.ProceduralTextures;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.resources.Identifier;
 
 /**
  * Client-side binder for the whole cursed-spirit roster. <b>Integration must call
@@ -19,6 +22,10 @@ public final class SpiritClient {
         ArchetypeModels.registerLayers(); // idempotent; shared across all packages
 
         for (SpiritSpecies species : SpiritSpecies.values()) {
+            Archetype archetype = SpiritModels.archetypeFor(species.modelKind());
+            Identifier texture = Identifier.fromNamespaceAndPath(
+                    "politicalserver", "textures/entity/" + species.id() + ".png");
+            ProceduralTextures.register(texture, archetype, species.id());
             EntityRendererRegistry.register(ModSpirits.typeFor(species),
                     context -> new SpiritRenderer(context, species));
         }

@@ -79,27 +79,37 @@ public final class AbilityEngine {
     private static void onAttack(ServerPlayer attacker, LivingEntity target) {
         ServerLevel level = (ServerLevel) target.level();
         com.political.config.PoliticalConfig cfg = com.political.config.PoliticalConfig.get();
-        ItemStats.Sheet sheet = ItemStats.compute(attacker.getMainHandItem());
+        ItemStack weapon = attacker.getMainHandItem();
+        ItemStats.Sheet sheet = ItemStats.compute(weapon);
         RpgStats stats = StatManager.get(attacker);
 
-        // Skyblock hit = (flat base + weapon damage + scaled strength), tuned by config multipliers
-        // and clamped to a sane ceiling so stat-stacking / multipliers can't overflow.
-        double base = (cfg.damageBaseFlat + sheet.damage + stats.strength * cfg.strengthDamageScale)
-                * cfg.damageMultiplier;
-        float cursedBonus = com.political.curse.CursedGear.attackBonus(attacker, attacker.getMainHandItem());
+        // Hypixel-Skyblock melee model:
+        //   additive   = base + weaponDamage + floor(strength/5) * strengthDamageScale
+        //   strengthMul= 1 + strength/100 * strengthMultiplierPct
+        //   base       = additive * strengthMul * damageMultiplier * cursedOutput
+        // Strength therefore contributes both flat (via the floor term) and multiplicatively,
+        // exactly like real Skyblock. Cursed-energy output/reinforcement (flow) scales it too.
+        double additive = cfg.damageBaseFlat + sheet.damage
+                + Math.floor(stats.strength / 5.0) * cfg.strengthDamageScale;
+        double strengthMul = 1.0 + (stats.strength / 100.0) * cfg.strengthMultiplierPct;
+        double base = additive * strengthMul * cfg.damageMultiplier
+                * com.political.curse.rules.JjkRules.outputMultiplier(attacker);
+
+        float cursedBonus = com.political.curse.CursedGear.attackBonus(attacker, weapon);
+        // Cursed-prefixed gear adds a flat cursed-energy bite on top, scaled by the wielder's reserves.
+        cursedBonus += com.political.items.PrefixAbilities.onHitBonus(attacker, weapon);
         if (cursedBonus > 0) {
             base += cursedBonus;
             com.political.curse.CursedGear.playHitFx(level, target);
         }
-        base = Math.min(base, cfg.maxHitDamage);
-        target.invulnerableTime = 0;
-        target.hurtServer(level, level.damageSources().playerAttack(attacker), (float) base);
 
         applyCritAndFerocity(attacker, target, level, base);
 
         // Black Flash (cursed technique buff) must be consumed here: this engine returns SUCCESS
         // from its AttackEntityCallback, which would short-circuit any other attack listener.
         com.political.power.PowerManager.tryConsumeBlackFlash(attacker, target, level);
+        // Cursed-prefixed weapons have an innate chance to land a Black Flash of their own.
+        com.political.items.PrefixAbilities.tryWeaponBlackFlash(attacker, weapon, target, level);
 
         List<Ability> abilities = RpgItems.abilitiesOf(attacker.getMainHandItem());
         if (abilities.isEmpty()) return;
@@ -138,29 +148,41 @@ public final class AbilityEngine {
         }
     }
 
-    /** Skyblock-style crit + ferocity on top of the base Skyblock hit. */
+    /**
+     * Applies the Skyblock hit: rolls crit (a single damage event multiplied by
+     * {@code 1 + critDamage/100}), then ferocity extra strikes that each deal a full hit.
+     * {@code base} is the pre-crit damage from {@link #onAttack}.
+     */
     private static void applyCritAndFerocity(ServerPlayer attacker, LivingEntity target, ServerLevel level, double base) {
         RpgStats s = StatManager.get(attacker);
         com.political.config.PoliticalConfig cfg = com.political.config.PoliticalConfig.get();
 
+        boolean crit = false;
         if (cfg.critEnabled) {
             double critChance = Math.min(cfg.maxCritChancePercent, s.critChance * cfg.critChanceMultiplier);
-            if (critChance > 0 && RNG.nextDouble() * 100.0 < critChance) {
-                float bonus = (float) Math.min(cfg.maxHitDamage,
-                        base * (s.critDamage * cfg.critDamageMultiplier) / 100.0);
-                target.invulnerableTime = 0;
-                target.hurtServer(level, level.damageSources().playerAttack(attacker), bonus);
-                level.sendParticles(ParticleTypes.CRIT, target.getX(),
-                        target.getY() + target.getBbHeight() * 0.6, target.getZ(), 12, 0.3, 0.3, 0.3, 0.1);
-            }
+            crit = critChance > 0 && RNG.nextDouble() * 100.0 < critChance;
+        }
+        double hit = crit
+                ? base * (1.0 + (s.critDamage * cfg.critDamageMultiplier) / 100.0)
+                : base;
+        hit = Math.min(hit, cfg.maxHitDamage);
+
+        target.invulnerableTime = 0;
+        target.hurtServer(level, level.damageSources().playerAttack(attacker), (float) hit);
+        if (crit) {
+            level.sendParticles(ParticleTypes.CRIT, target.getX(),
+                    target.getY() + target.getBbHeight() * 0.6, target.getZ(), 12, 0.3, 0.3, 0.3, 0.1);
         }
 
-        if (!cfg.ferocityEnabled) return;
+        if (!cfg.ferocityEnabled || s.ferocity <= 0) return;
+        // Ferocity = guaranteed extra strikes for every 100%, plus a chance for one more from the
+        // remainder. Each strike repeats the full (crit-rolled) hit, as in Skyblock.
         int extra = (int) (s.ferocity / 100.0);
         if (RNG.nextDouble() * 100.0 < s.ferocity % 100.0) extra++;
+        float ferDmg = (float) Math.min(cfg.maxHitDamage, hit * cfg.ferocityStrikeMultiplier);
         for (int i = 0; i < extra; i++) {
             target.invulnerableTime = 0;
-            target.hurtServer(level, level.damageSources().playerAttack(attacker), (float) (base * 0.6));
+            target.hurtServer(level, level.damageSources().playerAttack(attacker), ferDmg);
         }
     }
 

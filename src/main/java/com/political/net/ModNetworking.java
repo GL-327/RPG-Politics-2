@@ -20,6 +20,8 @@ public final class ModNetworking {
         PayloadTypeRegistry.clientboundPlay().register(PowerMenuS2C.TYPE, PowerMenuS2C.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(BankMenuS2C.TYPE, BankMenuS2C.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(GovMenuS2C.TYPE, GovMenuS2C.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(SbsOpenS2C.TYPE, SbsOpenS2C.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(EchoCodexOpenS2C.TYPE, EchoCodexOpenS2C.CODEC);
     }
 
     /** Serverbound payload types + receivers. Call during common init. */
@@ -58,6 +60,17 @@ public final class ModNetworking {
             ServerPlayer player = context.player();
             context.server().execute(() ->
                     com.political.politics.GovMenu.handleAction(player, payload.action(), payload.arg()));
+        });
+
+        PayloadTypeRegistry.serverboundPlay().register(SbsApplyC2S.TYPE, SbsApplyC2S.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(SbsApplyC2S.TYPE, (payload, context) -> {
+            ServerPlayer player = context.player();
+            context.server().execute(() -> {
+                // Powerful creative/admin tool: only operators (gamemaster level) may apply edits.
+                if (!net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS)
+                        .test(player.createCommandSourceStack())) return;
+                com.political.items.ItemEditor.apply(player, payload);
+            });
         });
 
         PayloadTypeRegistry.serverboundPlay().register(DevConfigSetC2S.TYPE, DevConfigSetC2S.CODEC);

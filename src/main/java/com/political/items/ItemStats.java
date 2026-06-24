@@ -36,6 +36,12 @@ public final class ItemStats {
     public static final String RARITY = "rpg_rarity";
     public static final String VARIANT = "rpg_variant";
     public static final String CURSED_GRADE = "rpg_cursed_grade";
+    /** Set by the {@code /sbs} editor so its exact stats are treated as authoritative (no rescale). */
+    public static final String EDITED = "rpg_edited";
+    /** Cursed-technique {@link com.political.power.Power} id granted by a {@code Cursed} prefix. */
+    public static final String PREFIX_POWER = "rpg_prefix_power";
+    /** {@link ItemActiveAbility} id granted by a {@code Unique} prefix. */
+    public static final String PREFIX_ABILITY = "rpg_prefix_ability";
 
     private ItemStats() {}
 
@@ -130,8 +136,19 @@ public final class ItemStats {
         return v == null ? Variant.NONE : v;
     }
 
+    /** The cursed-technique Power id bound by a {@code Cursed} prefix, or {@code ""} if none. */
+    public static String prefixPowerId(ItemStack stack) {
+        return tagOf(stack).getStringOr(PREFIX_POWER, "");
+    }
+
+    /** The active-ability id bound by a {@code Unique} prefix, or {@code ""} if none. */
+    public static String prefixAbilityId(ItemStack stack) {
+        return tagOf(stack).getStringOr(PREFIX_ABILITY, "");
+    }
+
     private static boolean hasExplicitStats(CompoundTag tag) {
-        return !tag.getStringOr(RpgItems.ITEM_ID_KEY, "").isEmpty()
+        return tag.getIntOr(EDITED, 0) != 0
+                || !tag.getStringOr(RpgItems.ITEM_ID_KEY, "").isEmpty()
                 || tag.getIntOr(HEALTH, 0) != 0 || tag.getIntOr(DEFENSE, 0) != 0
                 || tag.getIntOr(STRENGTH, 0) != 0 || tag.getIntOr(INTELLIGENCE, 0) != 0
                 || tag.getIntOr(CURSED, 0) != 0;
@@ -169,6 +186,9 @@ public final class ItemStats {
         }
 
         applyVariant(s, variantOf(stack), cursedGradeOf(stack));
+        if (tag.getIntOr(EDITED, 0) == 0) {
+            StatDisplay.snapSheet(s);
+        }
         return s;
     }
 
@@ -240,6 +260,50 @@ public final class ItemStats {
         putTag(stack, t -> {
             t.putInt(CURSED_GRADE, Math.max(1, grade));
             t.putString(VARIANT, Variant.CURSED.name());
+        });
+    }
+
+    /**
+     * Writes a full explicit stat sheet (used by the {@code /sbs} editor). Marks the stack as edited
+     * so {@link #compute} uses these exact values without rarity rescaling. Zero values are removed
+     * to keep the tag tidy; the {@link #EDITED} marker is always kept.
+     */
+    public static void writeStats(ItemStack stack, int health, int defense, int strength, int intelligence,
+                                  int damage, int critChance, int critDamage, int ferocity,
+                                  int speed, int attackSpeed) {
+        putTag(stack, t -> {
+            t.putInt(EDITED, 1);
+            putOrRemove(t, HEALTH, health);
+            putOrRemove(t, DEFENSE, defense);
+            putOrRemove(t, STRENGTH, strength);
+            putOrRemove(t, INTELLIGENCE, intelligence);
+            putOrRemove(t, DAMAGE, damage);
+            putOrRemove(t, CRIT_CHANCE, critChance);
+            putOrRemove(t, CRIT_DAMAGE, critDamage);
+            putOrRemove(t, FEROCITY, ferocity);
+            putOrRemove(t, SPEED, speed);
+            putOrRemove(t, ATTACK_SPEED, attackSpeed);
+        });
+    }
+
+    private static void putOrRemove(CompoundTag t, String key, int value) {
+        if (value == 0) t.remove(key);
+        else t.putInt(key, value);
+    }
+
+    /** Binds (or clears, when {@code powerId} is null/blank) the cursed technique of a Cursed prefix. */
+    public static void setPrefixPower(ItemStack stack, String powerId) {
+        putTag(stack, t -> {
+            if (powerId == null || powerId.isBlank()) t.remove(PREFIX_POWER);
+            else t.putString(PREFIX_POWER, powerId);
+        });
+    }
+
+    /** Binds (or clears, when {@code abilityId} is null/blank) the active ability of a Unique prefix. */
+    public static void setPrefixAbility(ItemStack stack, String abilityId) {
+        putTag(stack, t -> {
+            if (abilityId == null || abilityId.isBlank()) t.remove(PREFIX_ABILITY);
+            else t.putString(PREFIX_ABILITY, abilityId);
         });
     }
 

@@ -182,14 +182,18 @@ public final class SettlementManager {
         payStipends(server, d, now);
 
         // Don't queue a new settlement while one is still building.
-        if (!d.settlementGenEnabled || !PENDING.isEmpty()) return;
+        if ((!d.settlementGenEnabled && !d.villageClusterEnabled) || !PENDING.isEmpty()) return;
         long tick = server.overworld().getGameTime();
         if (tick - lastScatterTick < 60) return;
         lastScatterTick = tick;
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             if (!(player.level() instanceof ServerLevel level)) continue;
-            if (tryScatterAround(level, d, player.getBlockX(), player.getBlockZ())) break; // one per pass
+            // Cluster mode groups 4-6 villages as one "settlement"; otherwise drop a single tier.
+            boolean placed = d.villageClusterEnabled
+                    ? tryScatterCluster(level, d, player.getBlockX(), player.getBlockZ())
+                    : tryScatterAround(level, d, player.getBlockX(), player.getBlockZ());
+            if (placed) break; // one per pass
         }
 
         // Village overlay: register vanilla villages for governance when players explore.
@@ -257,6 +261,68 @@ public final class SettlementManager {
                 Component.literal("A new " + type.display.toLowerCase() + ", " + name
                         + (s.governedBy.isEmpty() ? "" : " (under " + DataManager.settlement(s.governedBy).name + ")")
                         + ", has risen at " + cx + ", " + cz + ".").withStyle(type.color), false);
+        return true;
+    }
+
+    /**
+     * Settles a tight <b>cluster</b> of 4-6 villages around one chosen heart, so a region gains a
+     * little knot of hamlets instead of a single lonely settlement. Each member is a full
+     * {@link SettlementType#VILLAGE} and registers for governance individually, while the elected
+     * overlay still treats them as neighbouring villages.
+     */
+    private static boolean tryScatterCluster(ServerLevel level, PoliticsData d, int px, int pz) {
+        int cell = cellSize(d);
+        String key = cellKey(level, px, pz, cell);
+        if (d.generatedCells.contains(key)) return false;
+        d.generatedCells.add(key);
+
+        int gx = Math.floorDiv(px, cell);
+        int gz = Math.floorDiv(pz, cell);
+        Random rng = new Random((((long) gx * 73428767L) ^ ((long) gz * 912931L)) ^ 0x5DEECE66DL);
+        if (rng.nextDouble() > d.settlementSpawnChance) return false;
+
+        // The cluster heart sits a short, deterministic hop from the player so members land in
+        // already-loaded chunks (correct heightmap, no floating/buried builds).
+        double heartAngle = rng.nextDouble() * Math.PI * 2;
+        int heartDist = 48 + rng.nextInt(40);
+        int hx = px + (int) Math.round(Math.cos(heartAngle) * heartDist);
+        int hz = pz + (int) Math.round(Math.sin(heartAngle) * heartDist);
+
+        int radius = Math.max(16, d.villageClusterRadius);
+        // Keep the whole cluster clear of other settlements (heart plus its outermost member).
+        Settlement near = DataManager.nearestSettlement(level.dimension().identifier().toString(), hx, hz);
+        double clearance = radius + 90.0;
+        if (near != null && near.distSq(hx, hz) < clearance * clearance) return false;
+
+        int min = Math.max(1, Math.min(d.villageClusterMin, d.villageClusterMax));
+        int max = Math.max(min, d.villageClusterMax);
+        int count = min + rng.nextInt(max - min + 1);
+
+        int built = 0;
+        for (int i = 0; i < count; i++) {
+            double a = (Math.PI * 2 * i) / count + rng.nextDouble() * 0.6 - 0.3;
+            double r = radius * (0.55 + rng.nextDouble() * 0.45);
+            int mx = hx + (int) Math.round(Math.cos(a) * r);
+            int mz = hz + (int) Math.round(Math.sin(a) * r);
+            if (!level.isLoaded(new BlockPos(mx, level.getSeaLevel(), mz))) continue;
+
+            String name = SettlementGenerator.pickName(rng);
+            BuildBuffer buffer = new BuildBuffer();
+            Settlement s;
+            try {
+                s = SettlementGenerator.planInto(buffer, level, mx, mz, SettlementType.VILLAGE, name);
+            } catch (RuntimeException e) {
+                com.political.RpgPoliticsMod.LOGGER.error("Cluster village generation failed at {},{}", mx, mz, e);
+                continue;
+            }
+            PENDING.addLast(new Pending(level, buffer, s));
+            built++;
+        }
+        if (built == 0) return false;
+
+        level.getServer().getPlayerList().broadcastSystemMessage(
+                Component.literal("A cluster of " + built + " villages has risen near " + hx + ", " + hz + ".")
+                        .withStyle(SettlementType.VILLAGE.color), false);
         return true;
     }
 

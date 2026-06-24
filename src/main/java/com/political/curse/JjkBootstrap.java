@@ -34,9 +34,10 @@ public final class JjkBootstrap {
         if (initialized) return;
         initialized = true;
 
-        // 1. Data: techniques + domains.
+        // 1. Data: techniques + domains + JJP presets.
         CursedTechniques.bootstrap();
         Domains.bootstrap();
+        com.political.curse.jjk.JjkPresetRegistry.bootstrap();
 
         // 2. Perception: teach the common CursedEnergy facade how to read server-side pools.
         CursedEnergy.installServerProviders(
@@ -47,8 +48,10 @@ public final class JjkBootstrap {
         //    into ModNetworking or types will register twice.
         JjkNetworking.registerA();
 
-        // 4. Server tick: drive active domains and keep every client's cursed-energy view fresh.
+        // 4. Server tick: drive the cursed-energy rules engine + active domains, and keep every client's
+        //    cursed-energy view fresh.
         ServerTickEvents.END_SERVER_TICK.register(server -> {
+            com.political.curse.rules.JjkRules.tick(server);
             DomainManager.tick(server);
             if (server.getTickCount() % 40 == 0) {
                 for (ServerPlayer player : server.getPlayerList().getPlayers()) {
@@ -58,11 +61,20 @@ public final class JjkBootstrap {
         });
 
         // 5. Tidy per-player state on disconnect.
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            ServerPlayer player = handler.player;
+            if (player != null) {
+                com.political.curse.limb.LimbStateManager.sync(player);
+            }
+        });
+
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayer player = handler.player;
             if (player != null) {
                 TechniqueManager.clear(player.getUUID());
                 DomainManager.clear(player.getUUID());
+                com.political.curse.rules.JjkRules.clear(player.getUUID());
+                com.political.curse.limb.LimbStateManager.clear(player.getUUID());
             }
         });
     }

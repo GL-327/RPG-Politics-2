@@ -16,7 +16,8 @@ public final class SpiritModels {
             case GAUNT -> Archetype.GAUNT_HUMANOID;
             case SWARM_TINY -> Archetype.TINY_SWARM;
             case HULKING -> Archetype.HULKING_BRUTE;
-            case HORNED -> Archetype.CLOAKED_SPIRIT;
+            // Horned curses now render as faithful horned special-grade silhouettes.
+            case HORNED -> Archetype.SPECIAL_GRADE;
         };
     }
 }

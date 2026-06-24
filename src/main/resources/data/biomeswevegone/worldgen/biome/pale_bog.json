@@ -1,0 +1,127 @@
+{
+    "attributes": {
+        "minecraft:audio/ambient_sounds": {
+            "additions": {
+                "sound": "minecraft:ambient.soul_sand_valley.additions",
+                "tick_chance": 0.0111
+            },
+            "mood": {
+                "block_search_extent": 8,
+                "offset": 2,
+                "sound": "minecraft:ambient.soul_sand_valley.mood",
+                "tick_delay": 6000
+            }
+        },
+        "minecraft:audio/background_music": {
+            "default": {
+                "max_delay": 24000,
+                "min_delay": 12000
+            }
+        },
+        "minecraft:visual/ambient_particles": [
+            {
+                "particle": {},
+                "probability": 0.00005
+            }
+        ],
+        "minecraft:visual/fog_color": "#a8b4a5",
+        "minecraft:visual/sky_color": "#a8b4a5",
+        "minecraft:visual/water_fog_color": "#2b444c"
+    },
+    "carvers": [
+        "minecraft:cave",
+        "minecraft:cave_extra_underground",
+        "minecraft:canyon"
+    ],
+    "downfall": 0.9,
+    "effects": {
+        "foliage_color": "#a8b4a5",
+        "grass_color": "#a8b4a5",
+        "water_color": "#8cd8f2"
+    },
+    "features": [
+        [],
+        [
+            "minecraft:lake_lava_underground"
+        ],
+        [],
+        [
+            "minecraft:monster_room",
+            "minecraft:monster_room_deep"
+        ],
+        [],
+        [],
+        [
+            "minecraft:ore_dirt",
+            "minecraft:ore_gravel",
+            "minecraft:ore_coal_upper",
+            "minecraft:ore_coal_lower",
+            "minecraft:ore_iron_upper",
+            "minecraft:ore_iron_middle",
+            "minecraft:ore_redstone",
+            "minecraft:ore_lapis",
+            "minecraft:ore_copper",
+            "minecraft:ore_gold",
+            "minecraft:ore_diamond"
+        ],
+        [],
+        [
+            "minecraft:spring_water",
+            "minecraft:spring_lava"
+        ],
+        [
+            "minecraft:trees_plains",
+            "minecraft:flower_plains",
+            "minecraft:patch_sunflower",
+            "minecraft:patch_pumpkin",
+            "minecraft:patch_grass_plain",
+            "minecraft:patch_tall_grass"
+        ],
+        []
+    ],
+    "has_precipitation": true,
+    "spawn_costs": {},
+    "spawners": {
+        "ambient": [],
+        "axolotls": [],
+        "creature": [
+            {
+                "type": "minecraft:frog",
+                "maxCount": 5,
+                "minCount": 2,
+                "weight": 10
+            }
+        ],
+        "misc": [],
+        "monster": [
+            {
+                "type": "minecraft:drowned",
+                "maxCount": 4,
+                "minCount": 2,
+                "weight": 85
+            },
+            {
+                "type": "minecraft:spider",
+                "maxCount": 4,
+                "minCount": 3,
+                "weight": 85
+            },
+            {
+                "type": "minecraft:bogged",
+                "maxCount": 4,
+                "minCount": 2,
+                "weight": 85
+            },
+            {
+                "type": "minecraft:slime",
+                "maxCount": 1,
+                "minCount": 1,
+                "weight": 1
+            }
+        ],
+        "underground_water_creature": [],
+        "water_ambient": [],
+        "water_creature": []
+    },
+    "temperature": 0.8
+}

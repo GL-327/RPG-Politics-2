@@ -1,0 +1,116 @@
+{
+    "attributes": {
+        "minecraft:audio/ambient_sounds": {
+            "additions": {
+                "sound": "minecraft:ambient.nether_wastes.additions",
+                "tick_chance": 0.0111
+            },
+            "loop": "minecraft:ambient.warped_forest.loop",
+            "mood": {
+                "block_search_extent": 8,
+                "offset": 2,
+                "sound": "minecraft:ambient.crimson_forest.mood",
+                "tick_delay": 6000
+            }
+        },
+        "minecraft:audio/background_music": {
+            "default": {
+                "max_delay": 24000,
+                "min_delay": 12000
+            }
+        },
+        "minecraft:visual/ambient_particles": [
+            {
+                "particle": {
+                    "type": "minecraft:spore_blossom_air"
+                },
+                "probability": 0.00357
+            }
+        ],
+        "minecraft:visual/fog_color": "#1c2109"
+    },
+    "carvers": "minecraft:nether_cave",
+    "downfall": 0,
+    "effects": {
+        "water_color": "#3f76e4"
+    },
+    "features": [
+        [],
+        [
+            "minecraft:lake_lava_underground"
+        ],
+        [],
+        [
+            "minecraft:monster_room",
+            "minecraft:monster_room_deep"
+        ],
+        [],
+        [],
+        [
+            "minecraft:ore_dirt",
+            "minecraft:ore_gravel",
+            "minecraft:ore_coal_upper",
+            "minecraft:ore_coal_lower",
+            "minecraft:ore_iron_upper",
+            "minecraft:ore_iron_middle",
+            "minecraft:ore_redstone",
+            "minecraft:ore_lapis",
+            "minecraft:ore_copper",
+            "minecraft:ore_gold",
+            "minecraft:ore_diamond"
+        ],
+        [],
+        [
+            "minecraft:spring_water",
+            "minecraft:spring_lava"
+        ],
+        [
+            "minecraft:trees_plains",
+            "minecraft:flower_plains",
+            "minecraft:patch_sunflower",
+            "minecraft:patch_pumpkin",
+            "minecraft:patch_grass_plain",
+            "minecraft:patch_tall_grass"
+        ],
+        []
+    ],
+    "has_precipitation": false,
+    "spawn_costs": {},
+    "spawners": {
+        "ambient": [],
+        "axolotls": [],
+        "creature": [
+            {
+                "type": "minecraft:strider",
+                "maxCount": 2,
+                "minCount": 1,
+                "weight": 60
+            }
+        ],
+        "misc": [],
+        "monster": [
+            {
+                "type": "minecraft:ghast",
+                "maxCount": 4,
+                "minCount": 4,
+                "weight": 50
+            },
+            {
+                "type": "minecraft:magma_cube",
+                "maxCount": 4,
+                "minCount": 4,
+                "weight": 2
+            },
+            {
+                "type": "minecraft:hoglin",
+                "maxCount": 4,
+                "minCount": 3,
+                "weight": 9
+            }
+        ],
+        "underground_water_creature": [],
+        "water_ambient": [],
+        "water_creature": []
+    },
+    "temperature": 2
+}

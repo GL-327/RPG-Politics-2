@@ -100,6 +100,11 @@ public final class ModTabs {
         tab("food2", CreativeModeTab.Row.BOTTOM, 9,
                 () -> new ItemStack(Food2Items.items().getFirst()),
                 (params, out) -> CreativeCatalog.food2(out));
+
+        tab("echo_archive", CreativeModeTab.Row.BOTTOM, 10,
+                () -> com.political.echo.EchoItems.display(com.political.echo.EchoItems.GLASSBOUND_CODEX,
+                        "Opens the Echo Archive — fragments of cursed history."),
+                (params, out) -> CreativeCatalog.echoArchive(out));
     }
 
     private static Item godslayerRelic() {

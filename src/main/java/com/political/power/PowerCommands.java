@@ -4,10 +4,14 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.political.curse.rules.BindingVow;
+import com.political.curse.rules.JjkRules;
 import com.political.politics.DataManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,6 +25,10 @@ import java.util.function.Predicate;
 public final class PowerCommands {
 
     private static final Predicate<CommandSourceStack> OP = Commands.hasPermission(Commands.LEVEL_GAMEMASTERS);
+
+    private static final SuggestionProvider<CommandSourceStack> VOW_SUGGESTIONS = (ctx, builder) ->
+            SharedSuggestionProvider.suggest(
+                    java.util.Arrays.stream(BindingVow.values()).map(BindingVow::id), builder);
 
     /** Minimum sorcerer grade required to learn each cursed technique. */
     private static final Map<Power, Integer> TECHNIQUE_GRADE = new EnumMap<>(Power.class);
@@ -108,6 +116,11 @@ public final class PowerCommands {
                 .then(Commands.literal("learn").then(Commands.argument("id", StringArgumentType.word())
                         .executes(PowerCommands::learn)))
                 .then(Commands.literal("forge").executes(PowerCommands::forge))
+                .then(Commands.literal("rct").executes(PowerCommands::reverseCursed))
+                .then(Commands.literal("flow").executes(PowerCommands::flow))
+                .then(Commands.literal("vows").executes(PowerCommands::listVows))
+                .then(Commands.literal("vow").then(Commands.argument("id", StringArgumentType.word())
+                        .suggests(VOW_SUGGESTIONS).executes(PowerCommands::vow)))
                 .then(Commands.literal("grade").requires(OP)
                         .then(Commands.argument("player", EntityArgument.player())
                                 .then(Commands.argument("grade", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 5))
@@ -202,10 +215,60 @@ public final class PowerCommands {
         int grade = DataManager.sorcererGrade(uuid);
         int exorcised = DataManager.data().cursesExorcised.getOrDefault(uuid, 0);
         var trait = DataManager.cursedTrait(uuid);
+        java.util.List<BindingVow> vows = JjkRules.activeVows(uuid);
+        String vowText = vows.isEmpty() ? "none"
+                : vows.stream().map(v -> v.display).collect(java.util.stream.Collectors.joining(", "));
+        String states = "";
+        if (JjkRules.isReverseCursedActive(p.getUUID())) states += " [RCT]";
+        if (JjkRules.isOutputActive(p.getUUID())) states += " [Flow]";
         return ok(c, "Aptitude: " + trait.display + " | " + DataManager.gradeLabel(grade)
                 + " | Curses exorcised: " + exorcised
-                + (trait.canUseTechniques() ? " | Learn techniques with /cursed learn <id>."
+                + " | Binding vows: " + vowText + states
+                + (trait.canUseTechniques() ? " | /cursed learn <id>, /cursed rct, /cursed flow, /cursed vow <id>."
                         : " | You channel no cursed energy, but cursed tools answer to you."));
+    }
+
+    private static int reverseCursed(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
+        ServerPlayer p = self(c);
+        if (!DataManager.cursedTrait(p.getStringUUID()).canUseTechniques())
+            return fail(c, "You channel no cursed energy to reverse.");
+        c.getSource().sendSuccess(() -> JjkRules.toggleReverseCursed(p), false);
+        return 1;
+    }
+
+    private static int flow(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
+        ServerPlayer p = self(c);
+        if (!DataManager.cursedTrait(p.getStringUUID()).canUseTechniques())
+            return fail(c, "You have no cursed energy to flow.");
+        c.getSource().sendSuccess(() -> JjkRules.toggleOutput(p), false);
+        return 1;
+    }
+
+    private static int listVows(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
+        ServerPlayer p = self(c);
+        String uuid = p.getStringUUID();
+        int grade = DataManager.sorcererGrade(uuid);
+        StringBuilder sb = new StringBuilder("=== Binding Vows (sworn marked *) ===\n");
+        for (BindingVow v : BindingVow.values()) {
+            boolean sworn = JjkRules.hasVow(uuid, v);
+            boolean canSwear = grade >= v.requiredGrade;
+            sb.append(sworn ? " * " : "   ").append(v.id()).append(" \u2014 ").append(v.display)
+                    .append(canSwear ? "" : " (needs " + DataManager.gradeLabel(v.requiredGrade) + ")")
+                    .append('\n').append("      ").append(v.description).append('\n');
+        }
+        sb.append("Swear or release with /cursed vow <id>.");
+        c.getSource().sendSuccess(() -> Component.literal(sb.toString()).withStyle(ChatFormatting.DARK_PURPLE), false);
+        return 1;
+    }
+
+    private static int vow(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
+        ServerPlayer p = self(c);
+        BindingVow v = BindingVow.byId(StringArgumentType.getString(c, "id"));
+        if (v == null) return fail(c, "Unknown binding vow. Use /cursed vows.");
+        if (!DataManager.cursedTrait(p.getStringUUID()).canUseTechniques())
+            return fail(c, "Only those who channel cursed energy may swear binding vows.");
+        c.getSource().sendSuccess(() -> JjkRules.toggleVow(p, v), false);
+        return 1;
     }
 
     private static int awaken(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {

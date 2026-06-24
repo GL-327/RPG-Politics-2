@@ -40,6 +40,11 @@ config/
 # reference material extracted from other mods (research only, never shipped)
 
 reference/
+.extract/
+
+# node tooling
+
+tools/node_modules/
 
 # manually dropped optional mod jars (JEI, sound physics, NEA, ...)
 

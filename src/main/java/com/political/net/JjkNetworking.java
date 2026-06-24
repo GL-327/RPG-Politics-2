@@ -31,6 +31,7 @@ public final class JjkNetworking {
         PayloadTypeRegistry.clientboundPlay().register(TechniqueMenuS2C.TYPE, TechniqueMenuS2C.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(DomainSyncS2C.TYPE, DomainSyncS2C.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(TechniqueCastS2C.TYPE, TechniqueCastS2C.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(JjkProfileS2C.TYPE, JjkProfileS2C.CODEC);
 
         // Serverbound types + receivers.
         PayloadTypeRegistry.serverboundPlay().register(TechniqueActionC2S.TYPE, TechniqueActionC2S.CODEC);
@@ -56,5 +57,24 @@ public final class JjkNetworking {
                 if (result != null) player.sendSystemMessage(result, true);
             });
         });
+
+        PayloadTypeRegistry.serverboundPlay().register(JjkProfileC2S.TYPE, JjkProfileC2S.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(JjkProfileC2S.TYPE, (payload, context) -> {
+            ServerPlayer player = context.player();
+            context.server().execute(() -> handleProfile(player, payload));
+        });
+    }
+
+    private static void handleProfile(ServerPlayer player, JjkProfileC2S payload) {
+        switch (payload.action()) {
+            case "toggle_limb" -> {
+                if (payload.limbOrdinal() >= 0 && payload.limbOrdinal() < com.political.curse.limb.CursedLimb.values().length) {
+                    com.political.curse.limb.LimbStateManager.toggleLimb(
+                            player, com.political.curse.limb.CursedLimb.values()[payload.limbOrdinal()], payload.enabled());
+                }
+            }
+            case "set_preset" -> com.political.curse.limb.LimbStateManager.setPreset(player, payload.presetId());
+            default -> com.political.curse.limb.LimbStateManager.sync(player);
+        }
     }
 }

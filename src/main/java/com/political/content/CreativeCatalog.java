@@ -134,6 +134,17 @@ public final class CreativeCatalog {
         for (Item item : Food2Items.items()) out.accept(new ItemStack(item));
     }
 
+    public static void echoArchive(CreativeModeTab.Output out) {
+        out.accept(com.political.echo.EchoItems.display(com.political.echo.EchoItems.GLASSBOUND_CODEX,
+                "Opens the Echo Archive — fragments of cursed history."));
+        out.accept(com.political.echo.EchoItems.display(com.political.echo.EchoItems.VEILSTONE_LENS,
+                "Resonates toward the nearest recorded structure or village."));
+        out.accept(com.political.echo.EchoItems.display(com.political.echo.EchoItems.RESONANCE_AMPOULE,
+                "Restores a surge of cursed energy."));
+        out.accept(com.political.echo.EchoItems.display(com.political.echo.EchoItems.MNEMONIC_SEAL,
+                "Imprints your current position into the seal's memory."));
+    }
+
     public static void quests(CreativeModeTab.Output out) {
         CreativeCatalog2.quests(out);
     }

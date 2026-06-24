@@ -16,11 +16,12 @@ public final class Spirit2Models {
             case GAUNT -> Archetype.GAUNT_HUMANOID;
             case SWARM_TINY -> Archetype.TINY_SWARM;
             case HULKING -> Archetype.HULKING_BRUTE;
-            case HORNED -> Archetype.CLOAKED_SPIRIT;
+            // Horned curses → faithful special-grade; corpse curses → skeletal undead husk.
+            case HORNED -> Archetype.SPECIAL_GRADE;
             case WINGED -> Archetype.WINGED;
             case SERPENT -> Archetype.SERPENTINE;
             case TOOL -> Archetype.MULTI_ARMED;
-            case CORPSE -> Archetype.CRAWLER;
+            case CORPSE -> Archetype.UNDEAD_HUSK;
         };
     }
 }

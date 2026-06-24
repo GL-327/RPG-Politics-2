@@ -26,6 +26,13 @@ public final class CursedClientState {
     /** Technique ids bound to the four cast keys (slots 1..4). Empty string = unbound. */
     public static final String[] bound = {"", "", "", ""};
 
+    /** Bitmask of enabled limbs (see {@link com.political.curse.limb.CursedLimb}). */
+    public static volatile int limbMask = com.political.curse.limb.CursedLimb.ALL_ENABLED_MASK;
+    /** Selected JJP energy preset id (empty = none). */
+    public static volatile String presetId = "";
+    /** Comma-separated preset ids from server for the picker. */
+    public static volatile List<String> presetIds = new ArrayList<>();
+
     /** entityId -> [current, max, grade] for every player whose cursed energy has been broadcast. */
     public static final Map<Integer, float[]> ENERGY = new ConcurrentHashMap<>();
 

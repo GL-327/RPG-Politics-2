@@ -52,6 +52,7 @@ public final class StructureManager {
     }
 
     public static void tick(MinecraftServer server) {
+        if (!com.political.config.PoliticalConfig.get().proceduralStructuresEnabled) return;
         drainPending();
         if (!PENDING.isEmpty()) return;
 

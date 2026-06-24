@@ -3,9 +3,9 @@ package com.political.expansion2.melee;
 import com.political.items.ItemStats;
 import com.political.items.Rarity;
 import com.political.items.SkyblockTooltipBuilder;
+import com.political.items.StatDisplay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -22,21 +22,17 @@ public final class Melee2TooltipBuilder {
         ItemStats.Sheet s = ItemStats.compute(stack);
         Rarity rarity = ItemStats.rarityOf(stack);
 
-        int gs = SkyblockTooltipBuilder.gearScore(s);
-        int total = SkyblockTooltipBuilder.totalGearScore(s, rarity);
-        lines.add(Component.literal("Gear Score: ").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(String.valueOf(gs)).withStyle(ChatFormatting.LIGHT_PURPLE))
-                .append(Component.literal(" (" + total + ")").withStyle(ChatFormatting.DARK_GRAY)));
+        lines.add(StatDisplay.gearScoreLine(SkyblockTooltipBuilder.gearScore(s)));
 
-        skyStat(lines, "Damage", s.damage, totalScale(s.damage, rarity), "", ChatFormatting.RED);
-        skyStat(lines, "Strength", s.strength, totalScale(s.strength, rarity), "", ChatFormatting.RED);
-        if (s.defense > 0) skyStat(lines, "Defense", s.defense, totalScale(s.defense, rarity), "", ChatFormatting.GREEN);
-        if (s.health > 0) skyStat(lines, "Health", s.health, totalScale(s.health, rarity), "", ChatFormatting.RED);
-        if (s.critChance > 0) skyStat(lines, "Crit Chance", s.critChance, s.critChance, "%", ChatFormatting.RED);
-        if (s.critDamage > 0) skyStat(lines, "Crit Damage", s.critDamage, totalScale(s.critDamage, rarity), "%", ChatFormatting.RED);
-        if (s.ferocity > 0) skyStat(lines, "Ferocity", s.ferocity, totalScale(s.ferocity, rarity), "", ChatFormatting.RED);
-        if (s.speed > 0) skyStat(lines, "Speed", s.speed, totalScale(s.speed, rarity), "", ChatFormatting.WHITE);
-        if (s.intelligence > 0) skyStat(lines, "Mana", s.intelligence, totalScale(s.intelligence, rarity), "", ChatFormatting.AQUA);
+        StatDisplay.line(lines, "Damage", s.damage, "", ChatFormatting.RED);
+        StatDisplay.line(lines, "Strength", s.strength, "", ChatFormatting.RED);
+        StatDisplay.line(lines, "Defense", s.defense, "", ChatFormatting.GREEN);
+        StatDisplay.line(lines, "Health", s.health, "", ChatFormatting.RED);
+        StatDisplay.line(lines, "Crit Chance", s.critChance, "%", ChatFormatting.RED);
+        StatDisplay.line(lines, "Crit Damage", s.critDamage, "%", ChatFormatting.RED);
+        StatDisplay.line(lines, "Ferocity", s.ferocity, "", ChatFormatting.RED);
+        StatDisplay.line(lines, "Speed", s.speed, "", ChatFormatting.WHITE);
+        StatDisplay.line(lines, "Mana", s.intelligence, "", ChatFormatting.AQUA);
 
         Melee2Ability ability = weapon == null ? null : weapon.ability;
         if (ability != null) {
@@ -59,24 +55,5 @@ public final class Melee2TooltipBuilder {
         lines.add(Component.literal(rarity.display.toUpperCase(Locale.ROOT) + " " + type)
                 .withStyle(rarity.color, ChatFormatting.BOLD));
         return lines;
-    }
-
-    private static double totalScale(double base, Rarity rarity) {
-        return base * rarity.mult * 1.8;
-    }
-
-    private static void skyStat(List<Component> lines, String label, double base, double total,
-                                String suffix, ChatFormatting color) {
-        if (base == 0) return;
-        MutableComponent line = Component.literal(label + ": ").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("+" + fmt(base) + suffix).withStyle(color));
-        if (total > base + 0.01) {
-            line.append(Component.literal(" (+" + fmt(total) + suffix + ")").withStyle(ChatFormatting.DARK_GRAY));
-        }
-        lines.add(line);
-    }
-
-    private static String fmt(double v) {
-        return v == (int) v ? String.valueOf((int) v) : String.format(Locale.ROOT, "%.2f", v);
     }
 }

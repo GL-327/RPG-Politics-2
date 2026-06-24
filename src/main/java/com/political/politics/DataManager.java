@@ -264,6 +264,22 @@ public final class DataManager {
         return com.political.curse.CursedTrait.byId(existing);
     }
 
+    // --- Binding Vows (JJK risk/reward contracts) ---
+
+    public static java.util.List<String> activeBindingVows(String uuid) {
+        return data.activeBindingVows.getOrDefault(uuid, java.util.Collections.emptyList());
+    }
+
+    /** Swears ({@code active=true}) or releases a binding vow id for a player. */
+    public static void setBindingVow(String uuid, String vowId, boolean active) {
+        java.util.List<String> list = data.activeBindingVows.computeIfAbsent(uuid, u -> new java.util.ArrayList<>());
+        if (active) {
+            if (!list.contains(vowId)) list.add(vowId);
+        } else {
+            list.remove(vowId);
+        }
+    }
+
     // --- Settlements & political geography ---
 
     public static java.util.Map<String, Settlement> settlements() {

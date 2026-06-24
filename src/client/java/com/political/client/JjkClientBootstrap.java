@@ -50,6 +50,7 @@ public final class JjkClientBootstrap {
         // Ensure the registries are populated client-side even if common init order differs.
         com.political.curse.technique.CursedTechniques.bootstrap();
         com.political.curse.domain.Domains.bootstrap();
+        com.political.curse.jjk.JjkPresetRegistry.bootstrap();
 
         // Teach the common perception facade how to read the local player's pool client-side.
         com.political.curse.energy.CursedEnergy.installClientProviders(
@@ -61,6 +62,13 @@ public final class JjkClientBootstrap {
         registerKeys();
         registerHud();
         DomainOverlayRenderer.register();
+
+        net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            if (!CursedClientState.presetId.isBlank()) {
+                ClientPlayNetworking.send(new com.political.net.JjkProfileC2S(
+                        "set_preset", CursedClientState.presetId, 0, true));
+            }
+        });
     }
 
     private static void registerReceivers() {
@@ -114,19 +122,28 @@ public final class JjkClientBootstrap {
 
         ClientPlayNetworking.registerGlobalReceiver(TechniqueCastS2C.TYPE, (payload, context) ->
                 context.client().execute(() -> TechniqueCastPose.trigger(payload.playerUuid())));
+
+        ClientPlayNetworking.registerGlobalReceiver(com.political.net.JjkProfileS2C.TYPE, (payload, context) ->
+                context.client().execute(() -> {
+                    CursedClientState.limbMask = payload.limbMask();
+                    CursedClientState.presetId = payload.presetId();
+                    CursedClientState.presetIds = split(payload.presetIds());
+                    TechniqueBindings.save();
+                    if (TechniqueScreen.OPEN != null) TechniqueScreen.OPEN.refresh();
+                }));
     }
 
     private static void registerKeys() {
         openTechniquesKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.politicalserver.open_techniques", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G,
-                KeyMapping.Category.MISC));
+                PoliticalKeyCategories.RPG));
         domainKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.politicalserver.expand_domain", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V,
-                KeyMapping.Category.MISC));
+                PoliticalKeyCategories.RPG));
         for (int i = 0; i < 4; i++) {
             SLOT_KEYS[i] = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                     "key.politicalserver.cursed_technique_" + (i + 1), InputConstants.Type.KEYSYM,
-                    SLOT_DEFAULTS[i], KeyMapping.Category.MISC));
+                    SLOT_DEFAULTS[i], PoliticalKeyCategories.RPG));
         }
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

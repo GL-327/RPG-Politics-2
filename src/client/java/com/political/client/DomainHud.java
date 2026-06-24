@@ -2,6 +2,8 @@ package com.political.client;
 
 import com.political.curse.domain.CursedDomain;
 import com.political.curse.domain.DomainRegistry;
+import com.political.curse.limb.CursedLimb;
+import com.political.curse.limb.LimbTechniqueMap;
 import com.political.curse.technique.CursedTechnique;
 import com.political.curse.technique.TechniqueRegistry;
 import com.political.politics.DataManager;
@@ -10,13 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
-/**
- * Compact JJK HUD overlay (Workstream A): a left-edge panel showing the player's sorcerer grade and
- * the four key-bound cursed techniques (with their themed colours and cast keys). Drawn mixin-free via
- * the Fabric HUD element pipeline (registered in {@link JjkClientBootstrap}). The cursed-energy bar
- * itself is already drawn by the main {@code PoliticalClient} HUD, so this complements rather than
- * duplicates it.
- */
+/** Compact JJK HUD overlay with liquid-glass panel styling. */
 public final class DomainHud {
 
     private static final String[] KEY_LABELS = {"Z", "X", "C", "B"};
@@ -31,13 +27,13 @@ public final class DomainHud {
         Font font = mc.font;
         int x = 6;
         int y = mc.getWindow().getGuiScaledHeight() / 2 - 42;
-        int w = 128;
+        int w = 132;
         int rows = 4;
         int extra = DomainClientState.localActive != null ? 14 : 0;
         int h = 16 + rows * 11 + extra;
 
-        g.fill(x - 2, y - 2, x + w, y + h, 0xB0050A12);
-        g.fill(x - 2, y - 2, x + w, y - 1, 0xFFC065FF);
+        HudGlass.panel(g, x - 2, y - 2, w, h);
+        HudGlass.accentTop(g, x - 2, y - 2, w, 0xFFC065FF);
 
         if (DomainOverlayRenderer.isLocalPlayerInsideDomain(mc)) {
             int sw = mc.getWindow().getGuiScaledWidth();
@@ -60,7 +56,13 @@ public final class DomainHud {
             String id = CursedClientState.bound[i];
             CursedTechnique t = (id == null || id.isEmpty()) ? null : TechniqueRegistry.byId(id);
             String name = t == null ? "\u2014 unbound" : t.displayName();
-            int color = t == null ? 0xFF555F6E : (0xFF000000 | t.element().tintRgb());
+            int color = 0xFF555F6E;
+            if (t != null) {
+                CursedLimb limb = LimbTechniqueMap.limbFor(t.id());
+                boolean open = CursedLimb.isEnabled(CursedClientState.limbMask, limb);
+                color = open ? (0xFF000000 | t.element().tintRgb()) : 0xFF664455;
+                if (!open) name = "\u2717 " + name;
+            }
             g.text(font, "[" + KEY_LABELS[i] + "] " + name, x + 2, rowY + i * 11, color, true);
         }
     }
